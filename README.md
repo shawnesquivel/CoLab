@@ -127,6 +127,7 @@ The sequential process will be automated, so when one individual has finished th
 
 I will be using the MERN tech stack [1]
 
+![image](https://user-images.githubusercontent.com/94336773/180620454-886d0d1f-d000-46eb-a2b8-46b71e246e08.png)
 
 
 * **M**ongoDB for database
