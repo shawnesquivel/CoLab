@@ -338,7 +338,7 @@ A functional requirement defines a function of a system or its components.
    </td>
    <td>User clicks on the profile icon. User can click Change Password. User will input the old password and a new password.
    </td>
-   <td>If old password matches, the new password will replace the old password.
+   <td>If the old password matches, the new password will replace the old password.
    </td>
    <td>The password is updated.
    </td>
@@ -366,9 +366,9 @@ A functional requirement defines a function of a system or its components.
    </td>
    <td>PM clicks on the Developer tab to see an overview. PM can click on a user to get their user profile.
    </td>
-   <td>
+   <td>The developer profile will be loaded.
    </td>
-   <td>
+   <td>The developer profile is displayed.
    </td>
   </tr>
   <tr>
