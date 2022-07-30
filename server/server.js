@@ -5,9 +5,13 @@ const port = 5000;
 const request = require("request");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const User = require("./model/user");
 
-mongoose.connect("mongodb://localhost:27017/login-app-db");
-// app.use("/", express.static(path.join(__dirname, "static")));
+mongoose.connect("mongodb://127.0.0.1:27017/login-app-db", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+app.use("/", express.static(path.join(__dirname, "static")));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
