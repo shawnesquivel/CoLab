@@ -1,26 +1,28 @@
 import React from "react";
 import { useRef, useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
   faCheck,
   faTimes,
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "./api/axios";
+import axios from "../api/axios";
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = "/register";
+const REGISTER_URL = "/api/register";
 
-const Register = () => {
+const ChangePassword = () => {
+  const navigate = useNavigate(); // to use the navigate hook
+
   // returns a mutable object whose .current is initialized to the passed argument
-  const userRef = useRef();
+  const pwdRef = useRef();
   const errRef = useRef();
-  // state for user input
-  const [user, setUser] = useState("");
-  const [validName, setValidName] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
-  // state for password input
+  // state for old password input
+  const [oldPwd, setOldPwd] = useState("");
+  const [validOldPwd, setValidOldPwd] = useState(false);
+  const [oldPwdFocus, setOldPwdFocus] = useState(false);
+  // state for new password input
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
@@ -34,17 +36,10 @@ const Register = () => {
   //   default focus on username
   useEffect(() => {
     // .current points to the mounted text input element
-    userRef.current.focus();
+    pwdRef.current.focus();
   }, []);
-  //   validate username
-  useEffect(() => {
-    // return boolean
-    const result = USER_REGEX.test(user);
-    console.log("Username validity:", result);
-    console.log("User ID:", user);
-    setValidName(result);
-  }, [user]);
-  // validate password and password confirmation
+
+  // validate the old password and password confirmation
   useEffect(() => {
     // returns true/false
     const result = PWD_REGEX.test(pwd);
@@ -59,56 +54,66 @@ const Register = () => {
   //   error message
   useEffect(() => {
     setErrMsg("");
-  }, [user, pwd, matchPwd]);
+  }, [oldPwd, pwd, matchPwd]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // no page refresh
-    // prevent users from manually enabling button
-    // does a final check on the username/pwd
-    const v1 = USER_REGEX.test(user);
-    const v2 = PWD_REGEX.test(pwd);
-    if (!v1 || !v2) {
-      setErrMsg("Invalid Entry");
-      return;
-    }
+    e.preventDefault(); // Prevent page refresh
+    // If users somehow manually enable the Register button, do a final check on userID/password.
+    // Better to do validation in the backend since frontend can be hacked
+    // const v1 = USER_REGEX.test(user);
+    // const v2 = PWD_REGEX.test(pwd);
+    // if (!v1 || !v2) {
+    //   setErrMsg("Invalid Entry");
+    //   return;
+    // }
     // To test form without backend
     // setSuccess(true);
     // console.log(user, pwd);
     // To Use Backend
     try {
-      const payload = JSON.stringify({ user, pwd });
-
+      const payload = JSON.stringify({ oldPwd, pwd });
+      // With Axios
       const response = await axios.post(REGISTER_URL, payload, {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         withCredentials: true,
       });
-      console.log(response.data);
-      console.log(response.accessToken);
-      console.log(JSON.stringify(response));
-      setSuccess(true);
-      // Clear form inputs
-      setUser("");
-      setPwd("");
-      setMatchPwd("");
+
+      console.log(response);
+      if (response.status === 200) {
+        setSuccess(true);
+        // // Clear form inputs
+        setOldPwd("");
+        setPwd("");
+        setMatchPwd("");
+      } else {
+        alert(response.status);
+      }
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
-      } else if (err.response?.status === 409) {
-        setErrMsg("Username is taken");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Password error");
       } else {
-        setErrMsg("Registration Failed");
+        setErrMsg("Change password failed");
       }
       errRef.current.focus();
     }
   };
-
   return (
     <>
       {success ? (
         <section>
-          <h1>Account Created!</h1>
+          <h1>Your password was changed.</h1>
           <p>
-            <a href="#">Sign In</a>
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Sign In
+            </button>
           </p>
         </section>
       ) : (
@@ -120,35 +125,35 @@ const Register = () => {
           >
             {errMsg}
           </p>
-          <h1>Register</h1>
+          <h1>Change Password</h1>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="username">
-              Username:
-              <span className={validName ? "valid" : "hide"}>
+            <label htmlFor="password">
+              Old Password:
+              <span className={validOldPwd ? "valid" : "hide"}>
                 <FontAwesomeIcon icon={faCheck} />
               </span>
-              <span className={validName || !user ? "hide" : "invalid"}>
+              <span className={validOldPwd || !oldPwd ? "hide" : "invalid"}>
                 <FontAwesomeIcon icon={faTimes} />
               </span>
             </label>
             <input
               type="text"
-              id="username"
-              ref={userRef}
+              id="password"
+              ref={pwdRef}
               autoComplete="off"
               onChange={(e) => {
-                setUser(e.target.value);
+                setOldPwd(e.target.value);
               }}
               required
-              aria-invalid={validName ? "false" : "true"}
-              aria-describedby="uidnote"
-              onFocus={() => setUserFocus(true)}
-              onBlur={() => setUserFocus(false)}
+              aria-invalid={validOldPwd ? "false" : "true"}
+              aria-describedby="pwdnote"
+              onFocus={() => setOldPwdFocus(true)}
+              onBlur={() => setOldPwdFocus(false)}
             />
             <p
               id="uidnote"
               className={
-                userFocus && user && !validName ? "instructions" : "offscreen"
+                pwdFocus && pwd && !validOldPwd ? "instructions" : "offscreen"
               }
             >
               <FontAwesomeIcon icon={faInfoCircle} />
@@ -157,18 +162,17 @@ const Register = () => {
               Can include any letters, numbers, underscores, and hyphens.
             </p>
             <label htmlFor="password">
-              Password:
+              New Password:
               <span className={validPwd ? "valid" : "hide"}>
                 <FontAwesomeIcon icon={faCheck} />
               </span>
-              <span className={validPwd || !user ? "hide" : "invalid"}>
+              <span className={validPwd || !oldPwd ? "hide" : "invalid"}>
                 <FontAwesomeIcon icon={faTimes} />
               </span>
             </label>
             <input
               type="password"
               id="password"
-              ref={userRef}
               onChange={(e) => {
                 setPwd(e.target.value);
               }}
@@ -225,22 +229,15 @@ const Register = () => {
               Confirmation password does not match.
             </p>
             <button
-              disabled={validName && validPwd && validMatch ? false : true}
+              disabled={validOldPwd && validPwd && validMatch ? false : true}
             >
-              Sign Up
+              Change Password
             </button>
           </form>
-          <p>
-            Already registered? <br />
-            <span className="line">
-              {/* TDL.1: Add Router Link Here! */}
-              <a href="#">Sign In</a>
-            </span>
-          </p>
         </section>
       )}
     </>
   );
 };
 
-export default Register;
+export default ChangePassword;

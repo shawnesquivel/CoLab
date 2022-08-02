@@ -1,20 +1,27 @@
-// import React, { useState, useEffect } from "react";
-import Register from "./Register";
-const App = () => {
-  // const [backendData, setBackendData] = useState([{}]);
-  //
-  // can use the relative route since we defined the proxy in the json
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/api")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setBackendData(data);
-  //     });
-  // }, []);
+import Register from "./components/Register";
+import Login from "./components/Login";
+import ErrorPage from "./components/ErrorPage";
+import ChangePassword from "./components/ChangePassword";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
+const App = () => {
   return (
     <main className="App">
-      <Register />
+      <h1>Debuggr.</h1>
+      <Router>
+        <nav>
+          {/* <Link to="/"> Home </Link> */}
+          <Link to="/"> Register </Link>
+          <Link to="/login"> Login </Link>
+          <Link to="/changepassword"> Change Password </Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      </Router>
     </main>
   );
 };
