@@ -101,7 +101,7 @@ app.post("/api/login", async (req, res) => {
     });
   }
 
-  // Compares the password and the hash(password)
+  // Compares the password and the hashed password
   if (await bcrypt.compare(pwd, userRecord.password)) {
     // Public information, do not put sensitive info.
     // The JWT signs the header/payload based on our signature.
@@ -109,20 +109,55 @@ app.post("/api/login", async (req, res) => {
       { id: userRecord._id, username: userRecord.username },
       JWT_SECRET_KEY
     );
+    console.log(token);
     if (token) {
       console.log("Succesfully signed token");
-    }
-    return res.json({ status: "OK", data: token });
-  }
 
-  res.json({ status: "OK", data: "beep boop" });
+      res.json({ status: "OK", data: token });
+    } else {
+      console.log("Did not sign token");
+    }
+  } else {
+    return res.json({ status: "error" });
+  }
 });
 
 // ENDPOINT #3 - CHANGE PASSWORD
-app.post("/api/changepassword", (req, res) => {
-  const { token } = req.body;
-  // verify the token
-  const userLoggedIn = jwt.verify(token, JWT_SECRET_KEY);
-  console.log(userLoggedIn);
-  res.json({ status: "OK" });
+app.post("/api/changepassword", async (req, res) => {
+  const { oldPwd, newPwd, token } = req.body;
+  console.log(oldPwd, newPwd, token);
+  try {
+    // verify the token - will throw error if not verified
+    console.log("inside the try block");
+
+    const user = jwt.verify(JSON.parse(token).data, JWT_SECRET_KEY);
+    // TDL: check old password matches the hashed password
+    // insert code here
+    // TDL: check new password meets requirements via REGEX (extract out from Register)
+
+    const newHashedPwd = await bcrypt.hash(newPwd, 10);
+    console.log("Password was hashed:", newHashedPwd);
+    const _id = user.id;
+    await User.updateOne(
+      { _id },
+      {
+        $set: { password: newHashedPwd },
+      }
+    );
+    const userRecord = await User.findOne({ _id });
+    console.log("Password was updated", userRecord);
+    res.json({ status: "OK" });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not verify identity" });
+  }
 });
+
+// Testing: If you modify the exampleToken (JWT token), then the jwt.verify will throw an error.
+// const exampleToken = {
+//   status: "OK",
+//   data: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZWI0MGIzYzMxNjE4NDUxNGQ1YTI2MCIsInVzZXJuYW1lIjoibmVsc29uIiwiaWF0IjoxNjU5NTg2MDgyfQ.Us8ereJui9JUDSAFEGY-EgmiGk6IA0Sw4gi59fFf-G4",
+// };
+// const user = jwt.verify(exampleToken.data, JWT_SECRET_KEY);
+// const nelson = User.findOne({ username: "nelson" });
+// console.log(nelson);

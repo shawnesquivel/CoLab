@@ -1,6 +1,6 @@
 import React from "react";
 import { useRef, useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   faCheck,
   faTimes,
@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../api/axios";
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = "/api/register";
+const CHANGEPASSWORD_URL = "/api/changepassword";
 
 const ChangePassword = () => {
   const navigate = useNavigate(); // to use the navigate hook
@@ -20,7 +20,6 @@ const ChangePassword = () => {
   const errRef = useRef();
   // state for old password input
   const [oldPwd, setOldPwd] = useState("");
-  const [validOldPwd, setValidOldPwd] = useState(false);
   const [oldPwdFocus, setOldPwdFocus] = useState(false);
   // state for new password input
   const [pwd, setPwd] = useState("");
@@ -71,9 +70,13 @@ const ChangePassword = () => {
     // console.log(user, pwd);
     // To Use Backend
     try {
-      const payload = JSON.stringify({ oldPwd, pwd });
+      const payload = JSON.stringify({
+        oldPwd,
+        newPwd: pwd,
+        token: localStorage.getItem("token"),
+      });
       // With Axios
-      const response = await axios.post(REGISTER_URL, payload, {
+      const response = await axios.post(CHANGEPASSWORD_URL, payload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -127,46 +130,26 @@ const ChangePassword = () => {
           </p>
           <h1>Change Password</h1>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="password">
-              Old Password:
-              <span className={validOldPwd ? "valid" : "hide"}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validOldPwd || !oldPwd ? "hide" : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
-            </label>
+            <label htmlFor="password">Old Password:</label>
             <input
-              type="text"
-              id="password"
+              type="password"
+              id="old-password"
               ref={pwdRef}
               autoComplete="off"
               onChange={(e) => {
                 setOldPwd(e.target.value);
               }}
               required
-              aria-invalid={validOldPwd ? "false" : "true"}
               aria-describedby="pwdnote"
               onFocus={() => setOldPwdFocus(true)}
               onBlur={() => setOldPwdFocus(false)}
             />
-            <p
-              id="uidnote"
-              className={
-                pwdFocus && pwd && !validOldPwd ? "instructions" : "offscreen"
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              4 to 24 characters. <br />
-              Must begin with a letter. <br />
-              Can include any letters, numbers, underscores, and hyphens.
-            </p>
             <label htmlFor="password">
               New Password:
               <span className={validPwd ? "valid" : "hide"}>
                 <FontAwesomeIcon icon={faCheck} />
               </span>
-              <span className={validPwd || !oldPwd ? "hide" : "invalid"}>
+              <span className={validPwd || !pwd ? "hide" : "invalid"}>
                 <FontAwesomeIcon icon={faTimes} />
               </span>
             </label>
@@ -193,7 +176,7 @@ const ChangePassword = () => {
               Must include uppercase and lower case letters, a number, and a
               special character <br />
               Allowed special characters
-              <span aria-label="exclamation mark">!</span>
+              <span aria-label="exclamation mark"> !</span>
               <span aria-label="at symbol">@</span>
               <span aria-label="hashtag">#</span>
               <span aria-label="dollar sign">$</span>
@@ -228,9 +211,7 @@ const ChangePassword = () => {
               <FontAwesomeIcon icon={faInfoCircle} />
               Confirmation password does not match.
             </p>
-            <button
-              disabled={validOldPwd && validPwd && validMatch ? false : true}
-            >
+            <button disabled={validPwd && validMatch ? false : true}>
               Change Password
             </button>
           </form>

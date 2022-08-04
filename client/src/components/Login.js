@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useRef, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
 import axios from "../api/axios";
 
@@ -10,7 +10,6 @@ const Login = () => {
   // sets authorization in the global context
   const { setAuth } = useContext(AuthContext);
 
-  const navigate = useNavigate();
   const errRef = useRef();
 
   // Login State
@@ -49,12 +48,17 @@ const Login = () => {
       });
 
       console.log(JSON.stringify(response?.data));
-      const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
-
-      setAuth({ user, pwd, roles, accessToken });
+      const accessToken = response?.data;
+      // const roles = response?.data?.roles;
+      console.log("AUTH:", user, pwd, accessToken);
+      setAuth({ user, pwd, accessToken });
 
       if (response.status === 200) {
+        // clear previous local storage
+        localStorage.clear();
+        // store the login token
+        console.log("Received token and set to local storage:", response.data);
+        localStorage.setItem("token", JSON.stringify(response.data));
         setSuccess(true);
         // clear components
         setUser("");
