@@ -1,22 +1,30 @@
 import React from "react";
-import { useEffect, useState, useRef, useContext } from "react";
-import { Link } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
+import { useEffect, useState, useRef } from "react";
+import useAuth from "../hooks/useAuth";
+
 import axios from "../api/axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const LOGIN_URL = "/api/login";
 
 const Login = () => {
-  // sets authorization in the global context
-  const { setAuth } = useContext(AuthContext);
+  // using the context before creating the custom hook useAuth
+  // const { setAuth } = useContext(AuthContext);
+  // using the context after creating custom hook useAuth (removed imports)
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  // see if it we came from a previous path
+  const from = location.state?.from?.pathname || "/";
 
   const errRef = useRef();
 
   // Login State
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
-  // Successful submission: ### TDL: Upon success, navigate to new page.
-  const [success, setSuccess] = useState(false);
+  // Successful submission: Show the Success JSX  (only use this for prototyping)
+  // Now replaced with the Navigate feature
+  // const [success, setSuccess] = useState(false);
   // Error Message
   const [errMsg, setErrMsg] = useState("");
   // Set User Focus on page load
@@ -59,7 +67,7 @@ const Login = () => {
         // store the login token
         console.log("Received token and set to local storage:", response.data);
         localStorage.setItem("token", JSON.stringify(response.data));
-        setSuccess(true);
+        // setSuccess(true); // used to sh
         // clear components
         setUser("");
         setPwd("");
@@ -81,55 +89,43 @@ const Login = () => {
   };
 
   return (
-    <>
-      {success ? (
-        <>
-          <p>Welcome to Bug Tracker, Shawn.</p>
-          <Link to="/">Back to Home</Link>
-        </>
-      ) : (
-        <section>
-          <h1>Login</h1>
-          <form onSubmit={handleSubmit}>
-            {errMsg ? <p aria-live="assertive">{errMsg}</p> : ""}
-            <label htmlFor="username">Username</label>
-            <input
-              ref={userRef}
-              onChange={(e) => {
-                setUser(e.target.value);
-              }}
-              type="text"
-              id="username"
-              autoComplete="off"
-              value={user}
-              required
-            />
-            <label htmlFor="pwd">Password</label>
-            <input
-              type="password"
-              onChange={(e) => {
-                setPwd(e.target.value);
-              }}
-              value={pwd}
-              id="pwd"
-              required
-            />
-            <button
-              disabled={user && pwd ? false : true}
-              onSubmit={handleSubmit}
-            >
-              Sign In
-            </button>
-          </form>
-          <p>Need an account?</p>
-          <span className="line">
-            <button>
-              <Link to="/">Register</Link>
-            </button>
-          </span>
-        </section>
-      )}
-    </>
+    <section>
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit}>
+        {errMsg ? <p aria-live="assertive">{errMsg}</p> : ""}
+        <label htmlFor="username">Username</label>
+        <input
+          ref={userRef}
+          onChange={(e) => {
+            setUser(e.target.value);
+          }}
+          type="text"
+          id="username"
+          autoComplete="off"
+          value={user}
+          required
+        />
+        <label htmlFor="pwd">Password</label>
+        <input
+          type="password"
+          onChange={(e) => {
+            setPwd(e.target.value);
+          }}
+          value={pwd}
+          id="pwd"
+          required
+        />
+        <button disabled={user && pwd ? false : true} onSubmit={handleSubmit}>
+          Sign In
+        </button>
+      </form>
+      <p>Need an account?</p>
+      <span className="line">
+        <button>
+          <Link to="/">Register</Link>
+        </button>
+      </span>
+    </section>
   );
 };
 
