@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const User = require("./model/user"); // User is a document, which is an instance of the model.
 const cors = require("cors"); // allow frontend to make requests to backend on different origins
 const bcrypt = require("bcryptjs"); //password hasher
-const { resourceLimits } = require("worker_threads");
+// const { resourceLimits } = require("worker_threads");
 const jwt = require("jsonwebtoken");
 // Very sensitive - keep safe.
 const JWT_SECRET_KEY = "mv(3jfoa.@01va(Adup";
@@ -70,7 +70,7 @@ app.post("/api/register", async (req, res) => {
       username: user,
       password: encryptedPwd,
       roles: {
-        Coder: 2000,
+        Influencer: 2000,
       },
     });
     console.log("User was created successfully: ", res);

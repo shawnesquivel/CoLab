@@ -7,17 +7,17 @@ import UpdateProfile from "./components/UpdateProfile";
 import Layout from "./components/Layout";
 import Unauthorized from "./components/Unauthorized";
 import Admin from "./components/Admin";
-import Lounge from "./components/Lounge";
-import Editor from "./components/Editor";
+import UpcomingCollabs from "./components/UpcomingCollabs";
+import CreateProject from "./components/CreateProject";
 import Links from "./components/Links";
-import HomePage from "./components/HomePage";
+import Dashboard from "./components/Dashboard";
 import RequireAuth from "./components/RequireAuth";
+import CollabInvites from "./components/CollabInvites";
 
 const ROLES = {
-  PM: 1000,
-  Coder: 2000,
-  Tester: 3000,
-  Admin: 4000,
+  Admin: 1000,
+  Influencer: 2000,
+  Brand: 3000,
 };
 
 const App = () => {
@@ -29,24 +29,49 @@ const App = () => {
         <Route path="login" element={<Login />} />
         <Route path="links" element={<Links />} />
         <Route path="changepassword" element={<ChangePassword />} />
-        <Route path="updateprofile" element={<UpdateProfile />} />
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* Private Routes (role based) */}
-        <Route element={<RequireAuth allowedRoles={[1000]} />}>
-          <Route path="home" element={<HomePage />} />
+        <Route
+          element={
+            <RequireAuth
+              allowedRoles={[ROLES.Admin, ROLES.Influencer, ROLES.Brand]}
+            />
+          }
+        >
+          <Route path="updateprofile" element={<UpdateProfile />} />
         </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.PM]} />}>
-          <Route path="editor" element={<Editor />} />
+        <Route
+          element={
+            <RequireAuth
+              allowedRoles={[ROLES.Admin, ROLES.Influencer, ROLES.Brand]}
+            />
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route
+          element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Brand]} />}
+        >
+          <Route path="createproject" element={<CreateProject />} />
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path="admin" element={<Admin />} />
         </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Coder]} />}>
-          <Route path="lounge" element={<Lounge />} />
+        <Route
+          element={
+            <RequireAuth allowedRoles={[ROLES.Influencer, ROLES.Brand]} />
+          }
+        >
+          <Route path="upcoming" element={<UpcomingCollabs />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.Influencer]} />}>
+          <Route path="invites" element={<CollabInvites />} />
         </Route>
 
         {/* Else  */}

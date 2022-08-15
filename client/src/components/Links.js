@@ -20,20 +20,26 @@ const Links = () => {
         <br />
         <Link to="/changepassword"> Change Password </Link>
         <br />
+        <br />
+
+        <h3>Influencer</h3>
         <Link to="/updateprofile"> Update Profile </Link>
         <br />
-        <br />
+        <Link to="/dashboard"> Dashboard </Link>
 
-        <h3>Private</h3>
-        <Link to="/home"> Landing Page </Link>
         <br />
-        <Link to="/editor"> Editor's Page </Link>
+        <Link to="/upcoming">Upcoming Collabs</Link>
         <br />
+        <Link to="/invites">Collab Invites</Link>
+        <br />
+        <br />
+        <h3>Brand Rep</h3>
+        <Link to="/createproject"> Create Project </Link>
+        <br />
+        <br />
+        <h3>Administrator</h3>
         <Link to="/admin"> Admin's Page</Link>
         <br />
-        <Link to="/lounge">Lounge</Link>
-        <br />
-
         <button
           onClick={() => {
             setAuth({});
