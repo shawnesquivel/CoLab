@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const Links = () => {
   const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
   return (
     <section>
       <h1>Links</h1>
@@ -36,6 +37,9 @@ const Links = () => {
         <button
           onClick={() => {
             setAuth({});
+            localStorage.clear();
+            console.log("User signed out:", localStorage);
+            navigate("/", { replace: true });
           }}
           className="flexGrow"
         >

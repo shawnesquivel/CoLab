@@ -43,7 +43,7 @@ const Login = () => {
     e.preventDefault();
     console.log(user, pwd);
 
-    // Axios Submit
+    // Submit the user/password combination
     try {
       const payload = JSON.stringify({ user, pwd });
       // axios throws errors automatically, no need for .catch
@@ -55,22 +55,28 @@ const Login = () => {
         withCredentials: true,
       });
 
+      console.log(response);
       console.log(JSON.stringify(response?.data));
-      const accessToken = response?.data;
+      const accessToken = response?.data?.token;
+      const roles = response?.data?.roles;
       // const roles = response?.data?.roles;
-      console.log("AUTH:", user, pwd, accessToken);
-      setAuth({ user, pwd, accessToken });
-
+      console.log("AUTH:", user, pwd, roles, accessToken);
+      setAuth({ user, pwd, roles, accessToken });
       if (response.status === 200) {
         // clear previous local storage
         localStorage.clear();
         // store the login token
         console.log("Received token and set to local storage:", response.data);
         localStorage.setItem("token", JSON.stringify(response.data));
+        console.log(user, "roles:", response.data.roles);
         // setSuccess(true); // used to sh
         // clear components
         setUser("");
         setPwd("");
+        // checks if we have an original requested destination
+        if (location?.state?.from) {
+          navigate(location.state.from);
+        }
       } else {
         alert(response.status);
       }

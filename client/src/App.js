@@ -14,9 +14,10 @@ import HomePage from "./components/HomePage";
 import RequireAuth from "./components/RequireAuth";
 
 const ROLES = {
-  User: 1000,
-  Editor: 2000,
-  Admin: 3000,
+  PM: 1000,
+  Coder: 2000,
+  Tester: 3000,
+  Admin: 4000,
 };
 
 const App = () => {
@@ -32,10 +33,19 @@ const App = () => {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* Private Routes (role based) */}
-        <Route element={<RequireAuth />}>
+        <Route element={<RequireAuth allowedRoles={[1000]} />}>
           <Route path="home" element={<HomePage />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.PM]} />}>
           <Route path="editor" element={<Editor />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path="admin" element={<Admin />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.Coder]} />}>
           <Route path="lounge" element={<Lounge />} />
         </Route>
 

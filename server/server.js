@@ -53,10 +53,11 @@ app.post("/api/register", async (req, res) => {
   console.log("Registration Received: req.body:", req.body); // needs bodyParser installed to decode the body
   const { user, pwd: plainTextPwd } = req.body;
 
-  // Check for valid Username/Password. Better to check in bakcend.
+  // Check for valid Username/Password. Better to check in backend.
   if (!user || typeof user !== "string") {
     return res.json({ status: "error", error: "invalid username" });
   }
+
   if (!plainTextPwd || typeof plainTextPwd !== "string") {
     console.log(plainTextPwd);
     return res.json({ status: "error", error: "invalid password" });
@@ -68,6 +69,9 @@ app.post("/api/register", async (req, res) => {
     const res = await User.create({
       username: user,
       password: encryptedPwd,
+      roles: {
+        Coder: 2000,
+      },
     });
     console.log("User was created successfully: ", res);
   } catch (err) {
@@ -90,7 +94,7 @@ app.post("/api/login", async (req, res) => {
 
   // Find the User record
   // .lean() returns a Plain Old Java Object (POJO) instead of the entire
-  const userRecord = await User.findOne({ username: user });
+  const userRecord = await User.findOne({ username: user }).exec();
 
   console.log("User in Database:", userRecord);
 
@@ -105,15 +109,20 @@ app.post("/api/login", async (req, res) => {
   if (await bcrypt.compare(pwd, userRecord.password)) {
     // Public information, do not put sensitive info.
     // The JWT signs the header/payload based on our signature.
+    const roles = Object.values(userRecord.roles);
     const token = jwt.sign(
-      { id: userRecord._id, username: userRecord.username },
+      {
+        id: userRecord._id,
+        username: userRecord.username,
+        roles: roles,
+      },
       JWT_SECRET_KEY
     );
     console.log(token);
     if (token) {
       console.log("Succesfully signed token");
 
-      res.json({ status: "OK", data: token });
+      res.json({ status: "OK", token: token, roles: roles });
     } else {
       console.log("Did not sign token");
     }
