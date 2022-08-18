@@ -11,7 +11,7 @@ const Login = () => {
   // using the context before creating the custom hook useAuth
   // const { setAuth } = useContext(AuthContext);
   // using the context after creating custom hook useAuth (removed imports)
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   // see if it we came from a previous path
@@ -55,13 +55,72 @@ const Login = () => {
         withCredentials: true,
       });
 
-      console.log(response);
-      console.log(JSON.stringify(response?.data));
+      console.log("Full Response:", response);
       const accessToken = response?.data?.token;
       const roles = response?.data?.roles;
       // const roles = response?.data?.roles;
-      console.log("AUTH:", user, pwd, roles, accessToken);
+      // const roles = response?.data?.roles;
+      console.log("Response Data", user, pwd, roles, accessToken);
       setAuth({ user, pwd, roles, accessToken });
+      console.log("AUTH:", auth);
+      if (response.status === 200) {
+        // clear previous local storage
+        localStorage.clear();
+        // store the login token
+        console.log("Received token and set to local storage:", response.data);
+        localStorage.setItem("token", JSON.stringify(response.data));
+        console.log(user, "roles:", response.data.roles);
+        // setSuccess(true); // used to sh
+        // clear components
+        setUser("");
+        setPwd("");
+        // checks if we have an original requested destination
+        if (location?.state?.from) {
+          navigate(location.state.from);
+        }
+      } else {
+        alert(response.status);
+      }
+    } catch (err) {
+      if (err?.response) {
+        setErrMsg("No server response.");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Username is taken");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Registration Failed");
+      }
+      errRef.current.focus();
+    }
+  };
+
+  const handleSubmitInfluencer = async (e) => {
+    e.preventDefault();
+
+    // Submit the user/password combination
+    try {
+      const payload = JSON.stringify({
+        user: "shayhayashico",
+        pwd: "$Hi12345",
+      });
+      // axios throws errors automatically, no need for .catch
+      // axios convertsd to json automatically
+      const response = await axios.post(LOGIN_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      console.log("Full Response:", response);
+      const accessToken = response?.data?.token;
+      const roles = response?.data?.roles;
+      // const roles = response?.data?.roles;
+      // const roles = response?.data?.roles;
+      console.log("Response Data", user, pwd, roles, accessToken);
+      setAuth({ user, pwd, roles, accessToken });
+      console.log("AUTH:", auth);
       if (response.status === 200) {
         // clear previous local storage
         localStorage.clear();
@@ -131,6 +190,8 @@ const Login = () => {
           <Link to="/">Register</Link>
         </button>
       </span>
+
+      <button onClick={handleSubmitInfluencer}>Login as an Influencer</button>
     </section>
   );
 };

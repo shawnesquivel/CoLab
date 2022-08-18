@@ -162,11 +162,77 @@ app.post("/api/changepassword", async (req, res) => {
   }
 });
 
-// Testing: If you modify the exampleToken (JWT token), then the jwt.verify will throw an error.
-// const exampleToken = {
-//   status: "OK",
-//   data: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZWI0MGIzYzMxNjE4NDUxNGQ1YTI2MCIsInVzZXJuYW1lIjoibmVsc29uIiwiaWF0IjoxNjU5NTg2MDgyfQ.Us8ereJui9JUDSAFEGY-EgmiGk6IA0Sw4gi59fFf-G4",
-// };
-// const user = jwt.verify(exampleToken.data, JWT_SECRET_KEY);
-// const nelson = User.findOne({ username: "nelson" });
-// console.log(nelson);
+// Get Profile Info - Get the User Information from the database
+app.post("/api/getuser", async (req, res) => {
+  console.log("Inside the Get Profile Endpoint");
+  // Payload contains JWT and user
+  console.log(req.body);
+  const { token } = req.body;
+  console.log(token);
+
+  try {
+    // Verify the JWT
+    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
+    // abstracted
+    const [user, _id] = verifyJWT(token);
+    const userRecord = await findUser(_id);
+
+    console.log("testing the post user", user, _id, userRecord);
+
+    res.json({ status: "OK", userProfile: userRecord });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not verify identity" });
+  }
+
+  // If user is
+
+  // Return the user
+});
+
+// UPDATE PROFILE
+app.post("/api/updateprofile", async (req, res) => {
+  console.log("Inside the Change Profile Endpoint");
+  // Payload contains JWT and user
+  console.log(req.body);
+
+  // TO DO: MODIFY THE TOKEN SO THAT YOU CAN RECEIVE THE NEW USER DATA
+  const { token } = req.body;
+  console.log(token);
+
+  try {
+    // Verify the JWT
+    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
+    // abstracted
+    const [user, _id] = verifyJWT(token);
+    const userRecord = await findUser(_id);
+
+    console.log("testing the post user", user, _id, userRecord);
+
+    // TO DO: ENTER CODE TO UPDATE THE USER RECORD
+
+    res.json({ status: "OK", userProfile: userRecord });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not verify identity" });
+  }
+
+  // If user is
+
+  // Return the user
+});
+
+// HELPER FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+// Verify JWT tokens
+const verifyJWT = (token) => {
+  // Verify the user, return the user + id
+  const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
+  const _id = user.id;
+  return [user, _id];
+};
+
+// Find the user in the database
+const findUser = async (_id) => {
+  return User.findOne({ _id });
+};
