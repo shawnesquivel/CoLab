@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
 import useAuth from "../hooks/useAuth";
+import AuthContext from "../context/AuthProvider";
 
 import axios from "../api/axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -11,7 +12,7 @@ const Login = () => {
   // using the context before creating the custom hook useAuth
   // const { setAuth } = useContext(AuthContext);
   // using the context after creating custom hook useAuth (removed imports)
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth } = useAuth(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   // see if it we came from a previous path
@@ -34,8 +35,8 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Username:", user);
-    console.log("Password:", pwd);
+    // console.log("Username:", user);
+    // console.log("Password:", pwd);
     setErrMsg("");
   }, [user, pwd]);
 
@@ -55,26 +56,21 @@ const Login = () => {
         withCredentials: true,
       });
 
-      console.log("Full Response:", response);
       const accessToken = response?.data?.token;
       const roles = response?.data?.roles;
-      // const roles = response?.data?.roles;
-      // const roles = response?.data?.roles;
       console.log("Response Data", user, pwd, roles, accessToken);
       setAuth({ user, pwd, roles, accessToken });
       console.log("AUTH:", auth);
+      setUser("");
+      setPwd("");
+
       if (response.status === 200) {
         // clear previous local storage
         localStorage.clear();
         // store the login token
         console.log("Received token and set to local storage:", response.data);
         localStorage.setItem("token", JSON.stringify(response.data));
-        console.log(user, "roles:", response.data.roles);
-        // setSuccess(true); // used to sh
-        // clear components
-        setUser("");
-        setPwd("");
-        // checks if we have an original requested destination
+
         if (location?.state?.from) {
           navigate(location.state.from);
         }
@@ -97,12 +93,13 @@ const Login = () => {
 
   const handleSubmitInfluencer = async (e) => {
     e.preventDefault();
-
+    setUser("shayhayashico");
+    setPwd("$Hi12345");
     // Submit the user/password combination
     try {
       const payload = JSON.stringify({
-        user: "shayhayashico",
-        pwd: "$Hi12345",
+        user,
+        pwd,
       });
       // axios throws errors automatically, no need for .catch
       // axios convertsd to json automatically
@@ -113,26 +110,20 @@ const Login = () => {
         withCredentials: true,
       });
 
-      console.log("Full Response:", response);
       const accessToken = response?.data?.token;
       const roles = response?.data?.roles;
-      // const roles = response?.data?.roles;
-      // const roles = response?.data?.roles;
       console.log("Response Data", user, pwd, roles, accessToken);
       setAuth({ user, pwd, roles, accessToken });
-      console.log("AUTH:", auth);
+      setUser("");
+      setPwd("");
+
       if (response.status === 200) {
         // clear previous local storage
         localStorage.clear();
         // store the login token
         console.log("Received token and set to local storage:", response.data);
         localStorage.setItem("token", JSON.stringify(response.data));
-        console.log(user, "roles:", response.data.roles);
-        // setSuccess(true); // used to sh
-        // clear components
-        setUser("");
-        setPwd("");
-        // checks if we have an original requested destination
+
         if (location?.state?.from) {
           navigate(location.state.from);
         }

@@ -45,6 +45,7 @@ const Links = () => {
             setAuth({});
             localStorage.clear();
             console.log("User signed out:", localStorage);
+            console.log("Auth Cleared", auth);
             navigate("/", { replace: true });
           }}
           className="flexGrow"

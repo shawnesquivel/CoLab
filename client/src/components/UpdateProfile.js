@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import AuthContext from "../context/AuthProvider";
 
 const GETUSER_URL = "/api/getuser";
 
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
-  const { auth } = useAuth();
+  const { auth } = useAuth(AuthContext);
   // STATE
   const [backendData, setBackendData] = useState({
     status: "still fetching data",
@@ -29,6 +30,7 @@ const UpdateProfile = () => {
   // Axios GET Request - Fetch user data
   const fetchUser = async () => {
     const user = auth?.user;
+    console.log(auth);
     // test axios
     // const response = await axios.get("https://yesno.wtf/api");
 
@@ -44,7 +46,6 @@ const UpdateProfile = () => {
       withCredentials: true,
     });
 
-    console.log(response.data.userProfile);
     setBackendData(response.data.userProfile);
   };
 

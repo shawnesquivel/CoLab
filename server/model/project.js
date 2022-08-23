@@ -20,7 +20,7 @@ const ProjectSchema = new mongoose.Schema(
     guaranteedProducts: [String],
     paymentMethod: { type: String, default: "cash" },
     paymentPrice: { type: Number, default: 1000 },
-    paymentProduct: { type: String, defualt: "oils" },
+    paymentProduct: { type: String, default: "oils" },
     status: { type: String, default: "Reviewing Contract" },
     waitingForBrand: { type: Boolean, default: false },
     waitingForInfluencer: { type: Boolean, default: true },

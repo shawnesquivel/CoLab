@@ -222,7 +222,7 @@ app.post("/api/updateprofile", async (req, res) => {
   // Return the user
 });
 
-// HELPER FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Helper Functions
 
 // Verify JWT tokens
 const verifyJWT = (token) => {
