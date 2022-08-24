@@ -34,6 +34,9 @@ const Register = () => {
   //   state for  successful registration
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  // set role
+  const [role, setRole] = useState("Influencer");
+
   //   default focus on username
   useEffect(() => {
     // .current points to the mounted text input element
@@ -63,7 +66,10 @@ const Register = () => {
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd, matchPwd]);
-
+  // Role selected
+  useEffect(() => {
+    console.log(role);
+  }, [role]);
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page refresh
     // If users somehow manually enable the Register button, do a final check on userID/password.
@@ -79,7 +85,8 @@ const Register = () => {
     // console.log(user, pwd);
     // To Use Backend
     try {
-      const payload = JSON.stringify({ user, pwd });
+      const payload = JSON.stringify({ user, pwd, role });
+      console.log(payload);
       // With Axios
       const response = await axios.post(REGISTER_URL, payload, {
         headers: {
@@ -246,6 +253,27 @@ const Register = () => {
               <FontAwesomeIcon icon={faInfoCircle} />
               Confirmation password does not match.
             </p>
+
+            <label htmlFor="role">
+              Role:
+              {/* <span className={validName ? "valid" : "hide"}>
+                <FontAwesomeIcon icon={faCheck} />
+              </span>
+              <span className={validName || !user ? "hide" : "invalid"}>
+                <FontAwesomeIcon icon={faTimes} />
+              </span> */}
+            </label>
+            <select
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value);
+              }}
+              required
+            >
+              <option value="Influencer">Influencer</option>
+              <option value="Brand">Brand</option>
+              <option value="Admin">Admin</option>
+            </select>
             <button
               disabled={validName && validPwd && validMatch ? false : true}
             >

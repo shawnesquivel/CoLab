@@ -98,8 +98,8 @@ const Login = () => {
     // Submit the user/password combination
     try {
       const payload = JSON.stringify({
-        user,
-        pwd,
+        user: "shayhayashico",
+        pwd: "$Hi12345",
       });
       // axios throws errors automatically, no need for .catch
       // axios convertsd to json automatically

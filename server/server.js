@@ -6,6 +6,7 @@ const request = require("request");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const User = require("./model/user"); // User is a document, which is an instance of the model.
+const Project = require("./model/project"); // User is a document, which is an instance of the model.
 const cors = require("cors"); // allow frontend to make requests to backend on different origins
 const bcrypt = require("bcryptjs"); //password hasher
 // const { resourceLimits } = require("worker_threads");
@@ -24,6 +25,12 @@ app.use(
 
 // To allow the request body to be parsed
 app.use(bodyParser.json());
+
+const ROLES = {
+  Admin: 1000,
+  Influencer: 2000,
+  Brand: 3000,
+};
 
 // CONNECT TO DATABASE
 mongoose
@@ -51,7 +58,7 @@ app.get("/", (req, res) => {
 // ENDPOINT #1 - USER SIGNUP
 app.post("/api/register", async (req, res) => {
   console.log("Registration Received: req.body:", req.body); // needs bodyParser installed to decode the body
-  const { user, pwd: plainTextPwd } = req.body;
+  let { user, pwd: plainTextPwd, role } = req.body;
 
   // Check for valid Username/Password. Better to check in backend.
   if (!user || typeof user !== "string") {
@@ -62,6 +69,26 @@ app.post("/api/register", async (req, res) => {
     console.log(plainTextPwd);
     return res.json({ status: "error", error: "invalid password" });
   }
+  if (role === "Influencer") {
+    role = {
+      Admin: null,
+      Influencer: 2000,
+      Brand: null,
+    };
+  } else if (role === "Brand") {
+    role = {
+      Admin: null,
+      Influencer: null,
+      Brand: 3000,
+    };
+  } else if (role === "Admin") {
+    role = {
+      Admin: 1000,
+      Influencer: null,
+      Brand: null,
+    };
+  }
+  console.log(role);
   const encryptedPwd = await bcrypt.hash(plainTextPwd, 10); // 10 = how slow the algo will be
 
   // Create a record/document in the User model
@@ -69,9 +96,7 @@ app.post("/api/register", async (req, res) => {
     const res = await User.create({
       username: user,
       password: encryptedPwd,
-      roles: {
-        Influencer: 2000,
-      },
+      roles: role,
     });
     console.log("User was created successfully: ", res);
   } catch (err) {
@@ -222,6 +247,107 @@ app.post("/api/updateprofile", async (req, res) => {
   // Return the user
 });
 
+// Create Project
+app.post("/api/createproject", async (req, res) => {
+  console.log("Inside the Create Project Endpoint");
+  // Payload contains JWT and user
+  console.log("req.body:", req.body);
+
+  const { token, title, influencerAssigned, brandRepAssigned, deadline } =
+    req.body;
+
+  console.log(
+    "token:",
+    token,
+    title,
+    influencerAssigned,
+    brandRepAssigned,
+    deadline
+  );
+
+  // Verify  project properties
+  if (!title || typeof title !== "string") {
+    return res.json({
+      status: "error",
+      error: "Project title input invalid",
+    });
+  }
+  if (!influencerAssigned || typeof title !== "string") {
+    return res.json({
+      status: "error",
+      error: "Influencer input invalid",
+    });
+  }
+  if (!brandRepAssigned || typeof title !== "string") {
+    return res.json({
+      status: "error",
+      error: "Brand rep input invalid",
+    });
+  }
+  // if (typeof deadline !== "object") {
+  //   return res.json({
+  //     status: "error",
+  //     error: "please provide a valid date",
+  //   });
+  // }
+
+  try {
+    // Verify brand representative
+    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
+    const [user, _id] = verifyJWT(token);
+    const brandRepRecord = await findUser(_id);
+    console.log("Brand Rep Record", user, _id, brandRepRecord);
+    // Check brand representative
+    // TO DO: change this to be the Admin (1000) or Brand (3000)
+
+    if (!brandRepRecord?.roles?.Influencer == 2000) {
+      return res.json({
+        status: "error",
+        error: "You do not have authority to create a project",
+      });
+    }
+
+    // Find the influencer record
+    const influencerRecord = await findUserByUsername(influencerAssigned);
+    console.log("influencerRecord:", influencerRecord);
+
+    // Create a project
+    const res = await Project.create({
+      title: title,
+      brandRepAssigned: brandRepRecord,
+      influencerAssigned: influencerRecord,
+      deadline: deadline,
+    });
+    console.log("Project was created:", res);
+
+    // Add project to brandRep and influencer's currentProjects property
+    // brandRep
+    await User.updateOne(
+      { _id },
+      {
+        $push: { currentProjects: res },
+      }
+    );
+    // influencer
+    await User.updateOne(
+      { username: influencerRecord.username },
+      {
+        $push: { currentProjects: res },
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    if (err.code === 11000) {
+      return res.json({
+        status: "error",
+        error: "Username already in use!",
+      });
+    }
+    throw err;
+  }
+  res.json({ status: "OK" });
+});
+
 // Helper Functions
 
 // Verify JWT tokens
@@ -232,7 +358,13 @@ const verifyJWT = (token) => {
   return [user, _id];
 };
 
-// Find the user in the database
+// Find the project in the database
 const findUser = async (_id) => {
   return User.findOne({ _id });
+};
+const findUserByUsername = async (username) => {
+  return User.findOne({ username });
+};
+const findProject = async (_id) => {
+  return Project.findOne({ username });
 };

@@ -11,6 +11,7 @@ import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 
 const GETUSER_URL = "/api/getuser";
+const CREATEPROJECT_URL = "/api/createproject";
 
 const Dashboard = () => {
   // Use authContext to get the current logged in user ? ?
@@ -85,6 +86,15 @@ const Dashboard = () => {
       });
       console.log("logging the form submission", payload);
       console.log("logging the date object", typeof deadline);
+
+      const response = await axios.post(CREATEPROJECT_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      console.log("Response Data", response);
     } catch (err) {
       console.log(err);
     }
