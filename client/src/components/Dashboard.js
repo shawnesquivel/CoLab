@@ -16,6 +16,9 @@ const CREATEPROJECT_URL = "/api/createproject";
 const Dashboard = () => {
   // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
+  useEffect(() => {
+    console.log(auth.roles);
+  }, []);
 
   // STATE
   const [backendData, setBackendData] = useState("");
@@ -136,79 +139,89 @@ const Dashboard = () => {
         <h3>Backend is loading</h3>
       )}
       <br />
-      {projectForm ? (
+      {auth.roles.includes(3000) || auth.roles.includes(1000) ? (
         <>
-          <form action="submit">
-            <h1>Create Project</h1>
-            <label htmlFor="title">Project Title</label>
-            <input
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-              type="text"
-              id="title"
-              autoComplete="off"
-              value={title}
-              required
-            />
+          <p>
+            Since you are a brand or admin, you are authorized to create
+            projects.{" "}
+          </p>
+          {projectForm ? (
+            <>
+              <form action="submit">
+                <h1>Create Project</h1>
+                <label htmlFor="title">Project Title</label>
+                <input
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                  type="text"
+                  id="title"
+                  autoComplete="off"
+                  value={title}
+                  required
+                />
 
-            <label htmlFor="influencer">Influencer Assigned</label>
-            <input
-              onChange={(e) => {
-                setInfluencerAssigned(e.target.value);
-              }}
-              type="text"
-              id="influencer"
-              autoComplete="off"
-              value={influencerAssigned}
-              required
-            />
+                <label htmlFor="influencer">Influencer Assigned</label>
+                <input
+                  onChange={(e) => {
+                    setInfluencerAssigned(e.target.value);
+                  }}
+                  type="text"
+                  id="influencer"
+                  autoComplete="off"
+                  value={influencerAssigned}
+                  required
+                />
 
-            <label htmlFor="">Task</label>
-            <input type="text" />
+                <label htmlFor="">Task</label>
+                <input type="text" />
 
-            <label htmlFor="deadline">Deadline Date</label>
-            <input
-              onChange={(e) => {
-                setDeadline(e.target.value);
+                <label htmlFor="deadline">Deadline Date</label>
+                <input
+                  onChange={(e) => {
+                    setDeadline(e.target.value);
+                  }}
+                  type="date"
+                  id="deadline"
+                  autoComplete="off"
+                  value={deadline}
+                  required
+                />
+                <label htmlFor="time">Deadline Time</label>
+                <input
+                  onChange={(e) => {
+                    setDeadlineTime(e.target.value);
+                  }}
+                  type="time"
+                  id="time"
+                  autoComplete="off"
+                  value={deadlineTime}
+                  required
+                />
+                <button onClick={submitProject}>Create Project</button>
+              </form>
+              <button
+                onClick={() => {
+                  toggleProjectForm(!projectForm);
+                }}
+              >
+                <FontAwesomeIcon icon={faAngleUp} />
+                {projectBtnText}
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                toggleProjectForm(!projectForm);
               }}
-              type="date"
-              id="deadline"
-              autoComplete="off"
-              value={deadline}
-              required
-            />
-            <label htmlFor="time">Deadline Time</label>
-            <input
-              onChange={(e) => {
-                setDeadlineTime(e.target.value);
-              }}
-              type="time"
-              id="time"
-              autoComplete="off"
-              value={deadlineTime}
-              required
-            />
-            <button onClick={submitProject}>Create Project</button>
-          </form>
-          <button
-            onClick={() => {
-              toggleProjectForm(!projectForm);
-            }}
-          >
-            <FontAwesomeIcon icon={faAngleUp} />
-            {projectBtnText}
-          </button>
+            >
+              <FontAwesomeIcon icon={faClipboardList} />
+              {projectBtnText}
+            </button>
+          )}
         </>
       ) : (
-        <button
-          onClick={() => {
-            toggleProjectForm(!projectForm);
-          }}
-        >
-          <FontAwesomeIcon icon={faClipboardList} />
-          {projectBtnText}
-        </button>
+        <p>Since you are an influencer, you cannot create projects.</p>
       )}
     </section>
   );
