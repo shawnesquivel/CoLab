@@ -348,8 +348,72 @@ app.post("/api/createproject", async (req, res) => {
   res.json({ status: "OK" });
 });
 
-// Helper Functions
+// Update profile
+app.post("/api/updateprofile", async (req, res) => {
+  console.log("Inside the Create Project Endpoint");
+  // Payload contains JWT and user
+  console.log("req.body:", req.body);
+  // FIX THIS
 
+  const { token, title, influencerAssigned, brandRepAssigned, deadline } =
+    req.body;
+  // FIX THIS
+
+  console.log(
+    "token:",
+    token,
+    title,
+    influencerAssigned,
+    brandRepAssigned,
+    deadline
+  );
+
+  // FIX THIS
+  if (!title || typeof title !== "string") {
+    return res.json({
+      status: "error",
+      error: "Project title input invalid",
+    });
+  }
+  if (!influencerAssigned || typeof title !== "string") {
+    return res.json({
+      status: "error",
+      error: "Influencer input invalid",
+    });
+  }
+  if (!brandRepAssigned || typeof title !== "string") {
+    return res.json({
+      status: "error",
+      error: "Brand rep input invalid",
+    });
+  }
+
+  try {
+    // Verify brand representative
+    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
+    const [user, _id] = verifyJWT(token);
+    const userRecord = await findUser(_id);
+    console.log("User record", user, _id, userRecord);
+    // Check brand representative
+    // TO DO: change this to be the Admin (1000) or Brand (3000)
+
+    // Update Profile
+    // FIX THIS
+    await User.updateOne(
+      { _id },
+      {
+        $set: { keywords: keywords },
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    console.log(err);
+    throw err;
+  }
+  res.json({ status: "OK" });
+});
+
+// ~~~~~~~~~~~~~~~~~~ HELPER FUNCTIONS ~~~~~~~~~~~~~~~~~~
 // Verify JWT tokens
 const verifyJWT = (token) => {
   // Verify the user, return the user + id

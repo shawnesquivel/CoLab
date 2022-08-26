@@ -1,0 +1,6 @@
+body {
+  --primary-color: #cec362;
+}
+.primary-color {
+  color: var(--primary-color);
+}

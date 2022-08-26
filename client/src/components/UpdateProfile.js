@@ -4,6 +4,7 @@ import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 
 const GETUSER_URL = "/api/getuser";
+const UPDATEPROFILE_URL = "/api/updateprofile";
 
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
@@ -15,11 +16,18 @@ const UpdateProfile = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [formButtonText, setFormButtonText] = useState("Change Profile");
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [role, setRole] = useState("Influencer");
+  const [dateOfBirth, setDateOfBirth] = useState("2000-01-31");
+  const [keywords, setKeywords] = useState(["lifestyle"]);
+
   useEffect(() => {
     if (showForm) {
       setFormButtonText("Hide");
     } else {
-      setFormButtonText("Change Profile");
+      setFormButtonText("Update your profile");
     }
   }, [showForm]);
 
@@ -55,14 +63,31 @@ const UpdateProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form Data:", firstName, lastName, dateOfBirth, role, keywords);
+    // Aug 26-27 2022: Create the submit function to backend
+
+    // ADD YOUR CODE HERE
+  };
+
+  const handleKeyDown = async (e) => {
+    if (e.key !== "Enter") return;
+    const value = e.target.value;
+    if (!value.trim()) return;
+    setKeywords([...keywords, value]);
+    console.log(keywords);
+    e.target.value = "";
+  };
+
+  const removeKeyword = (deleteIndex) => {
+    setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
   };
 
   return (
     <>
       <section>
         {/* wrap this all in ternary, so if the user is not found, we don't display anything */}
-        <h1>{backendData.status}</h1>
-        <h1>Profile Information</h1>
+        <h2>{backendData.status}</h2>
+        <h2>Profile Information</h2>
         <br /> <br />
         <h2>Welcome, {backendData?.firstName}</h2>
         <img src={backendData?.profilePicURL} alt="" />
@@ -73,7 +98,14 @@ const UpdateProfile = () => {
         <h3>Date of Birth</h3>
         <p>{backendData?.dateOfBirth}</p>
         <h3>Current Projects</h3>
-        <p>{backendData?.currentProjects}</p>
+        {backendData?.currentProjects?.map((project, index) => (
+          <>
+            <p>{project.title}</p>
+            <p>{project.status}</p>
+            <p>{project.waitingForInfluencer}</p>
+          </>
+        ))}
+        {/* <p>{backendData?.currentProjects}</p> */}
         <button>Upload Media Kit</button>
         <button>
           <a href={backendData?.socialMediaLinks?.instagram}>Instagram</a>
@@ -87,13 +119,80 @@ const UpdateProfile = () => {
         </button>
         {showForm ? (
           <form action="" onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="firstname">First Name</label>
             <input
               type="text"
-              id="username"
+              id="firstname"
               autoComplete="off"
-              placeholder={backendData.username}
+              placeholder={backendData.firstName}
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+              }}
             />
+            <label htmlFor="lastname">Last Name</label>
+            <input
+              type="text"
+              id="lastname"
+              autoComplete="off"
+              placeholder={backendData.lastName}
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+              }}
+            />
+            <label htmlFor="role">Role:</label>
+            <select
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value);
+              }}
+              required
+            >
+              <option value="Influencer">Influencer</option>
+              <option value="Brand">Brand</option>
+              <option value="Admin">Admin</option>
+            </select>
+
+            <label htmlFor="dateofbirth">Date of Birth</label>
+            <input
+              onChange={(e) => {
+                setDateOfBirth(e.target.value);
+              }}
+              type="date"
+              id="dateofbirth"
+              autoComplete="off"
+              value={dateOfBirth}
+              required
+            />
+            <label htmlFor="keywords">
+              Please describe your brand or personal brand. <br />
+              <span className="note__italic">
+                E.g., sustainability, fashion, fitness, lifestyle
+              </span>
+            </label>
+            <p></p>
+            <div className="keywords-container">
+              {keywords.map((keyword, index) => (
+                <div className="keywords-item" key={index}>
+                  <span className="keywords-text">{keyword}</span>
+                  <span
+                    onClick={() => removeKeyword(index)}
+                    className="keywords-delete"
+                  >
+                    &times;
+                  </span>
+                </div>
+              ))}
+              <input
+                onKeyDown={handleKeyDown}
+                type="text"
+                className="keywords-input"
+                placeholder="Add a new keyword"
+              />
+            </div>
+
+            <button>Update Profile</button>
           </form>
         ) : (
           ""
