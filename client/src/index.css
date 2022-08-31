@@ -8,6 +8,7 @@
   --primary-color: #cec362;
   --background-light-color: #fefcfb;
   --background-dark-color: #272727;
+  --transparent-dark-color: rgba(0, 0, 0, 0.7);
   --header-light-color: #fffefe;
   --text-color: #0f0f0f;
   --text-light-color: #fff;
@@ -189,4 +190,38 @@ select {
 .note__italic {
   font-style: italic;
   font-size: 0.85rem;
+}
+
+.project-card {
+  border: 1px solid black;
+  padding: 1rem;
+  border-radius: 3px;
+  width: min(80vw, 300px);
+  margin-top: 1rem;
+  gap: 5px 15px;
+}
+
+.project-highlight {
+  background: var(--primary-color);
+  color: var(--text-light-color);
+}
+
+.project-modal {
+  position: "fixed";
+  top: 50%;
+  left: 50%;
+  transform: "translate(-50%, -50%)";
+  background-color: (--background-light-color);
+  padding: 50px;
+  z-index: 1000;
+}
+
+.project-modal-overlay {
+  position: "fixed";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: (var(--transparent-dark-color));
+  z-index: 1000;
 }

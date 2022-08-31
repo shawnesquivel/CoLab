@@ -202,7 +202,7 @@ app.post("/api/getuser", async (req, res) => {
     const [user, _id] = verifyJWT(token);
     const userRecord = await findUser(_id);
 
-    console.log("testing the post user", user, _id, userRecord);
+    console.log("User Record", user, _id, userRecord);
 
     res.json({ status: "OK", userProfile: userRecord });
   } catch (err) {
@@ -217,24 +217,75 @@ app.post("/api/getuser", async (req, res) => {
 
 // UPDATE PROFILE
 app.post("/api/updateprofile", async (req, res) => {
-  console.log("Inside the Change Profile Endpoint");
-  // Payload contains JWT and user
-  console.log(req.body);
+  console.log("\n\n\n\n\n", "Inside the Update Profile Endpoint");
 
-  // TO DO: MODIFY THE TOKEN SO THAT YOU CAN RECEIVE THE NEW USER DATA
-  const { token } = req.body;
-  console.log(token);
+  const { token, firstName, lastName, role, dateOfBirth, keywords } = req.body;
+
+  console.log(token, firstName, lastName, role, dateOfBirth, keywords);
+
+  const roleArray = newRoleArray(role);
+  // Form validation
+  if (!firstName || typeof firstName !== "string") {
+    return res.json({
+      status: "error",
+      error: "First name input invalid",
+    });
+  }
+  if (!lastName || typeof lastName !== "string") {
+    return res.json({
+      status: "error",
+      error: "Last name input invalid",
+    });
+  }
+  if (typeof role !== "string") {
+    console.log("Role", role);
+    return res.json({
+      status: "error",
+      error: "Role chosen invalid",
+    });
+  }
+  if (!keywords.length) {
+    return res.json({
+      status: "error",
+      error: "Please enter at least one keyword!",
+    });
+  }
 
   try {
     // Verify the JWT
-    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
-    // abstracted
     const [user, _id] = verifyJWT(token);
+    await User.updateOne(
+      { _id },
+      {
+        $set: { firstName: firstName },
+      }
+    );
+    await User.updateOne(
+      { _id },
+      {
+        $set: { lastName: lastName },
+      }
+    );
+    await User.updateOne(
+      { _id },
+      {
+        $set: { dateOfBirth: new Date(dateOfBirth) },
+      }
+    );
+    await User.updateOne(
+      { _id },
+      {
+        $set: { roles: newRoleArray(role) },
+      }
+    );
+    await User.updateOne(
+      { _id },
+      {
+        $set: { keywords: keywords },
+      }
+    );
     const userRecord = await findUser(_id);
-
-    console.log("testing the post user", user, _id, userRecord);
-
-    // TO DO: ENTER CODE TO UPDATE THE USER RECORD
+    console.log("User Updated Record:", user, _id, userRecord);
 
     res.json({ status: "OK", userProfile: userRecord });
   } catch (err) {
@@ -348,71 +399,6 @@ app.post("/api/createproject", async (req, res) => {
   res.json({ status: "OK" });
 });
 
-// Update profile
-app.post("/api/updateprofile", async (req, res) => {
-  console.log("Inside the Create Project Endpoint");
-  // Payload contains JWT and user
-  console.log("req.body:", req.body);
-  // FIX THIS
-
-  const { token, title, influencerAssigned, brandRepAssigned, deadline } =
-    req.body;
-  // FIX THIS
-
-  console.log(
-    "token:",
-    token,
-    title,
-    influencerAssigned,
-    brandRepAssigned,
-    deadline
-  );
-
-  // FIX THIS
-  if (!title || typeof title !== "string") {
-    return res.json({
-      status: "error",
-      error: "Project title input invalid",
-    });
-  }
-  if (!influencerAssigned || typeof title !== "string") {
-    return res.json({
-      status: "error",
-      error: "Influencer input invalid",
-    });
-  }
-  if (!brandRepAssigned || typeof title !== "string") {
-    return res.json({
-      status: "error",
-      error: "Brand rep input invalid",
-    });
-  }
-
-  try {
-    // Verify brand representative
-    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
-    const [user, _id] = verifyJWT(token);
-    const userRecord = await findUser(_id);
-    console.log("User record", user, _id, userRecord);
-    // Check brand representative
-    // TO DO: change this to be the Admin (1000) or Brand (3000)
-
-    // Update Profile
-    // FIX THIS
-    await User.updateOne(
-      { _id },
-      {
-        $set: { keywords: keywords },
-      }
-    );
-  } catch (err) {
-    console.log(err);
-    console.log(err);
-    throw err;
-  }
-  res.json({ status: "OK" });
-});
-
 // ~~~~~~~~~~~~~~~~~~ HELPER FUNCTIONS ~~~~~~~~~~~~~~~~~~
 // Verify JWT tokens
 const verifyJWT = (token) => {
@@ -431,4 +417,28 @@ const findUserByUsername = async (username) => {
 };
 const findProject = async (_id) => {
   return Project.findOne({ username });
+};
+
+const newRoleArray = (role) => {
+  if (role === "Influencer") {
+    role = {
+      Admin: null,
+      Influencer: 2000,
+      Brand: null,
+    };
+  } else if (role === "Brand") {
+    role = {
+      Admin: null,
+      Influencer: null,
+      Brand: 3000,
+    };
+  } else if (role === "Admin") {
+    role = {
+      Admin: 1000,
+      Influencer: null,
+      Brand: null,
+    };
+  }
+  console.log("newRoleArray", role);
+  return role;
 };

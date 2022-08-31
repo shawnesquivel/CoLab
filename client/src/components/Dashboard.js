@@ -9,9 +9,22 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
+import ProjectModal from "./ProjectModal";
 
 const GETUSER_URL = "/api/getuser";
 const CREATEPROJECT_URL = "/api/createproject";
+
+const BUTTON_WRAPPER_STYLES = {
+  position: "relative",
+  zIndex: 1,
+};
+
+const OTHER_CONTENT_STYLES = {
+  position: "relative",
+  zIndex: 2,
+  backgroundColor: "red",
+  padding: "10px",
+};
 
 const Dashboard = () => {
   // Use authContext to get the current logged in user ? ?
@@ -22,17 +35,20 @@ const Dashboard = () => {
 
   // STATE
   const [backendData, setBackendData] = useState("");
-
+  // Form
   const [notifications, toggleNotifications] = useState(false);
   const [notificationBtnText, setNotificationBtnText] = useState("");
   const [projectForm, toggleProjectForm] = useState(false);
   const [projectBtnText, setProjectBtnText] = useState("Create Project");
 
-  // Form
+  // Create Project Form
   const [influencerAssigned, setInfluencerAssigned] = useState("");
   const [title, setTitle] = useState("");
   const [deadline, setDeadline] = useState("");
   const [deadlineTime, setDeadlineTime] = useState("");
+
+  // Open Modal
+  const [showModal, setShowModal] = useState(false);
 
   // Buttons
   useEffect(() => {
@@ -129,11 +145,29 @@ const Dashboard = () => {
       <h1>Dashboard</h1>
       {backendData ? (
         <>
-          <h3>{backendData.username}'s Projects:</h3>
-          <p>Project 1: {backendData.currentProjects[0]}</p>
-          <br />
-          <p>Project 2: {backendData.currentProjects[1]}</p>
-          <br />
+          <h3>Welcome, {backendData.firstName}.</h3>
+          <h3>Here are your active projects.</h3>
+          <section className="project-container">
+            {backendData?.currentProjects?.map((project, i) => (
+              <div
+                key={i}
+                className={
+                  project.waitingForInfluencer
+                    ? "project-card project-highlight"
+                    : "project-card"
+                }
+              >
+                <h4>Project Details</h4>
+                <p>Title: {project.title}</p>
+                <p>Project Status: {project.status}</p>
+                <br />
+                <h4>Payment</h4>
+                <p>Payment Method: {project.paymentMethod}</p>
+                <p>Payment: ${project.paymentPrice}</p>
+                <p>Payment Product: ${project.paymentProduct}</p>
+              </div>
+            ))}
+          </section>
         </>
       ) : (
         <h3>Backend is loading</h3>
@@ -221,7 +255,31 @@ const Dashboard = () => {
           )}
         </>
       ) : (
-        <p>Since you are an influencer, you cannot create projects.</p>
+        <>
+          <p>Since you are an influencer, you cannot create projects.</p>
+          <div style={BUTTON_WRAPPER_STYLES}>
+            <button
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              Expand Project
+            </button>
+            {showModal ? (
+              <ProjectModal
+                isOpen={showModal}
+                onClose={() => {
+                  setShowModal(false);
+                }}
+              >
+                Project Details
+              </ProjectModal>
+            ) : (
+              ""
+            )}
+          </div>
+          <div style={OTHER_CONTENT_STYLES}>Test Z Index of 2</div>
+        </>
       )}
     </section>
   );

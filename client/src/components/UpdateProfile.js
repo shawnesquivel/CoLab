@@ -61,12 +61,35 @@ const UpdateProfile = () => {
     fetchUser().catch(console.error);
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
     console.log("Form Data:", firstName, lastName, dateOfBirth, role, keywords);
-    // Aug 26-27 2022: Create the submit function to backend
 
-    // ADD YOUR CODE HERE
+    try {
+      const payload = JSON.stringify({
+        token: localStorage.getItem("token"),
+        firstName,
+        lastName,
+        role,
+        dateOfBirth,
+        keywords,
+      });
+      console.log("Update Profile Payload", payload);
+      const response = await axios.post(UPDATEPROFILE_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      console.log("Response Received", response.data);
+
+      if (response.status === 200) {
+      } else {
+        alert(response.status);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleKeyDown = async (e) => {
@@ -118,7 +141,7 @@ const UpdateProfile = () => {
           {formButtonText}
         </button>
         {showForm ? (
-          <form action="" onSubmit={handleSubmit}>
+          <form>
             <label htmlFor="firstname">First Name</label>
             <input
               type="text"
@@ -192,7 +215,9 @@ const UpdateProfile = () => {
               />
             </div>
 
-            <button>Update Profile</button>
+            <button type="button" onClick={handleClick}>
+              Update Profile
+            </button>
           </form>
         ) : (
           ""
