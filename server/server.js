@@ -58,7 +58,7 @@ app.get("/", (req, res) => {
 // ENDPOINT #1 - USER SIGNUP
 app.post("/api/register", async (req, res) => {
   console.log("Registration Received: req.body:", req.body); // needs bodyParser installed to decode the body
-  let { user, pwd: plainTextPwd, role } = req.body;
+  let { user, pwd: plainTextPwd, role, company } = req.body;
 
   // Check for valid Username/Password. Better to check in backend.
   if (!user || typeof user !== "string") {
@@ -97,6 +97,7 @@ app.post("/api/register", async (req, res) => {
       username: user,
       password: encryptedPwd,
       roles: role,
+      company: company,
     });
     console.log("User was created successfully: ", res);
   } catch (err) {
@@ -215,6 +216,38 @@ app.post("/api/getuser", async (req, res) => {
   // Return the user
 });
 
+// GET PROJECT
+app.post("/api/getproject", async (req, res) => {
+  console.log("Inside the Get Project Endpoint");
+  console.log(req.body);
+  const { token, projectID } = req.body;
+
+  console.log("Token:", token, "ProjectID:", projectID);
+
+  try {
+    const [user, _id] = verifyJWT(token);
+    console.log("verified JWT");
+    // const projectRecord = await findProjectByID(projectID);
+    // const projectRecord = await Project.findById(
+    //   "631b5d77d0a12a420eb182ad"
+    // ).then((err, data) => {
+    //   if (!err) {
+    //     console.log(data);
+    //   } else {
+    //     throw err;
+    //   }
+    // });
+    const projectRecord = await Project.findOne({
+      _id: mongoose.Types.ObjectId(projectID),
+    });
+    console.log("Retrieved the project", projectRecord);
+    res.json({ status: "getProject succeeded!", project: projectRecord });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not find project" });
+  }
+});
+
 // UPDATE PROFILE
 app.post("/api/updateprofile", async (req, res) => {
   console.log("\n\n\n\n\n", "Inside the Update Profile Endpoint");
@@ -254,6 +287,7 @@ app.post("/api/updateprofile", async (req, res) => {
   try {
     // Verify the JWT
     const [user, _id] = verifyJWT(token);
+    // todo: combine all tehse updateOnes into one update
     await User.updateOne(
       { _id },
       {
@@ -304,16 +338,49 @@ app.post("/api/createproject", async (req, res) => {
   // Payload contains JWT and user
   console.log("req.body:", req.body);
 
-  const { token, title, influencerAssigned, brandRepAssigned, deadline } =
-    req.body;
-
-  console.log(
-    "token:",
+  const {
     token,
     title,
     influencerAssigned,
     brandRepAssigned,
-    deadline
+    deadline,
+    instagramDeliverable,
+    tiktokDeliverable,
+    youtubeDeliverable,
+    reviewDeadline,
+    deadlineTime,
+    numberOfRevisions,
+    paymentMethod,
+    paymentPrice,
+    paymentProduct,
+    keywords,
+    hashtags,
+    tags,
+    phrases,
+    linkInBio,
+  } = req.body;
+
+  console.log(
+    "Received Request:",
+    token,
+    title,
+    influencerAssigned,
+    brandRepAssigned,
+    deadline,
+    instagramDeliverable,
+    tiktokDeliverable,
+    youtubeDeliverable,
+    reviewDeadline,
+    deadlineTime,
+    numberOfRevisions,
+    paymentMethod,
+    paymentPrice,
+    paymentProduct,
+    keywords,
+    hashtags,
+    tags,
+    phrases,
+    linkInBio
   );
 
   // Verify  project properties
@@ -342,6 +409,8 @@ app.post("/api/createproject", async (req, res) => {
   //   });
   // }
 
+  // todo: add validation for other form inputs
+
   try {
     // Verify brand representative
     // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
@@ -365,9 +434,30 @@ app.post("/api/createproject", async (req, res) => {
     // Create a project
     const res = await Project.create({
       title: title,
-      brandRepAssigned: brandRepRecord,
-      influencerAssigned: influencerRecord,
+      company: brandRepRecord.company,
+      brandRepAssigned: brandRepRecord._id,
+      influencerAssigned: influencerRecord._id,
       deadline: deadline,
+      instagramDeliverable: {
+        task: instagramDeliverable,
+      },
+      tiktokDeliverable: {
+        task: tiktokDeliverable,
+      },
+      youtubeDeliverable: {
+        task: youtubeDeliverable,
+      },
+      reviewDeadline: reviewDeadline,
+      deadlineTime: deadlineTime,
+      numberOfRevisions: numberOfRevisions,
+      paymentMethod: paymentMethod,
+      paymentPrice: paymentPrice,
+      paymentProduct: paymentProduct,
+      keywords: keywords,
+      hashtags: hashtags,
+      tags: tags,
+      phrases: phrases,
+      linkInBio: linkInBio,
     });
     console.log("Project was created:", res);
 
@@ -376,16 +466,20 @@ app.post("/api/createproject", async (req, res) => {
     await User.updateOne(
       { _id },
       {
-        $push: { currentProjects: res },
+        $push: { currentProjects: res._id },
       }
     );
     // influencer
+    console.log("Brand Rep Was Updated");
+
     await User.updateOne(
       { username: influencerRecord.username },
       {
-        $push: { currentProjects: res },
+        $push: { currentProjects: res._id },
       }
     );
+
+    console.log("Influencer Was Updated");
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -397,6 +491,25 @@ app.post("/api/createproject", async (req, res) => {
     throw err;
   }
   res.json({ status: "OK" });
+});
+
+// To Do: Update Project Status
+app.post("/api/updateproject", async (req, res) => {
+  const { status } = req.body;
+  try {
+    console.log(status);
+    // todo: get the project
+
+    // todo: change the project status
+
+    // status = accept project / reject project = easy
+
+    // status = change project => $push the proposed changes to the comments list.
+
+    // change the waitingForInfluencer + waitingForBrandRep status.
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 // ~~~~~~~~~~~~~~~~~~ HELPER FUNCTIONS ~~~~~~~~~~~~~~~~~~
@@ -411,6 +524,9 @@ const verifyJWT = (token) => {
 // Find the project in the database
 const findUser = async (_id) => {
   return User.findOne({ _id });
+};
+const findProjectByID = async (_id) => {
+  return Project.findOne({ _id });
 };
 const findUserByUsername = async (username) => {
   return User.findOne({ username });

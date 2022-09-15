@@ -34,8 +34,9 @@ const Register = () => {
   //   state for  successful registration
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-  // set role
+  // other user props
   const [role, setRole] = useState("Influencer");
+  const [company, setCompany] = useState("");
 
   //   default focus on username
   useEffect(() => {
@@ -85,7 +86,7 @@ const Register = () => {
     // console.log(user, pwd);
     // To Use Backend
     try {
-      const payload = JSON.stringify({ user, pwd, role });
+      const payload = JSON.stringify({ user, pwd, role, company });
       console.log(payload);
       // With Axios
       const response = await axios.post(REGISTER_URL, payload, {
@@ -110,6 +111,7 @@ const Register = () => {
         // // Clear form inputs
         setUser("");
         setPwd("");
+        setCompany("");
         setMatchPwd("");
       } else {
         alert(response.status);
@@ -274,6 +276,16 @@ const Register = () => {
               <option value="Brand">Brand</option>
               <option value="Admin">Admin</option>
             </select>
+
+            <label htmlFor="company">Company or Brand</label>
+            <input
+              type="text"
+              value={company}
+              onChange={(e) => {
+                setCompany(e.target.value);
+              }}
+              placeholder="E.g. Nike, TryGuys, Better Ideas"
+            />
             <button
               disabled={validName && validPwd && validMatch ? false : true}
             >

@@ -11,11 +11,11 @@ const UserSchema = new mongoose.Schema(
       Influencer: { type: Number, default: 0 },
       Brand: { type: Number, default: 0 },
     },
+    company: String,
     firstName: { type: String, default: "Shay" },
     lastName: { type: String, default: "Hayashi" },
-    companyName: String,
     dateOfBirth: { type: Date, default: new Date() },
-    currentProjects: [{ type: mongoose.Schema.Types.Mixed, unique: true }],
+    currentProjects: [{ type: mongoose.Schema.Types.ObjectId }],
     keywords: [{ type: String, default: "lifestyle" }],
     profilePicURL: {
       type: String,

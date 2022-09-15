@@ -116,30 +116,26 @@ const UpdateProfile = () => {
         <img src={backendData?.profilePicURL} alt="" />
         <h3>Username</h3>
         <p>{backendData?.username}</p>
+        <h3>Company/Brand</h3>
+        <p>{backendData?.company}</p>
         <h3>Password</h3>
         <p>*****</p>
         <h3>Date of Birth</h3>
         <p>{backendData?.dateOfBirth}</p>
-        <h3>Current Projects</h3>
-        {backendData?.currentProjects?.map((project, index) => (
-          <>
-            <p>{project.title}</p>
-            <p>{project.status}</p>
-            <p>{project.waitingForInfluencer}</p>
-          </>
-        ))}
-        {/* <p>{backendData?.currentProjects}</p> */}
-        <button>Upload Media Kit</button>
-        <button>
-          <a href={backendData?.socialMediaLinks?.instagram}>Instagram</a>
-        </button>
-        <button
-          onClick={() => {
-            setShowForm(!showForm);
-          }}
-        >
-          {formButtonText}
-        </button>
+        <div className="update-profile-options">
+          <button className="update-profile-btn">Upload Media Kit</button>
+          <button className="update-profile-btn">
+            <a href={backendData?.socialMediaLinks?.instagram}>Instagram</a>
+          </button>
+          <button
+            className="update-profile-btn"
+            onClick={() => {
+              setShowForm(!showForm);
+            }}
+          >
+            {formButtonText}
+          </button>
+        </div>
         {showForm ? (
           <form>
             <label htmlFor="firstname">First Name</label>

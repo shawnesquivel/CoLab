@@ -10,10 +10,10 @@
   --background-dark-color: #272727;
   --transparent-dark-color: rgba(0, 0, 0, 0.7);
   --header-light-color: #fffefe;
-  --text-color: #0f0f0f;
+  --text-dark-color: #0f0f0f;
   --text-light-color: #fff;
-  --text-accessibility-color: #7c7c7c;
-  --background-accessibility-color: #efefef;
+  --text-grey: #7c7c7c;
+  --background-accessibility-grey: #efefef;
   --secondary-color: #183683;
   --warning-color: #feb624;
   --success-color: #3c645b;
@@ -28,7 +28,11 @@ html {
 
 h1 {
   color: var(--header-light-color);
-  font-size: 3rem;
+  font-size: 2.2rem;
+}
+
+.header-dark {
+  color: var(--header-dark-color);
 }
 
 body {
@@ -65,7 +69,8 @@ form {
   flex-direction: column;
   justify-content: space-evenly;
   flex-grow: 1;
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.8rem;
 }
 
 a,
@@ -80,9 +85,10 @@ a:hover {
 input[type="text"],
 input[type="password"],
 input[type="date"] button,
+input[type="url"],
 textarea {
   font-family: "Nunito", sans-serif;
-  font-size: 22px;
+  font-size: 1rem;
   padding: 0.25rem;
   border-radius: 0.5rem;
 }
@@ -161,7 +167,7 @@ select {
 
 .keywords-item {
   background-color: var(--background-accessibility-color);
-  color: var(--text-color);
+  color: var(--text-dark-color);
   display: inline-block;
   padding: 0.5rem 0.75rem;
   border-radius: 20px;
@@ -196,9 +202,13 @@ select {
   border: 1px solid black;
   padding: 1rem;
   border-radius: 3px;
-  width: min(80vw, 300px);
+  width: min(80vw, 400px);
   margin-top: 1rem;
   gap: 5px 15px;
+}
+.project-card-header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .project-highlight {
@@ -224,4 +234,218 @@ select {
   bottom: 0;
   background-color: (var(--transparent-dark-color));
   z-index: 1000;
+}
+
+.project-container {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.project-details-btn {
+  border-radius: 40%;
+  width: 40px;
+  background-color: (var(--background-accessibility-color));
+  color: (var(--primary-color));
+  margin-top: 0;
+}
+
+.project-details-btn:hover {
+  cursor: pointer;
+}
+
+.project-details-company {
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.project-details-header {
+  font-size: 1.25rem;
+}
+
+.icon-left {
+  padding-right: 10px;
+}
+
+.create-project-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  /* flex-grow: 1; */
+  /* padding-bottom: 1rem; */
+}
+
+.create-project-header {
+  padding: 10px 0;
+  margin-top: 1rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.create-project-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex-grow: 1;
+  padding-bottom: 1rem;
+}
+
+.create-project-close-project-btn {
+  width: 100px;
+}
+
+label {
+  font-size: 1.1rem;
+}
+
+.create-project-btn {
+  font-size: 1.15rem;
+}
+
+.create-project-btn:hover {
+  cursor: pointer;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.update-profile-btn {
+  width: 300px;
+  font-size: 0.9rem;
+}
+
+.update-profile-options {
+  display: flex;
+  flex-wrap: row;
+  justify-content: left;
+  gap: 20px;
+}
+
+.project-modal-navbar {
+  display: flex;
+  flex-wrap: row;
+  margin: 15px;
+  justify-content: center;
+  gap: 50px;
+}
+
+.project-modal-page-highlight {
+  border-bottom: 6px solid var(--background-dark-color);
+  padding-bottom: 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  /* text-decoration: underline; */
+}
+
+.project-modal-page-greyed {
+  color: #6060604c;
+}
+.project-modal-title {
+  color: var(--text-dark-color);
+}
+
+/* Project Modal - Page One - Overview */
+
+.project-modal-campaign-photo {
+  max-width: 50%;
+  height: auto;
+  align-items: center;
+}
+
+.project-modal-page {
+  display: flex;
+  flex-wrap: column;
+  gap: 20px;
+}
+
+.project-modal-card {
+  display: flex;
+  flex-wrap: row;
+  border: 1px solid #000;
+  border-radius: 15px;
+  padding: 10px;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+/* Page 2: Products */
+
+.project-modal-add-product {
+  display: flex;
+  flex-wrap: row;
+  border: 1px dashed #000;
+  border-radius: 25px;
+  padding: 30px;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+.project-modal-product-photo {
+  max-width: 40%;
+  height: auto;
+}
+
+/* Page 4: Guidelines */
+
+.project-modal-examples-container {
+  display: flex;
+  flex-wrap: row;
+  gap: 30px;
+  justify-content: center;
+}
+
+.project-modal-example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.project-modal-required-elements-container {
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.project-modal-required-element {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  border: 1px solid #000;
+  border-radius: 25px;
+  padding: 30px;
+}
+/* Helper Classes */
+
+.btn-holder {
+  display: flex;
+  flex-wrap: row;
+  gap: 100px;
+  justify-content: center;
+}
+
+.btn-small {
+  width: 158px;
+}
+
+.btn-dark {
+  color: var(--text-light-color);
+  background-color: var(--background-dark-color);
+  border-radius: 25px;
+}
+
+.btn-light {
+  color: var(--text-dark-color);
+  background-color: var(--background-accessibility-grey);
+  border-radius: 25px;
+}
+
+.img-rounded {
+  border-radius: 50%;
+  width: 200px;
+  height: auto;
 }
