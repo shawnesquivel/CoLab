@@ -403,22 +403,32 @@ label {
   align-items: center;
 }
 
-.project-modal-required-elements-container {
+.project-modal-guidelines-container {
   padding-top: 40px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.project-modal-required-element {
+.project-modal-guidelines-card {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 1.5rem;
+  flex-direction: column;
   border: 1px solid #000;
   border-radius: 25px;
   padding: 30px;
 }
+
+.project-modal-guidelines-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 1.5rem;
+}
+
+.project-modal-guidelines-btn {
+  margin-top: 0;
+}
+
 /* Helper Classes */
 
 .btn-holder {

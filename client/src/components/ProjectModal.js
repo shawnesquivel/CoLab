@@ -338,82 +338,136 @@ const ProjectModal = ({
                 <p>Tik Toks</p>
               </div>
             </div>
-            <div className="project-modal-required-elements-container">
-              <div className="project-modal-required-element">
-                <h4>Hashtags</h4>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowHashtags(!showHashtags);
-                  }}
-                >
-                  {showHashtags ? (
-                    <>
-                      <FontAwesomeIcon icon={faAngleDown} />
-                    </>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon icon={faAngleUp} />
-                    </>
-                  )}
-                </button>
+            <div className="project-modal-guidelines-container">
+              <div className="project-modal-guidelines-card">
+                <div className="project-modal-guidelines-card-header">
+                  <h4>Hashtags</h4>
+                  <button
+                    type="button"
+                    className="project-modal-guidelines-btn"
+                    onClick={() => {
+                      setShowHashtags(!showHashtags);
+                    }}
+                  >
+                    {showHashtags ? (
+                      <>
+                        <FontAwesomeIcon icon={faAngleDown} />
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faAngleUp} />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {showHashtags ? (
+                  <div className="keywords-container">
+                    {project.hashtags.map((hashtag, index) => (
+                      <div className="keywords-item" key={index}>
+                        <span className="keywords-text">{hashtag}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  " "
+                )}
               </div>
-              <div className="project-modal-required-element">
-                <h4>Tags</h4>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowTags(!showTags);
-                  }}
-                >
-                  {showTags ? (
-                    <>
-                      <FontAwesomeIcon icon={faAngleDown} />
-                    </>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon icon={faAngleUp} />
-                    </>
-                  )}
-                </button>
+              <div className="project-modal-guidelines-card">
+                <div className="project-modal-guidelines-card-header">
+                  <h4>Tags</h4>
+                  <button
+                    type="button"
+                    className="project-modal-guidelines-btn"
+                    onClick={() => {
+                      setShowTags(!showTags);
+                    }}
+                  >
+                    {showTags ? (
+                      <>
+                        <FontAwesomeIcon icon={faAngleDown} />
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faAngleUp} />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {showTags ? (
+                  <div className="keywords-container">
+                    {project.tags.map((hashtag, index) => (
+                      <div className="keywords-item" key={index}>
+                        <span className="keywords-text">{hashtag}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  " "
+                )}
               </div>
-              <div className="project-modal-required-element">
-                <h4>Phrases</h4>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowPhrases(!showPhrases);
-                  }}
-                >
-                  {showPhrases ? (
-                    <>
-                      <FontAwesomeIcon icon={faAngleDown} />
-                    </>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon icon={faAngleUp} />
-                    </>
-                  )}
-                </button>
+              <div className="project-modal-guidelines-card">
+                <div className="project-modal-guidelines-card-header">
+                  <h4>Phrases</h4>
+                  <button
+                    type="button"
+                    className="project-modal-guidelines-btn"
+                    onClick={() => {
+                      setShowPhrases(!showPhrases);
+                    }}
+                  >
+                    {showPhrases ? (
+                      <>
+                        <FontAwesomeIcon icon={faAngleDown} />
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faAngleUp} />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {showPhrases ? (
+                  <div className="keywords-container">
+                    {project.phrases.map((phrase, index) => (
+                      <div className="keywords-item" key={index}>
+                        <span className="keywords-text">{phrase}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  " "
+                )}
               </div>
-              <div className="project-modal-required-element">
-                <h4>Link In Bio</h4>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowLinkInBio(!showLinkInBio);
-                  }}
-                >
-                  {showLinkInBio ? (
-                    <>
-                      <FontAwesomeIcon icon={faAngleDown} />
-                    </>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon icon={faAngleUp} />
-                    </>
-                  )}
-                </button>
+              <div className="project-modal-guidelines-card">
+                <div className="project-modal-guidelines-card-header">
+                  <h4>Link In Bio</h4>
+                  <button
+                    type="button"
+                    className="project-modal-guidelines-btn"
+                    onClick={() => {
+                      setShowLinkInBio(!showLinkInBio);
+                    }}
+                  >
+                    {showLinkInBio ? (
+                      <>
+                        <FontAwesomeIcon icon={faAngleDown} />
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faAngleUp} />
+                      </>
+                    )}
+                  </button>
+                </div>
+                {showLinkInBio ? (
+                  <div className="keywords-container">
+                    <div className="keywords-item">
+                      <span className="keywords-text">{project.linkInBio}</span>
+                    </div>
+                  </div>
+                ) : (
+                  " "
+                )}
               </div>
             </div>
 
