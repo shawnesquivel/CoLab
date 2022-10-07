@@ -179,6 +179,7 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
       });
 
       console.log("Response Data", response);
+      setShowSuccess(true);
     } catch (err) {
       console.log(err);
     }
@@ -570,20 +571,29 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                     name="linkinbio"
                     placeholder="https://glossier.com/products/cloud-paint"
                   />
-                  <button
-                    onClick={() => {
-                      setShowContractGuidelines(false);
-                      setShowContractPayment(true);
-                    }}
-                    type="button"
-                  >
-                    <FontAwesomeIcon className="icon-left" icon={faArrowLeft} />
-                    Previous Page
-                  </button>
-                  <button type="button" onClick={submitProject}>
-                    <FontAwesomeIcon className="icon-left" icon={faPlus} />
-                    Create Project
-                  </button>
+                  {!showSuccess ? (
+                    <>
+                      <button
+                        onClick={() => {
+                          setShowContractGuidelines(false);
+                          setShowContractPayment(true);
+                        }}
+                        type="button"
+                      >
+                        <FontAwesomeIcon
+                          className="icon-left"
+                          icon={faArrowLeft}
+                        />
+                        Previous Page
+                      </button>
+                      <button type="button" onClick={submitProject}>
+                        <FontAwesomeIcon className="icon-left" icon={faPlus} />
+                        Create Project
+                      </button>
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </div>
               ) : (
                 " "
@@ -591,6 +601,23 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
             </form>
           </div>
         </form>
+        {showSuccess ? (
+          <div className="flex-row">
+            <h3 className="create-project-header">
+              Successfully created project!
+            </h3>
+            <button
+              className="create-project-close-project-btn"
+              onClick={onClose}
+              type="button"
+            >
+              <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
+              Hide
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>,
     document.getElementById("portal")

@@ -17,7 +17,6 @@
   --secondary-color: #183683;
   --warning-color: #feb624;
   --success-color: #3c645b;
-
   --max-width: "1500px";
 }
 
@@ -201,10 +200,11 @@ select {
 .project-card {
   border: 1px solid black;
   padding: 1rem;
-  border-radius: 3px;
+  border-radius: 10%;
   width: min(80vw, 400px);
   margin-top: 1rem;
   gap: 5px 15px;
+  height: 250px;
 }
 .project-card-header {
   display: flex;
@@ -350,9 +350,13 @@ label {
 /* Project Modal - Page One - Overview */
 
 .project-modal-campaign-photo {
-  max-width: 50%;
-  height: auto;
+  max-width: 100%;
+  height: 150px;
   align-items: center;
+  object-fit: cover;
+  object-position: 0 100%;
+  border: 2px solid #000;
+  border-radius: 15px;
 }
 
 .project-modal-page {
@@ -403,7 +407,7 @@ label {
   align-items: center;
 }
 
-.project-modal-guidelines-container {
+.project-modal-container {
   padding-top: 40px;
   display: flex;
   flex-direction: column;
@@ -427,6 +431,70 @@ label {
 
 .project-modal-guidelines-btn {
   margin-top: 0;
+  border: none;
+  background-color: transparent;
+}
+
+.deadline-text {
+  font-size: 0.8rem;
+}
+
+.deadline-text-large {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.project-modal-tasks-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  font-size: 1.5rem;
+  align-items: center;
+}
+
+/* Manual Flexbox Settings for ProjectModal Tasks */
+.flex-item-one {
+  margin: 0 20px 0 0;
+}
+
+/* .flex-item-two {
+  margin: 0 200px 0 0;
+} */
+
+.flex-item-three {
+  margin-left: auto;
+}
+
+.project-modal-tasks-expand-container {
+  margin-top: 1rem;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card-text {
+  font-size: 1.1rem;
+}
+
+.project-task {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+}
+
+.project-task-upload-btn {
+  margin-top: 0;
+  width: 110px;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--primary-color);
+}
+
+/* Modal */
+.project-modal {
+  height: 100vh;
 }
 
 /* Helper Classes */
@@ -454,8 +522,41 @@ label {
   border-radius: 25px;
 }
 
+.btn-close-project {
+  margin-top: 0;
+}
+
+.btn-page-five {
+  width: 200px;
+}
+
 .img-rounded {
   border-radius: 50%;
   width: 200px;
   height: auto;
+}
+
+.icon-highlight {
+  color: var(--warning-color);
+}
+
+.bold-text {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.div-center {
+  text-align: center;
+}
+
+.submit-btn {
+  background-color: var(--success-color);
+  color: var(--text-light-color);
 }

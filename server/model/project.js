@@ -36,7 +36,6 @@ const ProjectSchema = new mongoose.Schema(
         default:
           "https://scontent.fcxh2-1.fna.fbcdn.net/v/t1.15752-9/298150279_372327245064921_5588736467645810256_n.jpg?stp=dst-jpg_s1080x2048&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_ohc=Za5CumN7k5oAX_bBmUh&_nc_ht=scontent.fcxh2-1.fna&oh=03_AVJYi7QHyyvrJVJVsNUsIQRxj2FdejWEtPrKNowM3cElnw&oe=63260EC1",
       },
-      submission: { type: String },
     },
     tiktokDeliverable: {
       task: { type: String, default: "D: Post IG Story" },
@@ -45,7 +44,6 @@ const ProjectSchema = new mongoose.Schema(
         default:
           "https://scontent.fcxh2-1.fna.fbcdn.net/v/t1.15752-9/298150279_372327245064921_5588736467645810256_n.jpg?stp=dst-jpg_s1080x2048&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_ohc=Za5CumN7k5oAX_bBmUh&_nc_ht=scontent.fcxh2-1.fna&oh=03_AVJYi7QHyyvrJVJVsNUsIQRxj2FdejWEtPrKNowM3cElnw&oe=63260EC1",
       },
-      submission: { type: String },
     },
     youtubeDeliverable: {
       task: { type: String, default: "D: Post IG Story" },
@@ -54,8 +52,10 @@ const ProjectSchema = new mongoose.Schema(
         default:
           "https://scontent.fcxh2-1.fna.fbcdn.net/v/t1.15752-9/298150279_372327245064921_5588736467645810256_n.jpg?stp=dst-jpg_s1080x2048&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_ohc=Za5CumN7k5oAX_bBmUh&_nc_ht=scontent.fcxh2-1.fna&oh=03_AVJYi7QHyyvrJVJVsNUsIQRxj2FdejWEtPrKNowM3cElnw&oe=63260EC1",
       },
-      submission: { type: String },
     },
+    instagramSubmission: { type: String, default: "none" },
+    tiktokSubmission: { type: String },
+    youtubeSubmission: { type: String },
     numberOfRevisions: { type: Number, default: 1 },
     keywords: [String],
     commentList: [String],

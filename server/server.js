@@ -14,6 +14,7 @@ const jwt = require("jsonwebtoken");
 // Very sensitive - keep safe.
 const JWT_SECRET_KEY = "mv(3jfoa.@01va(Adup";
 const MONGOOSE_URL = "mongodb://127.0.0.1:27017/login-app-db";
+const moment = require("moment");
 
 // To allow requests from client side server
 app.use(
@@ -495,18 +496,153 @@ app.post("/api/createproject", async (req, res) => {
 
 // To Do: Update Project Status
 app.post("/api/updateproject", async (req, res) => {
-  const { status } = req.body;
+  const { token, action, comment, project } = req.body;
   try {
-    console.log(status);
-    // todo: get the project
+    console.log(token, action, comment);
+    var newCommentWithDate = moment(new Date()).format(
+      "MMMM Do YYYY @ h:mm:ss a"
+    );
 
-    // todo: change the project status
+    //  1 - Contract
+    // Add Comment
+    if (action === "accept") {
+      newCommentWithDate += ": The influencer accepted the project.";
+    }
+    if (action === "reject") {
+      newCommentWithDate += ": The influencer rejected the project.";
+    }
+    if (action === "modify") {
+      newCommentWithDate +=
+        ": The influencer requested the following changes: " + comment;
+    }
+    // Update Project
+    if (action === "accept") {
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "in progress/waiting for submission" },
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+    }
+    if (action === "reject") {
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "project proposal rejected" },
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+    }
 
-    // status = accept project / reject project = easy
+    // 2 - In Progress / Submit Draft
+    // Add Comment
+    if (action === "influencer submit draft") {
+      newCommentWithDate += ": The influencer submitted the project.";
+    }
 
-    // status = change project => $push the proposed changes to the comments list.
+    if (action === "brand approves") {
+      newCommentWithDate += ": The influencer submitted the project.";
+    }
 
-    // change the waitingForInfluencer + waitingForBrandRep status.
+    if (action === "brand requests changes") {
+      newCommentWithDate += ": The influencer submitted the project.";
+    }
+
+    // Update Project and Notify Brand
+    if (action === "influencer submit draft") {
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "brand reviewing" },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { instagramSubmission: "selfie" },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { tiktokSubmission: "some tik tok" },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { youtubeSubmission: "some video" },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForBrand: true },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForInfluencer: false },
+        }
+      );
+    }
+    // 3 - Brand Accepts/Rejects Submission
+    if (action === "brand approves submission") {
+      newCommentWithDate +=
+        ": The brand approved the draft! Please post your content by the scheduled date.";
+
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "ready to publish" },
+        }
+      );
+
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+    }
+    if (action === "brand requests changes to submission") {
+      var rejectProjectComment = newCommentWithDate + ": " + comment;
+      newCommentWithDate +=
+        ": The brand requested changes to the submission. Please see the comments and re-upload.";
+
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "in progress/waiting for submission" },
+        }
+      );
+
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $push: { commentList: rejectProjectComment },
+        }
+      );
+    }
+
+    const projectRecord = await findProjectByID(project._id);
+
+    console.log(projectRecord);
   } catch (err) {
     console.log(err);
   }

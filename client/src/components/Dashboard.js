@@ -19,6 +19,7 @@ import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 import ProjectModal from "./ProjectModal";
 import CreateProjectModal from "./CreateProjectModal";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 // Endpoints
 const GETUSER_URL = "/api/getuser";
@@ -78,6 +79,9 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [projectModal, setProjectModal] = useState({});
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
+
+  // Disable Body Scroll when Modal is open
+  showModal ? disableBodyScroll(document) : enableBodyScroll(document);
 
   // Toggle Button Text
   useEffect(() => {
@@ -307,7 +311,9 @@ const Dashboard = () => {
               >
                 <div className="project-card-header">
                   <h4 className="project-details-header">
-                    {project.title}{" "}
+                    {project.title.length > 20
+                      ? project.title.slice(0, 20).concat("...")
+                      : project.title}
                     {project.waitingForInfluencer &&
                     auth.roles.includes(2000) ? (
                       <>✨</>
@@ -335,20 +341,15 @@ const Dashboard = () => {
                 <p className="project-details-company">{project.company}</p>
                 {auth.roles.includes(2000) ? (
                   <>
-                    <p>Brand: {project.company}</p>
-                    <p>
-                      Contact:
-                      {project.brandRepAssigned.firstName}{" "}
-                      {project.brandRepAssigned.lastName}
-                    </p>
+                    <p>{project.company} Collab</p>
                     <p>
                       {project.status === "Reviewing Contract"
                         ? "Please review contract."
                         : ""}
-                      {project.status === "In Progress"
-                        ? "Project in Progress."
+                      {project.status === "in progress/waiting for submission"
+                        ? "In Progress"
                         : ""}
-                      {project.status === "Brand Reviewing"
+                      {project.status === "brand reviewing"
                         ? "Submitted. Waiting for approval."
                         : ""}
                       {project.status === "Ready To Post"
@@ -654,6 +655,7 @@ const Dashboard = () => {
             onClose={() => {
               setShowModal(false);
             }}
+            showModal={setShowModal}
             project={projectModal}
             role={auth.roles}
           >

@@ -6,11 +6,14 @@ import {
   faPlus,
   faAngleDown,
   faAngleUp,
+  faArrowLeft,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactDOM from "react-dom";
 import {
   faInstagram,
+  faLastfm,
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
@@ -22,13 +25,19 @@ import {
 
 import campaignPhoto from "../assets/cloudpaint.png";
 
+import axios from "../api/axios";
+
+const moment = require("moment");
+
+const UPDATEPROJECT_URL = "/api/updateproject";
+
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  right: "0%",
+  transform: "translate(0%, -50%)",
   backgroundColor: "#fefcfb",
-  padding: "50px",
+  padding: "30px",
   zIndex: 1000,
 };
 const OVERLAY_STYLES = {
@@ -53,153 +62,567 @@ const ProjectModal = ({
   }, []);
 
   const [status, setStatus] = useState(project.status);
-  const [addComment, setAddComment] = useState(false);
-
+  const [showAddComment, setShowAddComment] = useState(false);
+  const [comment, setComment] = useState("");
   // Pages
   const [showPageOne, setShowPageOne] = useState(true); //overview
   const [showPageTwo, setShowPageTwo] = useState(false); // products
   const [showPageThree, setShowPageThree] = useState(false); // contract
   const [showPageFour, setShowPageFour] = useState(false); // calendar
+  const [showPageFive, setShowPageFive] = useState(false); // success page
 
-  // Page Four Dropdowns
+  // Page One - 2 - In Progress - Task Dropdowns
+  const [showSubmitDraft, setShowSubmitDraft] = useState(false);
+  const [showReviseDraft, setShowReviseDraft] = useState(false);
+
+  const [instagramBtnTxt, setInstagramBtnTxt] = useState("Upload");
+  const [tiktokBtnTxt, setTiktokBtnTxt] = useState("Upload");
+  const [youtubeBtnTxt, setYoutubeBtnTxt] = useState("Upload");
+  // 2 -  Influencer Upload
+  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  // 3 - Brand Accept/Reject Submission
+  const [showRejectProjectComment, setShowRejectProjectComment] =
+    useState(false);
+  const [rejectProjectcomment, setRejectProjectComment] = useState(
+    "The YouTube video at 3min 40sec is missing the brand logo."
+  );
+  // Brand Reviews Project
+  const [reviewSuccess, setReviewSuccess] = useState(false);
+  const [reviewSuccessMsg, setReviewSuccessMsg] = useState(false);
+
+  // Page Four - Review Contract - Guideline Dropdowns
   const [showHashtags, setShowHashtags] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const [showPhrases, setShowPhrases] = useState(false);
   const [showLinkInBio, setShowLinkInBio] = useState(false);
 
+  // Page Five - Accept Project
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+
   //  to do: Change Status of Project
-  const handleSubmit = async (e) => {
-    console.log(status);
-    try {
-      // to do: add axios post request
-      // if you want to propose changes, then include "comment"
-    } catch (err) {}
+  const handleSubmit = async (action, e) => {
+    e.preventDefault();
+    if (action === "modify") {
+      console.log("User wants to Modify Contract:", comment);
+    }
+    console.log("Action:", action);
+
+    if (action === "accept" || action === "reject") {
+      try {
+        const payload = JSON.stringify({
+          token: localStorage.getItem("token"),
+          action,
+          comment,
+          project,
+        });
+
+        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    if (action === "influencer submit draft") {
+      try {
+        console.log("inside submit draft try block");
+        const payload = JSON.stringify({
+          token: localStorage.getItem("token"),
+          action,
+          project,
+        });
+
+        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if (action === "brand approves submission") {
+      try {
+        const payload = JSON.stringify({
+          token: localStorage.getItem("token"),
+          action,
+          project,
+        });
+
+        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if (action === "brand requests changes to submission") {
+      try {
+        console.log("brand requests changes");
+        const payload = JSON.stringify({
+          token: localStorage.getItem("token"),
+          action,
+          comment: rejectProjectcomment,
+          project,
+        });
+
+        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   if (!isOpen) return null;
   return ReactDOM.createPortal(
     // #to-do: switch from in-line style to className style
-    <div style={OVERLAY_STYLES} className="">
-      <div style={MODAL_STYLES} className="">
-        <h1 style={{ color: "black" }}>
-          {project.company}: {project.title}
-        </h1>
-
-        <div className="project-modal-navbar">
-          <h3
-            className={
-              showPageOne
-                ? "project-modal-page-highlight"
-                : "project-modal-page-greyed"
-            }
-          >
-            Overview
-          </h3>
-          <h3
-            className={
-              showPageTwo
-                ? "project-modal-page-highlight"
-                : "project-modal-page-greyed"
-            }
-          >
-            Products
-          </h3>
-          <h3
-            className={
-              showPageThree
-                ? "project-modal-page-highlight"
-                : "project-modal-page-greyed"
-            }
-          >
-            Campaign
-          </h3>
-          <h3
-            className={
-              showPageFour
-                ? "project-modal-page-highlight"
-                : "project-modal-page-greyed"
-            }
-          >
-            Guidelines
-          </h3>
+    <div style={OVERLAY_STYLES} className="overlay-modal">
+      <div style={MODAL_STYLES} className="project-modal">
+        <div className="flex-row">
+          <h1 style={{ color: "black" }}>
+            {project.company}: {project.title}
+          </h1>
+          <button onClick={onClose} className="btn-light btn-close-project">
+            Close Project <FontAwesomeIcon icon={faTimes} />
+          </button>
         </div>
 
-        {showPageOne ? (
-          <section className="project-modal-page">
-            <img
-              className="project-modal-campaign-photo"
-              src={campaignPhoto}
-              alt="Campaign Product"
-            />
-            <h1 className="project-modal-title">Campaign Description</h1>
-            <p>
-              Skillshare is an online learning community with thousands of
-              online classes and members across 150 countries, who come together
-              to find inspiration and take the next step in their creative
-              journey.
-            </p>
-            <h1 className="project-modal-title">Required Steps</h1>
-            <div className="project-modal-card">
-              <FontAwesomeIcon icon={faCircleExclamation} />
-              <div>
-                <h2>Select Products</h2>
-                <p>
-                  0/2 Products Selected{" "}
-                  <span style={{ fontWeight: "bold", color: "red" }}>
-                    {" "}
-                    NEED TO FIX{" "}
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div className="project-modal-card">
-              <FontAwesomeIcon icon={faCircleExclamation} />
-              <div>
-                <h2>Read Contracts</h2>
-                <p>
-                  <FontAwesomeIcon icon={faInstagram} className="icon-left" />
-                  {project.instagramDeliverable.task}
-                </p>
-                <p>
-                  <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-                  {project.tiktokDeliverable.task}
-                </p>
-                <p>
-                  <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-                  {project.youtubeDeliverable.task}
-                </p>
-              </div>
-            </div>
-            <div className="project-modal-card">
-              <FontAwesomeIcon icon={faCircleExclamation} />
-              <div>
-                <h2>Read Content Guideline</h2>
-                <p>Include the required hashtags, tags, and phrases.</p>
-              </div>
-            </div>
-
-            <button
-              className="btn-light btn-small"
-              type="button"
-              onClick={() => {
-                setShowPageOne(false);
-                setShowPageTwo(true);
-              }}
+        {showPageFive ? (
+          ""
+        ) : (
+          <div className="project-modal-navbar">
+            <h3
+              className={
+                showPageOne
+                  ? "project-modal-page-highlight"
+                  : "project-modal-page-greyed"
+              }
             >
-              Continue
-            </button>
-          </section>
+              Overview
+            </h3>
+            <h3
+              className={
+                showPageTwo
+                  ? "project-modal-page-highlight"
+                  : "project-modal-page-greyed"
+              }
+            >
+              Payment/Products
+            </h3>
+            <h3
+              className={
+                showPageThree
+                  ? "project-modal-page-highlight"
+                  : "project-modal-page-greyed"
+              }
+            >
+              Campaign
+            </h3>
+            <h3
+              className={
+                showPageFour
+                  ? "project-modal-page-highlight"
+                  : "project-modal-page-greyed"
+              }
+            >
+              Guidelines
+            </h3>
+          </div>
+        )}
+
+        {showPageOne ? (
+          <>
+            <section className="project-modal-page">
+              <img
+                className="project-modal-campaign-photo"
+                src={campaignPhoto}
+                alt="Campaign Product"
+              />
+              {project.status === "Reviewing Contract" ? (
+                <>
+                  <h1 className="project-modal-title">Campaign Description</h1>
+                  <p>
+                    Skillshare is an online learning community with thousands of
+                    online classes and members across 150 countries, who come
+                    together to find inspiration and take the next step in their
+                    creative journey.
+                  </p>
+                  <h1 className="project-modal-title">Required Steps</h1>
+                  <div className="project-modal-card">
+                    <FontAwesomeIcon icon={faCircleExclamation} />
+                    <div>
+                      <h2>Select Products</h2>
+                      <p>
+                        0/2 Products Selected{" "}
+                        <span style={{ fontWeight: "bold", color: "red" }}>
+                          {" "}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="project-modal-card">
+                    <FontAwesomeIcon icon={faCircleExclamation} />
+                    <div>
+                      <h2>Read Contracts</h2>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faInstagram}
+                          className="icon-left"
+                        />
+                        {project.instagramDeliverable.task}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faTiktok}
+                          className="icon-left"
+                        />
+                        {project.tiktokDeliverable.task}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faYoutube}
+                          className="icon-left"
+                        />
+                        {project.youtubeDeliverable.task}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="project-modal-card">
+                    <FontAwesomeIcon icon={faCircleExclamation} />
+                    <div>
+                      <h2>Read Content Guideline</h2>
+                      <p>Include the required hashtags, tags, and phrases.</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
+
+              {project.status === "in progress/waiting for submission" &&
+              role.includes(2000) ? (
+                <>
+                  <div className="deadline-text-large">
+                    <h1 className="project-modal-title">Deadlines</h1>
+                    <p className="deadline-text-large">
+                      <span className=" bold-text">Draft Deadline Date:</span>
+                      <br />
+                      {moment(project.reviewDeadline).format(
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </p>
+
+                    <p className="deadline-text-large">
+                      <span className="bold-text">
+                        Upload to Social Media Date:
+                      </span>
+                      <br />
+                      {moment(project.deadline).format(
+                        "MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </p>
+                  </div>
+                  {!showUploadSuccess &&
+                  project.status !== "brand reviewing" ? (
+                    <div className="project-modal-container">
+                      <h1 className="project-modal-title">Tasks</h1>
+                      <div className="project-modal-guidelines-card">
+                        <div className="project-modal-tasks-card-header">
+                          <FontAwesomeIcon
+                            icon={faCircleExclamation}
+                            className="icon-highlight flex-item-one"
+                          />
+                          <div className="flex-item-two">
+                            <h4>Next Step: Submit Draft</h4>
+                            <p className="deadline-text">
+                              By{" "}
+                              {moment(project.reviewDeadline).format(
+                                "MMMM Do YYYY, h:mm:ss a"
+                              )}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            className="project-modal-guidelines-btn flex-item-three"
+                            onClick={() => {
+                              setShowSubmitDraft(!showSubmitDraft);
+                            }}
+                          >
+                            {showSubmitDraft ? (
+                              <>
+                                <FontAwesomeIcon icon={faAngleUp} />
+                              </>
+                            ) : (
+                              <>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        {showSubmitDraft ? (
+                          <div className="project-modal-tasks-expand-container">
+                            <div className="project-task">
+                              <p className="project-card-text">
+                                <FontAwesomeIcon
+                                  icon={faInstagram}
+                                  className="icon-left"
+                                />
+                                {project.instagramDeliverable.task} on Instagram
+                              </p>
+                              <button
+                                type="button"
+                                className={
+                                  instagramBtnTxt === "Submitted"
+                                    ? "project-task-upload-btn submit-btn"
+                                    : "project-task-upload-btn"
+                                }
+                                onClick={() => {
+                                  setInstagramBtnTxt("Submitted");
+                                }}
+                              >
+                                {instagramBtnTxt}
+                              </button>
+                            </div>
+                            <div className="project-task">
+                              <p className="project-card-text">
+                                <FontAwesomeIcon
+                                  icon={faTiktok}
+                                  className="icon-left"
+                                />
+                                {project.tiktokDeliverable.task} on Tik Tok
+                              </p>
+                              <button
+                                type="button"
+                                className={
+                                  tiktokBtnTxt === "Submitted"
+                                    ? "project-task-upload-btn submit-btn"
+                                    : "project-task-upload-btn"
+                                }
+                                onClick={() => {
+                                  setTiktokBtnTxt("Submitted");
+                                }}
+                              >
+                                {tiktokBtnTxt}
+                              </button>
+                            </div>
+                            <div className="project-task">
+                              <p className="project-card-text">
+                                <FontAwesomeIcon
+                                  icon={faYoutube}
+                                  className="icon-left"
+                                />
+                                {project.youtubeDeliverable.task} on YouTube
+                              </p>
+                              <button
+                                type="button"
+                                className={
+                                  youtubeBtnTxt === "Submitted"
+                                    ? "project-task-upload-btn submit-btn"
+                                    : "project-task-upload-btn"
+                                }
+                                onClick={() => {
+                                  setYoutubeBtnTxt("Submitted");
+                                }}
+                              >
+                                {youtubeBtnTxt}
+                              </button>
+                            </div>
+                            <button
+                              className="btn-small submit-btn project-task-upload-btn"
+                              style={{ margin: "0 auto", marginTop: "1rem" }}
+                              onClick={(e) => {
+                                handleSubmit("influencer submit draft", e);
+                                setShowSubmitDraft(false);
+                                setShowUploadSuccess(true);
+                              }}
+                            >
+                              Submit Draft
+                            </button>
+                          </div>
+                        ) : (
+                          " "
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {showUploadSuccess ? (
+                    <>
+                      <p>
+                        Successfully submitted draft. Please wait for the brand
+                        to review.
+                      </p>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </>
+              ) : (
+                ""
+              )}
+              {role.includes(2000) && project.status === "brand reviewing" ? (
+                <>
+                  <p>
+                    Thank you for submitting your draft. Please give the brand
+                    some time to review.
+                  </p>
+
+                  <p>
+                    <FontAwesomeIcon icon={faInstagram} className="icon-left" />
+                    1. {project.instagramSubmission} on Instagram.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faTiktok} className="icon-left" />
+                    2. {project.tiktokSubmission} on Tik Tok.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faYoutube} className="icon-left" />
+                    3. {project.youtubeSubmission} on YouTube.
+                  </p>
+                </>
+              ) : (
+                ""
+              )}
+              {role.includes(3000) && project.status === "brand reviewing" ? (
+                <>
+                  <p>Please review the submission.</p>
+                  <p>
+                    <FontAwesomeIcon icon={faInstagram} className="icon-left" />
+                    1. {project.instagramSubmission} on Instagram.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faTiktok} className="icon-left" />
+                    2. {project.tiktokSubmission} on Tik Tok.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faYoutube} className="icon-left" />
+                    3. {project.youtubeSubmission} on YouTube.
+                  </p>
+                  {!showRejectProjectComment ? (
+                    <div className="btn-holder">
+                      <button
+                        type="button"
+                        className="btn-dark btn-page-five"
+                        onClick={(e) => {
+                          handleSubmit("brand approves submission", e);
+                          setReviewSuccess(true);
+                          setReviewSuccessMsg("Project was approved");
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCheck} className="icon-left" />
+                        Approve Submission
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-dark btn-page-five"
+                        onClick={(e) => {
+                          setShowRejectProjectComment(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTimes} className="icon-left" />
+                        Project Needs to be Updated
+                      </button>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {showRejectProjectComment ? (
+                    <form action="">
+                      <label htmlFor="comments">
+                        <h4>What needs to be changed?</h4>
+                      </label>
+                      <p>Please be as specific as possible!</p>
+                      <input
+                        type="text"
+                        value={rejectProjectcomment}
+                        onChange={(e) =>
+                          setRejectProjectComment(e.target.value)
+                        }
+                      ></input>
+
+                      <button
+                        type="submit"
+                        className="btn-dark btn-page-five"
+                        onClick={(e) => {
+                          handleSubmit(
+                            "brand requests changes to submission",
+                            e
+                          );
+                          setReviewSuccess(true);
+                          setReviewSuccessMsg(
+                            "Comments have been sent to influencer to change. Please wait for the influencer to re-submit the project."
+                          );
+                        }}
+                      >
+                        Request changes to submission
+                        <FontAwesomeIcon icon={faPencil} />
+                      </button>
+                    </form>
+                  ) : (
+                    ""
+                  )}
+
+                  {reviewSuccess ? (
+                    <>
+                      <p>{reviewSuccessMsg}</p>
+                    </>
+                  ) : (
+                    " "
+                  )}
+                </>
+              ) : (
+                ""
+              )}
+            </section>
+            <div className="div-center">
+              <button
+                className="btn-light btn-small"
+                type="button"
+                onClick={() => {
+                  setShowPageOne(false);
+                  setShowPageTwo(true);
+                }}
+              >
+                Continue <FontAwesomeIcon icon={faArrowRight} />
+              </button>
+            </div>
+          </>
         ) : (
           ""
         )}
 
         {showPageTwo ? (
           <section className="project-modal-page">
-            <h1 className="project-modal-title">Select Products</h1>
-            <div className="project-modal-add-product">
-              <FontAwesomeIcon icon={faPlus} />
-              Add Product
-            </div>
+            <h1 className="project-modal-title">
+              {project.status === "Reviewing Contract"
+                ? "Select Products"
+                : "Shipped Products"}
+            </h1>
+            {project.status === "Reviewing Contract" ? (
+              <div className="project-modal-add-product">
+                <FontAwesomeIcon icon={faPlus} />
+                Add Product
+              </div>
+            ) : (
+              ""
+            )}
             <div className="project-modal-card">
               <img
                 className="project-modal-product-photo"
@@ -208,55 +631,67 @@ const ProjectModal = ({
               />
               <div>
                 <h2>Cloud Paint</h2>
-                <p>
-                  Dawn
-                  <span style={{ fontWeight: "bold", color: "red" }}>
-                    {" "}
-                    NEED TO FIX{" "}
-                  </span>
-                </p>
-                <p>
-                  <FontAwesomeIcon icon={faTrashCan} className="icon-left" />
-                  Remove
-                </p>
+                <p>Dawn</p>
+                {project.status === "Reviewing Contract" ? (
+                  <p>
+                    <FontAwesomeIcon icon={faTrashCan} className="icon-left" />
+                    Remove
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
             <div>
-              <h4>Payment Details</h4>
-              <p>{project.paymentMethod}</p>
-              <p>{project.paymentPrice}</p>
-              <p>{project.paymentProduct}</p>
+              <h1 className="project-modal-title">Payment Details</h1>
+              <p className="deadline-text-large">
+                <span className="bold-text">Project Payment: </span>$
+                {project.paymentPrice}
+              </p>
+              <p className="deadline-text-large">
+                <span className="bold-text">Payment Method: </span>
+                {project.paymentMethod === "wire transfer"
+                  ? "You will be paid via secure wire transfer"
+                  : ""}
+              </p>
             </div>
-
-            <div className="btn-holder">
-              <button
-                className="btn-light btn-small"
-                type="button"
-                onClick={() => {
-                  setShowPageTwo(false);
-                  setShowPageOne(true);
-                }}
-              >
-                Go Back
-              </button>
-              <button
-                className="btn-light btn-small"
-                type="button"
-                onClick={() => {
-                  setShowPageTwo(false);
-                  setShowPageThree(true);
-                }}
-              >
-                Continue
-              </button>
-            </div>
+            {!showSuccess ? (
+              <div className="btn-holder">
+                <button
+                  className="btn-light btn-small"
+                  type="button"
+                  onClick={() => {
+                    setShowPageTwo(false);
+                    setShowPageOne(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                </button>
+                <button
+                  className="btn-light btn-small"
+                  type="button"
+                  onClick={() => {
+                    setShowPageTwo(false);
+                    setShowPageThree(true);
+                  }}
+                >
+                  Continue <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              </div>
+            ) : (
+              <p>Success!</p>
+            )}
           </section>
         ) : (
           ""
         )}
         {showPageThree ? (
           <section className="project-modal-page">
-            <h1 className="project-modal-title">Contract</h1>
+            <h1 className="project-modal-title">
+              {project.status === "Reviewing Contract"
+                ? "Contract"
+                : "You agreed to:"}
+            </h1>
             <p>
               The creator will provide the following in accordance to the
               content guidelines:
@@ -300,7 +735,7 @@ const ProjectModal = ({
                   setShowPageTwo(true);
                 }}
               >
-                Go Back
+                <FontAwesomeIcon icon={faArrowLeft} /> Go Back
               </button>
               <button
                 type="button"
@@ -310,7 +745,9 @@ const ProjectModal = ({
                 }}
                 className="btn-dark btn-small"
               >
-                I agree to the terms.{" "}
+                {role.includes(2000) && project.status === "Reviewing Contract"
+                  ? "I agree to the terms."
+                  : "View Guidelines"}
               </button>
             </div>
           </section>
@@ -338,7 +775,7 @@ const ProjectModal = ({
                 <p>Tik Toks</p>
               </div>
             </div>
-            <div className="project-modal-guidelines-container">
+            <div className="project-modal-container">
               <div className="project-modal-guidelines-card">
                 <div className="project-modal-guidelines-card-header">
                   <h4>Hashtags</h4>
@@ -351,11 +788,11 @@ const ProjectModal = ({
                   >
                     {showHashtags ? (
                       <>
-                        <FontAwesomeIcon icon={faAngleDown} />
+                        <FontAwesomeIcon icon={faAngleUp} />
                       </>
                     ) : (
                       <>
-                        <FontAwesomeIcon icon={faAngleUp} />
+                        <FontAwesomeIcon icon={faAngleDown} />
                       </>
                     )}
                   </button>
@@ -384,11 +821,11 @@ const ProjectModal = ({
                   >
                     {showTags ? (
                       <>
-                        <FontAwesomeIcon icon={faAngleDown} />
+                        <FontAwesomeIcon icon={faAngleUp} />
                       </>
                     ) : (
                       <>
-                        <FontAwesomeIcon icon={faAngleUp} />
+                        <FontAwesomeIcon icon={faAngleDown} />
                       </>
                     )}
                   </button>
@@ -417,11 +854,11 @@ const ProjectModal = ({
                   >
                     {showPhrases ? (
                       <>
-                        <FontAwesomeIcon icon={faAngleDown} />
+                        <FontAwesomeIcon icon={faAngleUp} />
                       </>
                     ) : (
                       <>
-                        <FontAwesomeIcon icon={faAngleUp} />
+                        <FontAwesomeIcon icon={faAngleDown} />
                       </>
                     )}
                   </button>
@@ -450,11 +887,11 @@ const ProjectModal = ({
                   >
                     {showLinkInBio ? (
                       <>
-                        <FontAwesomeIcon icon={faAngleDown} />
+                        <FontAwesomeIcon icon={faAngleUp} />
                       </>
                     ) : (
                       <>
-                        <FontAwesomeIcon icon={faAngleUp} />
+                        <FontAwesomeIcon icon={faAngleDown} />
                       </>
                     )}
                   </button>
@@ -480,96 +917,129 @@ const ProjectModal = ({
                   setShowPageFour(false);
                 }}
               >
-                Go Back
+                <FontAwesomeIcon icon={faArrowLeft} /> Go Back
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowPageFour(false);
-                  setShowPageOne(true);
-                }}
-                className="btn-dark btn-small"
-              >
-                I agree to the guidelines.
-              </button>
+
+              {role.includes(2000) &&
+              project.status === "Reviewing Contract" ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPageFour(false);
+                    setShowPageFive(true);
+                  }}
+                  className="btn-dark btn-small"
+                >
+                  Finish Reviewing <FontAwesomeIcon icon={faCheck} />
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           </section>
         ) : (
           ""
         )}
 
-        <form action="">
-          {project.status === "Reviewing Contract" && role.includes(2000) ? (
-            <>
-              <br />
-              <p>
-                Thank you for reviewing the contract. Do you accept the terms
-                and conditions?
-              </p>
-            </>
-          ) : (
-            ""
-          )}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              setStatus("Accept");
-              handleSubmit();
-            }}
-          >
-            Accept the Project <FontAwesomeIcon icon={faCheck} />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              setStatus("Reject");
-              handleSubmit();
-            }}
-          >
-            Reject the Project <FontAwesomeIcon icon={faTimes} />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              setStatus("Proposed Changes");
-              handleSubmit();
-              setAddComment(true);
-            }}
-          >
-            I'd like to propose some changes.{" "}
-            <FontAwesomeIcon icon={faPencil} />
-          </button>
-        </form>
+        {showPageFive &&
+        project.status === "Reviewing Contract" &&
+        role.includes(2000) ? (
+          <div className="project-modal-title">
+            {" "}
+            {!showSuccess ? (
+              <>
+                <h2 className="project-modal-title">
+                  "Thanks for reviewing the project!"
+                </h2>
+                <p>
+                  Thank you for reviewing the contract. Do you accept the terms
+                  and conditions?
+                </p>
+                <p>How would you like to proceed?</p>
+              </>
+            ) : (
+              successMsg
+            )}
+            <form action="">
+              {!showSuccess ? (
+                <div className="btn-holder">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPageFive(false);
+                      setShowPageFour(true);
+                    }}
+                    className="btn-light btn-page-five"
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} /> Go Back
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-dark btn-page-five"
+                    onClick={(e) => {
+                      handleSubmit("accept", e);
+                      setShowSuccess(true);
+                      setSuccessMsg("You accepted the project!");
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCheck} className="icon-left" />
+                    Accept Project
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-dark btn-page-five"
+                    onClick={(e) => {
+                      handleSubmit("reject", e);
+                      setShowSuccess(true);
+                      setSuccessMsg(
+                        'You rejected the project. Go to the "Upcoming Collabs" to look for other projects!'
+                      );
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTimes} className="icon-left" />
+                    Reject Project
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-dark btn-page-five"
+                    onClick={() => {
+                      setShowAddComment(true);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPencil} className="icon-left" />
+                    Modify Contract
+                  </button>
+                </div>
+              ) : (
+                ""
+              )}
+            </form>
+            {showAddComment ? (
+              <form action="">
+                <label htmlFor="comments">Add a new comment</label>
+                <p>E.g., request new deadline date, increase payment price</p>
+                <input
+                  type="text"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                ></input>
 
-        {addComment ? (
-          <form action="">
-            <label htmlFor="comments">
-              Add a new comment (if you have proposed changes)
-            </label>
-            <input type="text"></input>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                setStatus("Proposed Changes");
-                handleSubmit();
-              }}
-            >
-              Submit modifications to proposal{" "}
-              <FontAwesomeIcon icon={faPencil} />
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  className="btn-light"
+                  onClick={(e) => handleSubmit("modify", e)}
+                >
+                  Submit modifications to proposal{" "}
+                  <FontAwesomeIcon icon={faPencil} />
+                </button>
+              </form>
+            ) : (
+              ""
+            )}
+          </div>
         ) : (
           ""
         )}
-
-        <button onClick={onClose}>
-          Close Project <FontAwesomeIcon icon={faTimes} />
-        </button>
       </div>
     </div>,
     document.getElementById("portal")
