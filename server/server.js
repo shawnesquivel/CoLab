@@ -15,6 +15,9 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = "mv(3jfoa.@01va(Adup";
 const MONGOOSE_URL = "mongodb://127.0.0.1:27017/login-app-db";
 const moment = require("moment");
+// Stripe
+require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
 
 // To allow requests from client side server
 app.use(
@@ -494,16 +497,17 @@ app.post("/api/createproject", async (req, res) => {
   res.json({ status: "OK" });
 });
 
-// To Do: Update Project Status
+// Update Project
 app.post("/api/updateproject", async (req, res) => {
   const { token, action, comment, project } = req.body;
   try {
     console.log(token, action, comment);
+    // Create a baseline comment that will be updated depending on the update
     var newCommentWithDate = moment(new Date()).format(
       "MMMM Do YYYY @ h:mm:ss a"
     );
 
-    //  1 - Contract
+    //  Update comment string based based on influencer accept/reject/modify contract
     // Add Comment
     if (action === "accept") {
       newCommentWithDate += ": The influencer accepted the project.";
@@ -515,7 +519,7 @@ app.post("/api/updateproject", async (req, res) => {
       newCommentWithDate +=
         ": The influencer requested the following changes: " + comment;
     }
-    // Update Project
+    // Step 1A - Influencer Accepts Contract/Project
     if (action === "accept") {
       await Project.updateOne(
         { _id: project._id },
@@ -525,6 +529,7 @@ app.post("/api/updateproject", async (req, res) => {
         }
       );
     }
+    // Step 1B - Influencer Reject Contract/Project
     if (action === "reject") {
       await Project.updateOne(
         { _id: project._id },
@@ -535,21 +540,22 @@ app.post("/api/updateproject", async (req, res) => {
       );
     }
 
-    // 2 - In Progress / Submit Draft
+    // Step 2 - Status: Project In Progress => Action: Influencer Submit Draft
     // Add Comment
     if (action === "influencer submit draft") {
-      newCommentWithDate += ": The influencer submitted the project.";
+      newCommentWithDate +=
+        ": The influencer submitted the project. Awaiting the submission of their draft.";
     }
 
     if (action === "brand approves") {
-      newCommentWithDate += ": The influencer submitted the project.";
+      newCommentWithDate += ": The brand approves of the submission.";
     }
 
     if (action === "brand requests changes") {
-      newCommentWithDate += ": The influencer submitted the project.";
+      newCommentWithDate += ": The brand requests changes.";
     }
 
-    // Update Project and Notify Brand
+    // Step 2: Update Project and Notify Brand
     if (action === "influencer submit draft") {
       await Project.updateOne(
         { _id: project._id },
@@ -594,25 +600,43 @@ app.post("/api/updateproject", async (req, res) => {
         }
       );
     }
-    // 3 - Brand Accepts/Rejects Submission
+    // Step 3 - Brand Accepts/Rejects Submission
+    // Edit Comment if brand accepts submission
     if (action === "brand approves submission") {
       newCommentWithDate +=
         ": The brand approved the draft! Please post your content by the scheduled date.";
 
+      // Influencer can publish
       await Project.updateOne(
         { _id: project._id },
         {
           $set: { status: "ready to publish" },
         }
       );
-
+      // Add comment
       await Project.updateOne(
         { _id: project._id },
         {
           $push: { commentList: newCommentWithDate },
         }
       );
+
+      // Next step with influencer
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForInfluencer: true },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForBrand: false },
+        }
+      );
     }
+
+    // Edit comment if the brand wants to change the submission
     if (action === "brand requests changes to submission") {
       var rejectProjectComment = newCommentWithDate + ": " + comment;
       newCommentWithDate +=
@@ -640,11 +664,112 @@ app.post("/api/updateproject", async (req, res) => {
       );
     }
 
+    // Action: Influencer posted the content to social media
+    // Comment: Same as action
+    // New Status: Awaiting Project Payment
+    // Influencer is awaiting project payment from brand
+
+    if (action === "influencer posted content") {
+      newCommentWithDate +=
+        ": The influencer posted the content. Brand: Please confirm the submission and pay the influencer.";
+
+      // Influencer can publish
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "awaiting project payment" },
+        }
+      );
+      // Add comment
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+
+      // Next step with brand (must pay influencer)
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForInfluencer: false },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForBrand: true },
+        }
+      );
+    }
+
+    // Step 5 - Brand has paid the influencer. Project is complete!
+    if (action === "brand paid influencer") {
+      newCommentWithDate +=
+        ": The brand has sent the payment. Please allow 2-4 business days for the payment to process.";
+
+      // Influencer can publish
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { status: "project complete" },
+        }
+      );
+      // Add comment
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $push: { commentList: newCommentWithDate },
+        }
+      );
+
+      // Next step with brand (must pay influencer)
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForInfluencer: false },
+        }
+      );
+      await Project.updateOne(
+        { _id: project._id },
+        {
+          $set: { waitingForBrand: false },
+        }
+      );
+    }
+
     const projectRecord = await findProjectByID(project._id);
 
     console.log(projectRecord);
   } catch (err) {
     console.log(err);
+  }
+});
+
+// Brand to pay influencer
+app.post("/api/payment", async (req, res) => {
+  let { amount, id } = req.body;
+  console.log("inside the payment api");
+  try {
+    const payment = await stripe.paymentIntents.create({
+      amount,
+      currency: "USD",
+      description: "project payment",
+      payment_method: id,
+      confirm: true,
+    });
+
+    console.log("payment: ", payment);
+    res.json({
+      message: "Payment success!",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "Payment failed!",
+      success: false,
+    });
   }
 });
 

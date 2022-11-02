@@ -8,6 +8,8 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@stripe/react-stripe-js": "^1.14.1",
+    "@stripe/stripe-js": "^1.42.1",
     "axios": "^0.27.2",
     "body-scroll-lock": "^4.0.0-beta.0",
     "moment": "^2.29.4",

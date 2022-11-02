@@ -13,9 +13,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactDOM from "react-dom";
 import {
   faInstagram,
-  faLastfm,
   faTiktok,
   faYoutube,
+  faStripe,
+  faPaypal,
 } from "@fortawesome/free-brands-svg-icons";
 
 import {
@@ -26,6 +27,7 @@ import {
 import campaignPhoto from "../assets/cloudpaint.png";
 
 import axios from "../api/axios";
+import StripeContainer from "./StripeContainer";
 
 const moment = require("moment");
 
@@ -89,6 +91,8 @@ const ProjectModal = ({
   // Brand Reviews Project
   const [reviewSuccess, setReviewSuccess] = useState(false);
   const [reviewSuccessMsg, setReviewSuccessMsg] = useState(false);
+  // Influencer has posted deliverables
+  const [postedContentSuccess, setPostedContentSuccess] = useState(false);
 
   // Page Four - Review Contract - Guideline Dropdowns
   const [showHashtags, setShowHashtags] = useState(false);
@@ -100,14 +104,14 @@ const ProjectModal = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
-  //  to do: Change Status of Project
+  // Show Stripe Button
+  const [showStripe, setShowStripe] = useState(false);
+  const [showProjectComments, setShowProjectComments] = useState(false);
+
+  //  Attached to each button - will change the project status
   const handleSubmit = async (action, e) => {
     e.preventDefault();
-    if (action === "modify") {
-      console.log("User wants to Modify Contract:", comment);
-    }
-    console.log("Action:", action);
-
+    // Step 1A / 1B - Influencer accepts or rejects contract
     if (action === "accept" || action === "reject") {
       try {
         const payload = JSON.stringify({
@@ -128,6 +132,13 @@ const ProjectModal = ({
       }
     }
 
+    // Step 1C - Influencer wants to modify the contract => Step 0
+    if (action === "modify") {
+      console.log("User wants to Modify Contract:", comment);
+    }
+    console.log("Action:", action);
+
+    // Step 2 - Influencer submits their draft of the project => Step 3
     if (action === "influencer submit draft") {
       try {
         console.log("inside submit draft try block");
@@ -147,6 +158,7 @@ const ProjectModal = ({
         console.log(err);
       }
     }
+    // Step 3A - Brand reviewed project and approves of the submission => Move to Step 4
     if (action === "brand approves submission") {
       try {
         const payload = JSON.stringify({
@@ -165,6 +177,7 @@ const ProjectModal = ({
         console.log(err);
       }
     }
+    // Step 3B - Brand reviewed project and rejects submission => Return to step 2
     if (action === "brand requests changes to submission") {
       try {
         console.log("brand requests changes");
@@ -175,6 +188,28 @@ const ProjectModal = ({
           project,
         });
 
+        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    // Step 4 - Influencer posts content to social media
+    if (action === "influencer posted content") {
+      try {
+        const payload = JSON.stringify({
+          token: localStorage.getItem("token"),
+          action,
+          project,
+        });
+        console.log(
+          "Influencer has uploaded the content to social media",
+          payload
+        );
         const response = await axios.post(UPDATEPROJECT_URL, payload, {
           headers: {
             "Content-Type": "application/json",
@@ -476,11 +511,35 @@ const ProjectModal = ({
               ) : (
                 ""
               )}
-              {role.includes(2000) && project.status === "brand reviewing" ? (
+
+              {/* SUMMARY PAGE FOR INFLUENCERS: Brand is reviewing the project OR Influencer is ready to publish the content OR Influencer is awaiting Payment*/}
+              {role.includes(2000) &&
+              (project.status === "brand reviewing" ||
+                project.status.toLowerCase() === "ready to publish" ||
+                project.status === "awaiting project payment") ? (
                 <>
+                  <h3>
+                    {project.status === "ready to publish"
+                      ? "You're all set to post your content!"
+                      : ""}
+                    {project.status === "awaiting project payment"
+                      ? "You have uploaded your deliverables to social media."
+                      : ""}
+                  </h3>
                   <p>
-                    Thank you for submitting your draft. Please give the brand
-                    some time to review.
+                    {project.status === "brand reviewing"
+                      ? "Thank you for submitting your draft. Please give the brand some time to review."
+                      : ""}
+                    {project.status.toLowerCase() === "ready to publish"
+                      ? `${project.company} has approved your submission. Please post your content before the deadline time. Be sure to include any required hashtags as per the Guidelines page!`
+                      : ""}
+                    {/* If the content has been posted and the influencer is waiting to be paid */}
+                    {project.status === "awaiting project payment"
+                      ? `Thank you for submitting your project.
+                          ${project.company} has been notified of your
+                          submission, and upon their confirmation, your payment
+                          will be transferred as per the contract.`
+                      : ""}
                   </p>
 
                   <p>
@@ -495,10 +554,44 @@ const ProjectModal = ({
                     <FontAwesomeIcon icon={faYoutube} className="icon-left" />
                     3. {project.youtubeSubmission} on YouTube.
                   </p>
+                  {/* Deadline */}
+                  <h3>
+                    {project.status.toLowerCase() === "ready to publish"
+                      ? `Deadline: ${moment(project.reviewDeadline).format(
+                          "MMMM Do YYYY, h:mm:ss a"
+                        )}`
+                      : ""}
+                  </h3>
+                  {/* Influncer: Notify the brand that you have published the deliverables */}
+                  {role.includes(2000) &&
+                  project.status.toLowerCase() === "ready to publish" &&
+                  !postedContentSuccess ? (
+                    <button
+                      type="button"
+                      className="btn-dark btn-page-five"
+                      onClick={(e) => {
+                        handleSubmit("influencer posted content", e);
+                        setPostedContentSuccess(true);
+                      }}
+                    >
+                      I have uploaded my deliverables
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                  {postedContentSuccess ? (
+                    <p>
+                      Thank you for posting your content! The brand has been
+                      notified.
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </>
               ) : (
                 ""
               )}
+              {/* Brand is reviewing the project */}
               {role.includes(3000) && project.status === "brand reviewing" ? (
                 <>
                   <p>Please review the submission.</p>
@@ -590,7 +683,97 @@ const ProjectModal = ({
               ) : (
                 ""
               )}
+
+              {/* Brand is paying  */}
+              {role.includes(3000) &&
+              project.status === "awaiting project payment" ? (
+                <>
+                  <h3>The influencer has submitted their deliverables.</h3>
+                  <p>
+                    Please pay the influencer as per the contract guidelines by
+                    the agreed payment method.
+                  </p>
+                  <h4>Project Submission Details</h4>
+                  <p>
+                    <FontAwesomeIcon icon={faInstagram} className="icon-left" />
+                    1. {project.instagramSubmission} on Instagram.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faTiktok} className="icon-left" />
+                    2. {project.tiktokSubmission} on Tik Tok.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faYoutube} className="icon-left" />
+                    3. {project.youtubeSubmission} on YouTube.
+                  </p>
+                  <h3>Select your Payment Method</h3>
+                  <h4>Project Price: ${project.paymentPrice} CAD</h4>
+                  <div className="btn-holder">
+                    <button
+                      className="btn-small btn-dark reset-margin-top"
+                      onClick={() => {
+                        setShowStripe(!showStripe);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faStripe}
+                        className="icon-right"
+                        style={{ fontSize: "1.2rem", padding: "" }}
+                      />
+                    </button>
+                    <a
+                      href="https://paypal.com"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <button className="btn-small btn-dark reset-margin-top">
+                        <FontAwesomeIcon
+                          style={{ fontSize: "0.8rem" }}
+                          icon={faPaypal}
+                          className="icon-left"
+                        />
+                        Paypal
+                      </button>
+                    </a>
+                  </div>
+                  {showStripe ? <StripeContainer project={project} /> : ""}
+                </>
+              ) : (
+                ""
+              )}
             </section>
+            {/* Show Comments - Always Active */}
+            <button
+              onClick={() => {
+                setShowProjectComments(!showProjectComments);
+              }}
+              className="btn-dark btn-small"
+            >
+              {!showProjectComments ? "Show Comments" : "Hide Comments"}
+            </button>
+            {project.commentList && showProjectComments ? (
+              <div className="comment-list">
+                <h3 className="comment-list__header">Recent Activity</h3>
+                {/* Reverse the comment array (to get newest first) and display  */}
+                {[...project.commentList].reverse().map((comment) => {
+                  const commentArr = comment.split("m: ");
+                  const date = commentArr[0] + "m";
+                  const commentOne = commentArr[1];
+                  const commentTwo = commentArr[2];
+                  return (
+                    <div className="comment-list__comment">
+                      <p className="bold">{date}</p>
+                      <p>{commentOne}</p>
+                      <br />
+                      {commentTwo ? <p>{commentTwo}</p> : ""}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className="div-center">
               <button
                 className="btn-light btn-small"

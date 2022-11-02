@@ -297,11 +297,12 @@ const Dashboard = () => {
               ""
             )}
           </div>
-
+          {/* Contains all the active project cards */}
           <section className="project-container">
             {currentProjects?.map((project, i) => (
               <div
                 key={project._id}
+                // Highlight the card for influencers or brand
                 className={
                   (project.waitingForInfluencer && auth.roles.includes(2000)) ||
                   (!project.waitingForInfluencer && auth.roles.includes(3000))
@@ -326,34 +327,30 @@ const Dashboard = () => {
                     onClick={() => {
                       setProjectModal(project);
                       setShowModal(true);
-                      console.log(
-                        "Showing the project details",
-                        project,
-                        projectModal,
-                        showModal
-                      );
                     }}
                     className="project-details-btn"
                   >
                     <FontAwesomeIcon icon={faExpand} />
                   </button>
                 </div>
+                {/* Status Card Text for Influencers */}
                 <p className="project-details-company">{project.company}</p>
                 {auth.roles.includes(2000) ? (
                   <>
                     <p>{project.company} Collab</p>
                     <p>
-                      {project.status === "Reviewing Contract"
+                      {project.status.toLowerCase() === "Reviewing Contract"
                         ? "Please review contract."
                         : ""}
-                      {project.status === "in progress/waiting for submission"
+                      {project.status.toLowerCase() ===
+                      "in progress/waiting for submission"
                         ? "In Progress"
                         : ""}
-                      {project.status === "brand reviewing"
-                        ? "Submitted. Waiting for approval."
+                      {project.status.toLowerCase() === "brand reviewing"
+                        ? "Submitted. Waiting for approval!"
                         : ""}
-                      {project.status === "Ready To Post"
-                        ? "Your deliverables are ready to be posted."
+                      {project.status.toLowerCase() === "ready to publish"
+                        ? "Waiting for you to post content!"
                         : ""}
                     </p>
                   </>
