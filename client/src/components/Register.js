@@ -8,6 +8,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../api/axios";
+import "../styles/register.scss";
+import colabFolderIcon from "../assets/Colab-logo.png";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -38,6 +40,11 @@ const Register = () => {
   const [role, setRole] = useState("Influencer");
   const [company, setCompany] = useState("");
 
+  // Landing page
+  const [showLanding, setShowLanding] = useState(true);
+  const [showInfluencerForm, setShowInfluencerForm] = useState(false);
+  const [showBrandForm, setShowBrandForm] = useState(false);
+
   //   default focus on username
   useEffect(() => {
     // .current points to the mounted text input element
@@ -47,64 +54,44 @@ const Register = () => {
   useEffect(() => {
     // return boolean
     const result = USER_REGEX.test(user);
-    console.log("Username validity:", result);
-    console.log("User ID:", user);
     setValidName(result);
   }, [user]);
   // validate password and password confirmation
   useEffect(() => {
     // returns true/false
     const result = PWD_REGEX.test(pwd);
-    console.log("Password Validity:", result);
-    console.log("Password:", pwd);
     setValidPwd(result);
     // password confirmation
     const match = pwd === matchPwd;
     setValidMatch(match);
   }, [pwd, matchPwd]);
 
-  //   error message
+  //   Set Error Message
   useEffect(() => {
     setErrMsg("");
   }, [user, pwd, matchPwd]);
-  // Role selected
-  useEffect(() => {
-    console.log(role);
-  }, [role]);
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh
-    // If users somehow manually enable the Register button, do a final check on userID/password.
-    // Better to do validation in the backend since frontend can be hacked
+    e.preventDefault();
+    // If register button is hacked, validate username/pwd again here and in backend
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
     if (!v1 || !v2) {
       setErrMsg("Invalid Entry");
       return;
     }
-    // To test form without backend
+    // To skip backend - uncomment the next 2 lines.
     // setSuccess(true);
     // console.log(user, pwd);
-    // To Use Backend
     try {
       const payload = JSON.stringify({ user, pwd, role, company });
       console.log(payload);
-      // With Axios
       const response = await axios.post(REGISTER_URL, payload, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
       });
-      // With Fetch
-      // const response = await fetch("http://localhost:5000/api/register", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: payload,
-      // }).then((res) => res.json());
-      // Check the response
-
       console.log(response);
       if (response.status === 200) {
         setSuccess(true);
@@ -130,14 +117,48 @@ const Register = () => {
 
   return (
     <>
+      {/* Landing Page */}
+      {showLanding ? (
+        <section className="landing">
+          <div className="landing__container-left">
+            <img src={colabFolderIcon} alt="colab folder icon" />
+            <h1 className="landing__header">Let's Collaborate!</h1>
+            <p className="landing__description">
+              Sign up to get access to thousands of social media campaigns with
+              the top brands.{" "}
+            </p>
+            <p className="landing__description text--bold">I am a(n):</p>
+            <button
+              className="landing__btn"
+              onClick={() => setShowInfluencerForm(true)}
+            >
+              Influencer
+            </button>
+            <button
+              className="landing__btn"
+              onClick={() => setShowBrandForm(true)}
+            >
+              Brand
+            </button>
+            <p className="description-text">
+              Have an account? <a className="landing__link"> Login instead </a>
+            </p>
+          </div>
+          <img src="" alt="model in a black coat" />
+        </section>
+      ) : (
+        ""
+      )}
+
       {success ? (
         <section>
-          <h1>Account Created!</h1>
+          <h1 className="register__success-msg">Account Created!</h1>
           <p>
             <button
               onClick={() => {
                 navigate("/login");
               }}
+              className="btn-dark"
             >
               Sign In
             </button>
@@ -152,7 +173,7 @@ const Register = () => {
           >
             {errMsg}
           </p>
-          <h1>Register</h1>
+          <h1 className="register__title">Create new account</h1>
           <form onSubmit={handleSubmit}>
             <label htmlFor="username">
               Username:
@@ -256,15 +277,7 @@ const Register = () => {
               Confirmation password does not match.
             </p>
 
-            <label htmlFor="role">
-              Role:
-              {/* <span className={validName ? "valid" : "hide"}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validName || !user ? "hide" : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span> */}
-            </label>
+            <label htmlFor="role">Role</label>
             <select
               value={role}
               onChange={(e) => {
@@ -277,26 +290,27 @@ const Register = () => {
               <option value="Admin">Admin</option>
             </select>
 
-            <label htmlFor="company">Company or Brand</label>
+            <label htmlFor="company">Company or Personal Brand</label>
             <input
               type="text"
               value={company}
               onChange={(e) => {
                 setCompany(e.target.value);
               }}
-              placeholder="E.g. Nike, TryGuys, Better Ideas"
+              placeholder=""
             />
             <button
               disabled={validName && validPwd && validMatch ? false : true}
+              className=""
             >
-              Sign Up
+              Create New Account
             </button>
           </form>
           <p>
-            Already registered? <br />
+            Already have an account? <br />
             <span className="line">
-              <button>
-                <Link to="/login">Sign In</Link>
+              <button className="register__btn-login">
+                <Link to="/login">Log In</Link>
               </button>
             </span>
           </p>

@@ -633,9 +633,7 @@ const Dashboard = () => {
           )}
         </>
       ) : (
-        <>
-          <p>Since you are an influencer, you cannot create projects.</p>
-        </>
+        ""
       )}
       {/* to do: remove in-line form */}
       <div style={BUTTON_WRAPPER_STYLES}>

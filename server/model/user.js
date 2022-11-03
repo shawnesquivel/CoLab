@@ -12,8 +12,8 @@ const UserSchema = new mongoose.Schema(
       Brand: { type: Number, default: 0 },
     },
     company: String,
-    firstName: { type: String, default: "Shay" },
-    lastName: { type: String, default: "Hayashi" },
+    firstName: { type: String, default: "FirstName" },
+    lastName: { type: String, default: "LastName" },
     dateOfBirth: { type: Date, default: new Date() },
     currentProjects: [{ type: mongoose.Schema.Types.ObjectId }],
     keywords: [{ type: String, default: "lifestyle" }],
@@ -38,20 +38,6 @@ const UserSchema = new mongoose.Schema(
   },
   { collection: "users" }
 );
-
-// title: {type: String, default: 'August Campaign'},
-// description: {type: String, default: 'To promote our new diffuser'},
-// guaranteedProduct: {type: String, default: 'Diffuser'},
-// paymentMethod: {type: String, default: 'Cash'},
-// paymentPrice: {type: Number, default: 100},
-// paymentProduct: {type: String, default: 'Diffuser Oil'},
-// feedback: String,
-// status: { type: String, default: "Needs Review"}
-// picture: {
-//   type: String,
-//   default:
-//     "https://scontent.fcxh2-1.fna.fbcdn.net/v/t1.15752-9/298150279_372327245064921_5588736467645810256_n.jpg?stp=dst-jpg_s1080x2048&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_ohc=w01KUkII9ycAX-NFFkL&_nc_ht=scontent.fcxh2-1.fna&oh=03_AVIafFXHusEPtkk4sUeMRsuedGlacGYmEdE4BVu_L6CWUw&oe=631E25C1",
-// }
 
 // mongoose will use the 'collection' name users instead of userschemas
 // the model is the instance of the schema

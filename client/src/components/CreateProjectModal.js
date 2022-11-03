@@ -370,7 +370,7 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   </div>
 
                   <label htmlFor="paymentmethod">
-                    Select your method of cash payment 💵
+                    Select your method of payment 💵
                     <select
                       value={paymentMethod}
                       onChange={(e) => {
@@ -378,13 +378,13 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                         setPaymentMethod(e.target.value);
                       }}
                     >
-                      <option value="wire transfer">Wire Transfer</option>
+                      <option value="wire transfer">Stripe</option>
                       <option value="paypal">Paypal</option>
                       <option value="none">None - Product Only</option>
                     </select>
                   </label>
                   <label htmlFor="paymentproduct">
-                    Select the gifted product 🎁
+                    Describe the product you are sending
                     <select
                       value={paymentProduct}
                       onChange={(e) => {

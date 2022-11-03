@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+/* /* @import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
 @import "utilities.css";
 
-/* ACTIVE */
+/* deprecated */
 
 * {
   margin: 0;
@@ -27,8 +27,12 @@ html {
   font-size: 22px;
 }
 
-h1 {
+.website__title {
   color: var(--header-light-color);
+}
+
+h1 {
+  /* color: var(--header-light-color); */
   font-size: 2.2rem;
 }
 
@@ -46,14 +50,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   padding: 1rem 0.5rem;
 }
 
 section {
   width: 100%;
   max-width: var(--max-width);
-  min-height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -276,8 +278,6 @@ select {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  /* flex-grow: 1; */
-  /* padding-bottom: 1rem; */
 }
 
 .create-project-header {
@@ -342,7 +342,6 @@ label {
   padding-bottom: 10px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  /* text-decoration: underline; */
 }
 
 .project-modal-page-greyed {
@@ -638,4 +637,7 @@ label {
   transition: all 100ms ease-in-out;
   will-change: transform, background-color, box-shadow;
   border: none;
-}
+} */
+
+
+

@@ -4,7 +4,6 @@ import Links from "./Links";
 const Layout = () => {
   return (
     <main className="App">
-      <h1>CoLab</h1>
       <Links />
 
       <Outlet />

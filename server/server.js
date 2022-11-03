@@ -36,7 +36,7 @@ const ROLES = {
   Brand: 3000,
 };
 
-// CONNECT TO DATABASE
+// Establish connection
 mongoose
   .connect(MONGOOSE_URL, {
     useNewUrlParser: true,
@@ -49,22 +49,21 @@ mongoose
 
 app.use("/", express.static(path.join(__dirname, "static")));
 
-// CONNECT TO EXPRESS SERVER
 app.listen(port, () => {
   console.log(`Server is online at Port ${port}`);
 });
 
-// TEST ENDPOINT
+// Test Endpoint
 app.get("/", (req, res) => {
-  res.send("Welcome to the Express Server!");
+  res.send("Welcome to CoLab's Backend.");
 });
 
 // ENDPOINT #1 - USER SIGNUP
 app.post("/api/register", async (req, res) => {
-  console.log("Registration Received: req.body:", req.body); // needs bodyParser installed to decode the body
+  console.log("Registration Received: req.body:", req.body);
   let { user, pwd: plainTextPwd, role, company } = req.body;
 
-  // Check for valid Username/Password. Better to check in backend.
+  // Username / Password Validation
   if (!user || typeof user !== "string") {
     return res.json({ status: "error", error: "invalid username" });
   }
@@ -73,6 +72,8 @@ app.post("/api/register", async (req, res) => {
     console.log(plainTextPwd);
     return res.json({ status: "error", error: "invalid password" });
   }
+
+  // Initialize Role
   if (role === "Influencer") {
     role = {
       Admin: null,
@@ -92,7 +93,7 @@ app.post("/api/register", async (req, res) => {
       Brand: null,
     };
   }
-  console.log(role);
+
   const encryptedPwd = await bcrypt.hash(plainTextPwd, 10); // 10 = how slow the algo will be
 
   // Create a record/document in the User model

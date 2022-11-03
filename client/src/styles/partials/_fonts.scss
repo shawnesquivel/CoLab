@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "DM Sans";
+  src: url("../../assets/fonts/DMSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Bold */
+@font-face {
+  font-family: "SF Pro";
+  src: url("../../assets/fonts/SF-Pro.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Desktop + Tablet Font Sizes */
+$desktop-page-header: 2.0625rem; //33px
+$desktop-section-header: 0.75rem; // 12px
+$desktop-subheader: 0.875rem; // 14px
+$desktop-body-copy: 0.875rem; // 14px
+$desktop-label: 0.75rem; // 12px
+$desktop-btn: 0.75rem; //12 px
+/* Mobile Font Sizes */
+$mobile-page-header: 1.5rem; // 24px
+$mobile-section-header: 0.75rem; // 12px
+$mobile-subheader: 0.8125rem; // 13px
+$mobile-body-copy: 0.8125rem; // 13px
+$mobile-label: 0.75rem; // 12px
+$mobile-btn: 0.75rem; //12 px

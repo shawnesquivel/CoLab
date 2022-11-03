@@ -42,8 +42,6 @@ const ChangePassword = () => {
   useEffect(() => {
     // returns true/false
     const result = PWD_REGEX.test(pwd);
-    console.log("Password Validity:", result);
-    console.log("Password:", pwd);
     setValidPwd(result);
     // password confirmation
     const match = pwd === matchPwd;
@@ -57,17 +55,7 @@ const ChangePassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page refresh
-    // If users somehow manually enable the Register button, do a final check on userID/password.
-    // Better to do validation in the backend since frontend can be hacked
-    // const v1 = USER_REGEX.test(user);
-    // const v2 = PWD_REGEX.test(pwd);
-    // if (!v1 || !v2) {
-    //   setErrMsg("Invalid Entry");
-    //   return;
-    // }
-    // To test form without backend
-    // setSuccess(true);
-    // console.log(user, pwd);
+
     // To Use Backend
     try {
       const payload = JSON.stringify({

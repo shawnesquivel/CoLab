@@ -1,0 +1,19 @@
+@use "./partials/index" as *;
+
+.links {
+  &-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+  }
+  &__link {
+  }
+  &__btn-sign-out {
+    margin-top: 0;
+  }
+}
+
+.website__title {
+  color: $text-dark-color;
+}
