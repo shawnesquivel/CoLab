@@ -14,7 +14,6 @@ const UserSchema = new mongoose.Schema(
     company: String,
     firstName: { type: String, default: "FirstName" },
     lastName: { type: String, default: "LastName" },
-    dateOfBirth: { type: Date, default: new Date() },
     currentProjects: [{ type: mongoose.Schema.Types.ObjectId }],
     keywords: [{ type: String, default: "lifestyle" }],
     profilePicURL: {
@@ -29,12 +28,12 @@ const UserSchema = new mongoose.Schema(
     socialMediaLinks: {
       instagram: {
         type: String,
-        default: "https://instagram.com/shayhayashico",
       },
-      tiktok: { type: String, default: "https://tiktok.com/@shayhayashi" },
-      youtube: { type: String, default: "https://youtube.com/c/ShayHayashi" },
+      tiktok: { type: String },
+      youtube: { type: String },
     },
     hasActions: { type: Boolean, default: false },
+    hasUpdatedProfile: { type: Boolean, default: false },
   },
   { collection: "users" }
 );

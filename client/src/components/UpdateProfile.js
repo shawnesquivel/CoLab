@@ -3,12 +3,16 @@ import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 
+import { useNavigate, Link } from "react-router-dom";
+
 const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
 
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
+  const navigate = useNavigate(); // to use the navigate hook
+
   // STATE
   const [backendData, setBackendData] = useState({
     status: "still fetching data",
@@ -118,8 +122,15 @@ const UpdateProfile = () => {
         <p>{backendData?.username}</p>
         <h3>Company/Brand</h3>
         <p>{backendData?.company}</p>
-        <h3>Password</h3>
-        <p>*****</p>
+        <h3>Change your password</h3>
+        <button
+          onClick={() => {
+            navigate("/changepassword");
+          }}
+          className="register__btn-cta"
+        >
+          Change Password
+        </button>
         <h3>Date of Birth</h3>
         <p>{backendData?.dateOfBirth}</p>
         <div className="update-profile-options">

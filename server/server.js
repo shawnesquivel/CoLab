@@ -61,7 +61,7 @@ app.get("/", (req, res) => {
 // ENDPOINT #1 - USER SIGNUP
 app.post("/api/register", async (req, res) => {
   console.log("Registration Received: req.body:", req.body);
-  let { user, pwd: plainTextPwd, role, company } = req.body;
+  let { user, pwd: plainTextPwd, role, firstName, lastName } = req.body;
 
   // Username / Password Validation
   if (!user || typeof user !== "string") {
@@ -74,19 +74,19 @@ app.post("/api/register", async (req, res) => {
   }
 
   // Initialize Role
-  if (role === "Influencer") {
+  if (role.toLowerCase() === "influencer") {
     role = {
       Admin: null,
       Influencer: 2000,
       Brand: null,
     };
-  } else if (role === "Brand") {
+  } else if (role.toLowerCase() === "brand") {
     role = {
       Admin: null,
       Influencer: null,
       Brand: 3000,
     };
-  } else if (role === "Admin") {
+  } else if (role.toLowerCase() === "admin") {
     role = {
       Admin: 1000,
       Influencer: null,
@@ -102,7 +102,8 @@ app.post("/api/register", async (req, res) => {
       username: user,
       password: encryptedPwd,
       roles: role,
-      company: company,
+      firstName,
+      lastName,
     });
     console.log("User was created successfully: ", res);
   } catch (err) {

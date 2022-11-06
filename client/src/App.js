@@ -6,7 +6,6 @@ import ChangePassword from "./components/ChangePassword";
 import UpdateProfile from "./components/UpdateProfile";
 import Layout from "./components/Layout";
 import Unauthorized from "./components/Unauthorized";
-import Admin from "./components/Admin";
 import UpcomingCollabs from "./components/UpcomingCollabs";
 import CreateProject from "./components/CreateProject";
 import Links from "./components/Links";
@@ -56,10 +55,6 @@ const App = () => {
           element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Brand]} />}
         >
           <Route path="createproject" element={<CreateProject />} />
-        </Route>
-
-        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-          <Route path="admin" element={<Admin />} />
         </Route>
 
         <Route

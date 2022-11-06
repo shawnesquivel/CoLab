@@ -17,3 +17,35 @@
 .website__title {
   color: $text-dark-color;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2rem;
+  // margin: $margin-top $margin-sides;
+  // padding: $margin-top $margin-sides;
+
+  &-right {
+    display: flex;
+    gap: 1rem;
+    &--img {
+      width: 125px;
+      height: 43.45px;
+    }
+  }
+}
+
+.socials-container {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  &--icon {
+    height: 24.75px;
+    width: 24.75px;
+  }
+}
+
+.everything {
+  margin: $margin-top $margin-sides;
+}

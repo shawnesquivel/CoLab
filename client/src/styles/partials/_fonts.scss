@@ -14,16 +14,16 @@
 }
 
 /* Desktop + Tablet Font Sizes */
-$desktop-page-header: 2.0625rem; //33px
-$desktop-section-header: 0.75rem; // 12px
-$desktop-subheader: 0.875rem; // 14px
-$desktop-body-copy: 0.875rem; // 14px
+$desktop-page-header: 3rem; // 48px
+// $desktop-section-header: 0.75rem; // 12px
+// $desktop-subheader: 0.875rem; // 14px
+$desktop-body-copy-regular: 1.375rem;
+$desktop-body-copy-small: 1.25rem; //20px
+$desktop-body-copy-tiny: 0.8rem; //14px
+$desktop-note: 0.875rem;
+
 $desktop-label: 0.75rem; // 12px
-$desktop-btn: 0.75rem; //12 px
-/* Mobile Font Sizes */
-$mobile-page-header: 1.5rem; // 24px
-$mobile-section-header: 0.75rem; // 12px
-$mobile-subheader: 0.8125rem; // 13px
-$mobile-body-copy: 0.8125rem; // 13px
-$mobile-label: 0.75rem; // 12px
-$mobile-btn: 0.75rem; //12 px
+$desktop-btn-small: 0.75rem; //12 px
+// $desktop-btn-regular: 1.25rem;
+$desktop-btn-regular: 20px;
+$btn-text: 1.25rem;

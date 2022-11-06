@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+
 import axios from "../api/axios";
 import Notifications from "./Notifications";
 import {
@@ -41,6 +43,8 @@ const OTHER_CONTENT_STYLES = {
 const Dashboard = () => {
   // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
+  const navigate = useNavigate(); // to use the navigate hook
+
   // useEffect(() => {
   //   console.log(auth.roles);
   // }, []);
@@ -246,9 +250,32 @@ const Dashboard = () => {
         <>
           <div className="dashboard-header">
             <div>
-              <h2>
-                Welcome back, {backendData.firstName} {backendData.lastName}!
-              </h2>
+              {backendData.hasUpdatedProfile ? (
+                <h2>
+                  Welcome back, {backendData.firstName} {backendData.lastName}!{" "}
+                </h2>
+              ) : (
+                <>
+                  <h2>
+                    Welcome back, {backendData.firstName} {backendData.lastName}
+                    .{" "}
+                  </h2>
+
+                  <p>
+                    Please update your profile first so we can match you with
+                    the right projects!{" "}
+                  </p>
+
+                  <button
+                    onClick={() => {
+                      navigate("/updateprofile");
+                    }}
+                    className="register__btn-cta"
+                  >
+                    Update Profile
+                  </button>
+                </>
+              )}
 
               {backendData.currentProjects[0] ? (
                 <>
