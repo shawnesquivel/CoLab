@@ -13,10 +13,29 @@ const UpdateProfile = () => {
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
 
-  // STATE
+  // backend data holds user data
   const [backendData, setBackendData] = useState({
-    status: "still fetching data",
+    status: "still fetching user data",
   });
+
+  // get image data
+  const [imgData, setImgData] = useState([]);
+  useEffect(() => {
+    console.log("getting the images");
+    axios
+      .get("/uploadimage")
+      .then((res) => {
+        setImgData(res.data);
+        console.log(imgData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(imgData);
+  }, [imgData]);
 
   const [showForm, setShowForm] = useState(false);
   const [formButtonText, setFormButtonText] = useState("Change Profile");
@@ -38,7 +57,6 @@ const UpdateProfile = () => {
   // const [errMsg, setErrMsg] = useState("");
   // const [err, setErr] = useState(false);
 
-  // AXIOS
   // Axios GET Request - Fetch user data
   const fetchUser = async () => {
     const user = auth?.user;
@@ -229,6 +247,20 @@ const UpdateProfile = () => {
         ) : (
           ""
         )}
+        {imgData?.map((obj) => {
+          const base64String = btoa(
+            new Uint8Array(obj.img.data.data).reduce(function (data, byte) {
+              return data + String.fromCharCode(byte);
+            }, "")
+          );
+          return (
+            <img
+              src={`data:image/png;base64,${base64String}`}
+              alt=""
+              width="300"
+            />
+          );
+        })}
       </section>
     </>
   );

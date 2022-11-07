@@ -5,8 +5,9 @@ const port = 5000;
 const request = require("request");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const User = require("./model/user"); // User is a document, which is an instance of the model.
-const Project = require("./model/project"); // User is a document, which is an instance of the model.
+const User = require("./model/user"); // Document (model instance)
+const Project = require("./model/project");
+const Image = require("./model/image");
 const cors = require("cors"); // allow frontend to make requests to backend on different origins
 const bcrypt = require("bcryptjs"); //password hasher
 // const { resourceLimits } = require("worker_threads");
@@ -18,6 +19,9 @@ const moment = require("moment");
 // Stripe
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
+const multer = require("multer");
+const fs = require("fs");
+// const upload = multer ( { dest: 'uploads/'});
 
 // To allow requests from client side server
 app.use(
@@ -51,6 +55,46 @@ app.use("/", express.static(path.join(__dirname, "static")));
 
 app.listen(port, () => {
   console.log(`Server is online at Port ${port}`);
+});
+
+// Multer Storage for Files
+const storage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+// use the diskStorage from above
+const upload = multer({ storage: storage });
+
+// Single Image Upload
+app.post("/uploadimage", upload.single("testImage"), (req, res) => {
+  const saveImage = Image({
+    name: req.body.name,
+    img: {
+      data: fs.readFileSync("uploads/" + req.file.filename),
+      contentType: "image/png",
+    },
+  });
+
+  saveImage
+    .save()
+    .then((res) => {
+      console.log("the image is successfully saved");
+    })
+    .catch((err) => {
+      console.log(err, "an error has occured");
+    });
+
+  res.send("image is saved");
+});
+
+app.get("/uploadimage", async (req, res) => {
+  const allData = await Image.find();
+  res.json(allData);
 });
 
 // Test Endpoint
