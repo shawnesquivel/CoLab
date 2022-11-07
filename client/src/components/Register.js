@@ -63,7 +63,6 @@ const Register = () => {
             ) : (
               ""
             )}
-            {/* Show the Brand Page */}
           </div>
           <img
             src={influencerHeadshot}

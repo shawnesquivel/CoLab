@@ -250,15 +250,7 @@ const RegisterForm = ({
                       placeholder="password"
                       className="form__input form__input--password"
                     />
-                    <p
-                      id="uidnote"
-                      className="form__instructions"
-                      // className={
-                      //   !validPwd
-                      //     ? "form__instructions"
-                      //     : "form__instructions--offscreen"
-                      // }
-                    >
+                    <p id="uidnote" className="form__instructions">
                       Use 8 or more characters with at least one upper case
                       letter, lower case letter, number, and special character.
                     </p>

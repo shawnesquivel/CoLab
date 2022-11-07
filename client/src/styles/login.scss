@@ -1,28 +1,23 @@
 @use "partials/index" as *;
 
-.landing {
+.login {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 10rem;
-  margin-top: 1rem;
+  margin-top: 2.5rem;
 
   &__container-left {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: left;
   }
 
   &__img-right {
     object-fit: cover;
-    // width: 592px;
-    // width: 300px;
     max-width: 100%;
     height: auto;
-    // height: 816px;
     max-height: 816px;
-    // border-radius: 30px;
   }
 
   &__folder-logo {
@@ -65,16 +60,15 @@
   }
 }
 
-.register {
+.login {
   &__two-col {
     display: flex;
   }
   &__title {
     font-weight: bold;
   }
-  // &__btn-login {
-
-  // }
+  //   &__btn-login {
+  //   }
 
   &__btn-back {
     border: none;
@@ -109,13 +103,12 @@
   }
 }
 
-.form {
+.login-form {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  flex-grow: 1;
   padding-bottom: 0.5rem;
   font-size: 0.8rem;
+  width: 500px;
   &__label-row-container {
     display: flex;
     justify-content: space-between;
