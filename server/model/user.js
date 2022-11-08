@@ -12,10 +12,10 @@ const UserSchema = new mongoose.Schema(
       Brand: { type: Number, default: 0 },
     },
     company: String,
-    firstName: { type: String, default: "FirstName" },
-    lastName: { type: String, default: "LastName" },
+    firstName: String,
+    lastName: String,
     currentProjects: [{ type: mongoose.Schema.Types.ObjectId }],
-    keywords: [{ type: String, default: "lifestyle" }],
+    keywords: [{ type: String }],
     profilePicURL: {
       type: String,
       default:
@@ -25,13 +25,9 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "https://drive.google.com/",
     },
-    socialMediaLinks: {
-      instagram: {
-        type: String,
-      },
-      tiktok: { type: String },
-      youtube: { type: String },
-    },
+    instagram: String,
+    tiktok: String,
+    youtube: String,
     hasActions: { type: Boolean, default: false },
     hasUpdatedProfile: { type: Boolean, default: false },
   },

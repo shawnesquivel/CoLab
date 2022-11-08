@@ -29,6 +29,7 @@ const Login = () => {
   // Now replaced with the Navigate feature
   // const [success, setSuccess] = useState(false);
   // Error Message
+  const [showErrMsg, setShowErrMsg] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   // Set User Focus on page load
   const userRef = useRef();
@@ -36,16 +37,14 @@ const Login = () => {
     userRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    // console.log("Username:", user);
-    // console.log("Password:", pwd);
-    setErrMsg("");
-  }, [user, pwd]);
+  // useEffect(() => {
+  //   // console.log("Username:", user);
+  //   // console.log("Password:", pwd);
+  //   setErrMsg("");
+  // }, [user, pwd]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user, pwd);
-
     // Submit the user/password combination
     try {
       const payload = JSON.stringify({ user, pwd });
@@ -60,25 +59,39 @@ const Login = () => {
 
       const accessToken = response?.data?.token;
       const roles = response?.data?.roles;
-      console.log("Response Data", user, pwd, roles, accessToken);
-      setAuth({ user, pwd, roles, accessToken });
-      console.log("AUTH:", auth);
+
       setUser("");
       setPwd("");
-
+      console.log(response);
+      // Reponse from server
       if (response.status === 200) {
-        // clear previous local storage
-        localStorage.clear();
-        // store the login token
-        console.log("Received token and set to local storage:", response.data);
-        localStorage.setItem("token", JSON.stringify(response.data));
+        // Login success
+        if (response.data.status === "OK") {
+          // clear previous local storage
+          localStorage.clear();
 
-        if (location?.state?.from) {
-          navigate(location.state.from);
+          console.log("Response Data", user, pwd, roles, accessToken);
+          setAuth({ user, pwd, roles, accessToken });
+          console.log("AUTH:", auth);
+
+          // store the login token
+          console.log(
+            "Successful login: received token and set to local storage:",
+            response.data
+          );
+          localStorage.setItem("token", JSON.stringify(response.data));
+
+          if (location?.state?.from) {
+            navigate(location.state.from);
+          } else {
+            navigate("/dashboard");
+          }
+        } else {
+          setErrMsg("Incorrect username or password. Please try again.");
+          setShowErrMsg(true);
         }
-      } else {
-        alert(response.status);
       }
+      // Axios Post Fails
     } catch (err) {
       if (err?.response) {
         setErrMsg("No server response.");
@@ -92,59 +105,59 @@ const Login = () => {
       errRef.current.focus();
     }
   };
+  // Demo: Quick Login With Pre-Defined User
+  // const handleSubmitInfluencer = async (e) => {
+  //   e.preventDefault();
+  //   setUser("shayhayashico");
+  //   setPwd("$Hi12345");
+  //   // Submit the user/password combination
+  //   try {
+  //     const payload = JSON.stringify({
+  //       user: "shayhayashico",
+  //       pwd: "$Hi12345",
+  //     });
+  //     // axios throws errors automatically, no need for .catch
+  //     // axios convertsd to json automatically
+  //     const response = await axios.post(LOGIN_URL, payload, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       withCredentials: true,
+  //     });
 
-  const handleSubmitInfluencer = async (e) => {
-    e.preventDefault();
-    setUser("shayhayashico");
-    setPwd("$Hi12345");
-    // Submit the user/password combination
-    try {
-      const payload = JSON.stringify({
-        user: "shayhayashico",
-        pwd: "$Hi12345",
-      });
-      // axios throws errors automatically, no need for .catch
-      // axios convertsd to json automatically
-      const response = await axios.post(LOGIN_URL, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+  //     const accessToken = response?.data?.token;
+  //     const roles = response?.data?.roles;
+  //     console.log("Response Data", user, pwd, roles, accessToken);
+  //     setAuth({ user, pwd, roles, accessToken });
+  //     setUser("");
+  //     setPwd("");
 
-      const accessToken = response?.data?.token;
-      const roles = response?.data?.roles;
-      console.log("Response Data", user, pwd, roles, accessToken);
-      setAuth({ user, pwd, roles, accessToken });
-      setUser("");
-      setPwd("");
+  //     if (response.status === 200) {
+  //       // clear previous local storage
+  //       localStorage.clear();
+  //       // store the login token
+  //       console.log("Received token and set to local storage:", response.data);
+  //       localStorage.setItem("token", JSON.stringify(response.data));
 
-      if (response.status === 200) {
-        // clear previous local storage
-        localStorage.clear();
-        // store the login token
-        console.log("Received token and set to local storage:", response.data);
-        localStorage.setItem("token", JSON.stringify(response.data));
-
-        if (location?.state?.from) {
-          navigate(location.state.from);
-        }
-      } else {
-        alert(response.status);
-      }
-    } catch (err) {
-      if (err?.response) {
-        setErrMsg("No server response.");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Username is taken");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("Registration Failed");
-      }
-      errRef.current.focus();
-    }
-  };
+  //       if (location?.state?.from) {
+  //         navigate(location.state.from);
+  //       }
+  //     } else {
+  //       alert(response.status);
+  //     }
+  //   } catch (err) {
+  //     if (err?.response) {
+  //       setErrMsg("No server response.");
+  //     } else if (err.response?.status === 400) {
+  //       setErrMsg("Username is taken");
+  //     } else if (err.response?.status === 401) {
+  //       setErrMsg("Unauthorized");
+  //     } else {
+  //       setErrMsg("Registration Failed");
+  //     }
+  //     errRef.current.focus();
+  //   }
+  // };
 
   return (
     <>
@@ -155,7 +168,6 @@ const Login = () => {
             Enter your account details
           </p>
           <form onSubmit={handleSubmit} className="login-form">
-            {errMsg ? <p aria-live="assertive">{errMsg}</p> : ""}
             <label htmlFor="username" className="login-form__label">
               Username
             </label>
@@ -189,11 +201,20 @@ const Login = () => {
             <p id="uidnote" className="login-form__instructions">
               Forgot Password?
             </p>
+
             <div className="flex-col-center">
+              {errMsg ? (
+                <p aria-live="assertive" className="login__error">
+                  {errMsg}
+                </p>
+              ) : (
+                ""
+              )}
+
               <button
                 disabled={user && pwd ? false : true}
                 onSubmit={handleSubmit}
-                className="register__btn-cta"
+                className="login__btn-cta"
               >
                 Sign In
               </button>
@@ -217,7 +238,7 @@ const Login = () => {
         <img
           src={loginImg}
           alt="black model with curly hair with left arm raised with a blue dress short hanging over her shoulders wearing a white tanktop"
-          className="landing__img-right"
+          className="login__img-right"
         />
       </section>
     </>

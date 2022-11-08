@@ -1,0 +1,60 @@
+.App-inner {
+  width: 100%;
+}
+
+.notification-btn {
+  width: 100px;
+  border: none;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: row;
+
+  &-container-left {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+  }
+
+  &-container-right {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  &-links {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// Top Left
+.logo-container {
+  margin-top: 2rem;
+  display: flex;
+
+  &__logo {
+    height: auto;
+  }
+}
+
+// Middle Left
+.dashboard-links {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  &-right {
+    &__profile {
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+    }
+  }
+}

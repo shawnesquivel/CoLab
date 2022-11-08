@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 
 import { useNavigate, Link } from "react-router-dom";
+import pageOneImg from "../assets/updateprofile.png";
+import pageTwoImg from "../assets/update-profile-photo.png";
+import pageThreeImg from "../assets/update-profile-mediakit.png";
+import headshot from "../assets/headshot.png";
+import "../styles/updateprofile.scss";
 
 const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
+const UPLOADPROFILEPIC_URL = "/api/uploadimage";
 
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
@@ -39,6 +45,10 @@ const UpdateProfile = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [formButtonText, setFormButtonText] = useState("Change Profile");
+  // Page One
+  const [instagram, setInstagram] = useState("");
+  const [tiktok, setTiktok] = useState("");
+  const [youtube, setYoutube] = useState("");
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -46,16 +56,25 @@ const UpdateProfile = () => {
   const [dateOfBirth, setDateOfBirth] = useState("2000-01-31");
   const [keywords, setKeywords] = useState(["lifestyle"]);
 
-  useEffect(() => {
-    if (showForm) {
-      setFormButtonText("Hide");
-    } else {
-      setFormButtonText("Update your profile");
-    }
-  }, [showForm]);
+  // Page 2
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
 
-  // const [errMsg, setErrMsg] = useState("");
-  // const [err, setErr] = useState(false);
+  // Pages
+  const [pageOne, showPageOne] = useState(true);
+  const [pageTwo, showPageTwo] = useState(true);
+  const [pageThree, showPageThree] = useState(false);
+
+  // useEffect(() => {
+  //   if (showForm) {
+  //     setFormButtonText("Hide");
+  //   } else {
+  //     setFormButtonText("Update your profile");
+  //   }
+  // }, [showForm]);
+
+  const [errMsg, setErrMsg] = useState("");
+  const [err, setErr] = useState(false);
 
   // Axios GET Request - Fetch user data
   const fetchUser = async () => {
@@ -83,17 +102,16 @@ const UpdateProfile = () => {
     fetchUser().catch(console.error);
   }, []);
 
-  const handleClick = async (e) => {
+  const updateProfile = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", firstName, lastName, dateOfBirth, role, keywords);
+    console.log("Form Data:", instagram, tiktok, youtube, keywords);
 
     try {
       const payload = JSON.stringify({
         token: localStorage.getItem("token"),
-        firstName,
-        lastName,
-        role,
-        dateOfBirth,
+        instagram,
+        tiktok,
+        youtube,
         keywords,
       });
       console.log("Update Profile Payload", payload);
@@ -109,6 +127,8 @@ const UpdateProfile = () => {
       } else {
         alert(response.status);
       }
+      showPageOne(false);
+      showPageTwo(true);
     } catch (err) {
       console.log(err);
     }
@@ -127,10 +147,48 @@ const UpdateProfile = () => {
     setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
   };
 
+  // To do: fix this - 404 axios error, cannot find endpoint
+  const handleUploadProfilePic = async (e) => {
+    e.preventDefault();
+    if (!isFilePicked) {
+      alert("you have not uploaded a file!");
+      return;
+    }
+
+    try {
+      const payload = JSON.stringify({
+        name: "profile picture",
+        testImage: selectedFile,
+      });
+      console.log("Update Profile Payload", payload);
+      const response = await axios.post(UPLOADPROFILEPIC_URL, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      console.log("Response Received", response.data);
+
+      // if (response.status === 200) {
+      // } else {
+      //   alert(response.status);
+      // }
+      // showPageOne(false);
+      // showPageTwo(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const uploadFileHandler = (e) => {
+    setSelectedFile(e.target.files[0]);
+    setIsFilePicked(true);
+  };
+
   return (
     <>
-      <section>
-        {/* wrap this all in ternary, so if the user is not found, we don't display anything */}
+      {/* Old  */}
+      {/* <section>
         <h2>{backendData.status}</h2>
         <h2>Profile Information</h2>
         <br /> <br />
@@ -149,8 +207,6 @@ const UpdateProfile = () => {
         >
           Change Password
         </button>
-        <h3>Date of Birth</h3>
-        <p>{backendData?.dateOfBirth}</p>
         <div className="update-profile-options">
           <button className="update-profile-btn">Upload Media Kit</button>
           <button className="update-profile-btn">
@@ -165,89 +221,11 @@ const UpdateProfile = () => {
             {formButtonText}
           </button>
         </div>
-        {showForm ? (
-          <form>
-            <label htmlFor="firstname">First Name</label>
-            <input
-              type="text"
-              id="firstname"
-              autoComplete="off"
-              placeholder={backendData.firstName}
-              value={firstName}
-              onChange={(e) => {
-                setFirstName(e.target.value);
-              }}
-            />
-            <label htmlFor="lastname">Last Name</label>
-            <input
-              type="text"
-              id="lastname"
-              autoComplete="off"
-              placeholder={backendData.lastName}
-              value={lastName}
-              onChange={(e) => {
-                setLastName(e.target.value);
-              }}
-            />
-            <label htmlFor="role">Role:</label>
-            <select
-              value={role}
-              onChange={(e) => {
-                setRole(e.target.value);
-              }}
-              required
-            >
-              <option value="Influencer">Influencer</option>
-              <option value="Brand">Brand</option>
-              <option value="Admin">Admin</option>
-            </select>
 
-            <label htmlFor="dateofbirth">Date of Birth</label>
-            <input
-              onChange={(e) => {
-                setDateOfBirth(e.target.value);
-              }}
-              type="date"
-              id="dateofbirth"
-              autoComplete="off"
-              value={dateOfBirth}
-              required
-            />
-            <label htmlFor="keywords">
-              Please describe your brand or personal brand. <br />
-              <span className="note__italic">
-                E.g., sustainability, fashion, fitness, lifestyle
-              </span>
-            </label>
-            <p></p>
-            <div className="keywords-container">
-              {keywords.map((keyword, index) => (
-                <div className="keywords-item" key={index}>
-                  <span className="keywords-text">{keyword}</span>
-                  <span
-                    onClick={() => removeKeyword(index)}
-                    className="keywords-delete"
-                  >
-                    &times;
-                  </span>
-                </div>
-              ))}
-              <input
-                onKeyDown={handleKeyDown}
-                type="text"
-                className="keywords-input"
-                placeholder="Add a new keyword"
-              />
-            </div>
+      </section> */}
 
-            <button type="button" onClick={handleClick}>
-              Update Profile
-            </button>
-          </form>
-        ) : (
-          ""
-        )}
-        {imgData?.map((obj) => {
+      {/* Display back end images */}
+      {/* {imgData?.map((obj) => {
           const base64String = btoa(
             new Uint8Array(obj.img.data.data).reduce(function (data, byte) {
               return data + String.fromCharCode(byte);
@@ -260,7 +238,217 @@ const UpdateProfile = () => {
               width="300"
             />
           );
-        })}
+        })} */}
+
+      <section className="update-profile">
+        <div className="update-profile__container-left">
+          <h1 className="update-profile__header">
+            Hey, <br /> {backendData?.firstName}
+          </h1>
+          <p className="update-profile__description mb-1p5">
+            Please complete your profile so we can match you with the right
+            brands.
+          </p>
+          {pageOne ? (
+            <>
+              {" "}
+              <p className="update-profile__description mb-1p5 text--bold">
+                Build Your Profile
+              </p>
+              <form className="update-profile-form" novalidate>
+                <label
+                  htmlFor="instagram"
+                  className="update-profile-form__label"
+                >
+                  Instagram URL
+                </label>
+                <input
+                  onChange={(e) => {
+                    setInstagram(e.target.value);
+                  }}
+                  type="text"
+                  id="instagram"
+                  autoComplete="off"
+                  value={instagram}
+                  required
+                  placeholder="instagram url"
+                  className="update-profile-form__input"
+                />
+                <label htmlFor="tiktok" className="update-profile-form__label">
+                  tiktok URL
+                </label>
+                <input
+                  onChange={(e) => {
+                    setTiktok(e.target.value);
+                  }}
+                  type="text"
+                  id="tiktok"
+                  autoComplete="off"
+                  value={tiktok}
+                  required
+                  placeholder="tiktok url"
+                  className="update-profile-form__input"
+                />
+                <label htmlFor="youtube" className="update-profile-form__label">
+                  YouTube URL
+                </label>
+                <input
+                  onChange={(e) => {
+                    setYoutube(e.target.value);
+                  }}
+                  type="text"
+                  id="youtube"
+                  autoComplete="off"
+                  value={youtube}
+                  required
+                  placeholder="youtube url"
+                  className="update-profile-form__input"
+                />
+
+                <label htmlFor="keywords">Your niche</label>
+
+                <input
+                  onKeyDown={handleKeyDown}
+                  type="text"
+                  className="update-profile-form__input"
+                  placeholder="type keyword then hit enter"
+                />
+                <div className="keywords-container">
+                  {keywords.map((keyword, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{keyword}</span>
+                      <span
+                        onClick={() => removeKeyword(index)}
+                        className="keywords-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex-col-center">
+                  {errMsg ? (
+                    <p aria-live="assertive" className="update-profile__error">
+                      {errMsg}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                  <div className="flex-col-center">
+                    <button
+                      type="button"
+                      onClick={updateProfile}
+                      className="update-profile__btn-cta"
+                    >
+                      Update Profile
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </>
+          ) : (
+            ""
+          )}
+          {/* Upload Profile Picture  */}
+          {pageTwo ? (
+            <>
+              {" "}
+              <p className="update-profile__description mb-1p5 text--bold">
+                Upload Profile Picture
+              </p>
+              <form
+                className="update-profile-form"
+                enctype="multipart/form-data"
+              >
+                <label htmlFor="profilepic"></label>
+                <input
+                  type="file"
+                  id="profilepic"
+                  onChange={uploadFileHandler}
+                  required
+                />
+
+                <p id="uidnote" className="login-form__instructions">
+                  Max 2MB, .png only
+                </p>
+                {isFilePicked ? (
+                  <div>
+                    <p>Name: {selectedFile.name}</p>
+                    <p>Type: {selectedFile.type}</p>
+                    <p>Size: {selectedFile.size / 100000} MB</p>
+                    <p>
+                      lastModifiedDate:{" "}
+                      {selectedFile.lastModifiedDate.toLocaleDateString()}
+                    </p>
+                  </div>
+                ) : (
+                  <p>Select a file to show details</p>
+                )}
+
+                <div className="flex-col-center">
+                  <img
+                    src={headshot}
+                    className="update-profile__profile-pic"
+                    alt="user profile"
+                  />
+                  <button
+                    type="submit"
+                    onClick={handleUploadProfilePic}
+                    className="update-profile__btn-cta"
+                  >
+                    Upload Photo
+                  </button>
+                  <button
+                    type="button"
+                    className="update-profile__btn-cta"
+                    onClick={() => {
+                      showPageThree(true);
+                    }}
+                  >
+                    Skip
+                  </button>
+
+                  {errMsg ? (
+                    <p aria-live="assertive" className="update-profile__error">
+                      {errMsg}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </form>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+        {pageOne ? (
+          <img
+            src={pageOneImg}
+            alt="black model with curly hair with left arm raised with a blue dress short hanging over her shoulders wearing a white tanktop"
+            className="update-profile__img-right"
+          />
+        ) : (
+          ""
+        )}
+        {pageTwo ? (
+          <img
+            src={pageTwoImg}
+            alt="blonde woman in a blue dress and heels turning torso backwards"
+            className="update-profile__img-right"
+          />
+        ) : (
+          ""
+        )}
+        {pageThree ? (
+          <img
+            src={pageThreeImg}
+            alt="tanned man in a bucket hat, mint crewneck, and silver chain grabbing his hat and looking at camera with sun on face"
+            className="update-profile__img-right"
+          />
+        ) : (
+          ""
+        )}
       </section>
     </>
   );

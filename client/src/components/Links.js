@@ -78,10 +78,6 @@ const Links = () => {
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/upcoming">Upcoming Collabs</Link>
               <Link to="/invites">Collab Invites </Link>
-              {/* <h3>
-            <Link to="/createproject"> Brand Rep: Create Project ------ </Link>
-            <Link to="/admin"> Admin: Website Settings</Link>
-          </h3> */}
             </nav>
           </section>
         </>

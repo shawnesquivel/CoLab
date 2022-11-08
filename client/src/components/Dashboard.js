@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
 import axios from "../api/axios";
 import Notifications from "./Notifications";
 import {
@@ -13,15 +12,17 @@ import {
   faExpand,
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
-
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 import ProjectModal from "./ProjectModal";
 import CreateProjectModal from "./CreateProjectModal";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import "../styles/dashboard.scss";
+import colab from "../assets/colab-text.png";
+import colabFolder from "../assets/colab-logo.png";
+import headshot from "../assets/headshot.png";
 
 // Endpoints
 const GETUSER_URL = "/api/getuser";
@@ -223,14 +224,177 @@ const Dashboard = () => {
   };
 
   return (
-    <section>
-      {notifications ? (
+    <section className="dashboard">
+      <div className="dashboard-container-left">
+        <div className="logo-container">
+          <img
+            src={colabFolder}
+            alt="logo folder"
+            className="logo-container__logo"
+          />
+          <img src={colab} alt="logo text" className="logo-container__logo" />
+        </div>
+        <nav className="dashboard-links">
+          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/upcoming">New Collabs</Link>
+          <Link to="/invites">Invites</Link>
+          <Link to="/settings">Settings</Link>
+        </nav>
+      </div>
+
+      <div className="dashboard-container-right">
+        {backendData ? (
+          <header className="header">
+            <div className="header-left">
+              {backendData.hasUpdatedProfile ? (
+                <h3>
+                  Welcome back, {backendData.firstName} {backendData.lastName}.
+                  👋
+                </h3>
+              ) : (
+                <>
+                  <h2>Welcome, {backendData.firstName}. 👋</h2>
+
+                  <p className="register__text register__text--subtle">
+                    <Link
+                      to="/updateprofile"
+                      className="register__text register__text--subtle text--underline"
+                    >
+                      Please update your profile!
+                    </Link>
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="header-right">
+              <FontAwesomeIcon icon={faBell} />
+              <img src={headshot} alt="profile" class="header-right__profile" />
+            </div>
+          </header>
+        ) : (
+          ""
+        )}
+
+        {backendData ? (
+          <>
+            <div className="">
+              {/* Create Project (ONLY FOR BRAND REPS) */}
+              {auth.roles.includes(3000) ? (
+                <>
+                  <div style={{ BUTTON_WRAPPER_STYLES }}>
+                    <button
+                      onClick={() => {
+                        setShowCreateProjectModal(true);
+                      }}
+                      className="create-project-btn"
+                    >
+                      <FontAwesomeIcon icon={faPlus} className="icon-left" />
+                      Create a New Project
+                    </button>
+                    {showCreateProjectModal ? (
+                      <CreateProjectModal
+                        isOpen={showCreateProjectModal}
+                        onClose={() => {
+                          setShowCreateProjectModal(false);
+                        }}
+                        project={projectModal}
+                        role={auth.roles}
+                        brand={backendData.firstName}
+                      >
+                        Create Project
+                      </CreateProjectModal>
+                    ) : (
+                      ""
+                      // <p>showModal is set to false.</p>
+                    )}
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+            {/* Contains all the active project cards */}
+            <section className="project-container">
+              {currentProjects?.map((project, i) => (
+                <div
+                  key={project._id}
+                  // Highlight the card for influencers or brand
+                  className={
+                    (project.waitingForInfluencer &&
+                      auth.roles.includes(2000)) ||
+                    (!project.waitingForInfluencer && auth.roles.includes(3000))
+                      ? "project-card project-highlight"
+                      : "project-card"
+                  }
+                >
+                  <div className="project-card-header">
+                    <h4 className="project-details-header">
+                      {project.title.length > 20
+                        ? project.title.slice(0, 20).concat("...")
+                        : project.title}
+                      {project.waitingForInfluencer &&
+                      auth.roles.includes(2000) ? (
+                        <>✨</>
+                      ) : (
+                        ""
+                      )}
+                    </h4>
+                    <h6>{project.description}</h6>
+                    <button
+                      onClick={() => {
+                        setProjectModal(project);
+                        setShowModal(true);
+                      }}
+                      className="project-details-btn"
+                    >
+                      <FontAwesomeIcon icon={faExpand} />
+                    </button>
+                  </div>
+                  {/* Status Card Text for Influencers */}
+                  <p className="project-details-company">{project.company}</p>
+                  {auth.roles.includes(2000) ? (
+                    <>
+                      <p>{project.company} Collab</p>
+                      <p>
+                        {project.status.toLowerCase() === "Reviewing Contract"
+                          ? "Please review contract."
+                          : ""}
+                        {project.status.toLowerCase() ===
+                        "in progress/waiting for submission"
+                          ? "In Progress"
+                          : ""}
+                        {project.status.toLowerCase() === "brand reviewing"
+                          ? "Submitted. Waiting for approval!"
+                          : ""}
+                        {project.status.toLowerCase() === "ready to publish"
+                          ? "Waiting for you to post content!"
+                          : ""}
+                      </p>
+                    </>
+                  ) : (
+                    <p>Status: {project.status.toLowerCase()}.</p>
+                  )}
+                  <p>${project.paymentPrice}</p>
+                  <p>{project.paymentProduct ? "🎁 Gifted" : ""}</p>
+                </div>
+              ))}
+            </section>
+          </>
+        ) : (
+          <h3>Backend is loading</h3>
+        )}
+      </div>
+
+      {/* Notification Button */}
+      {/* {notifications ? (
         <>
           <Notifications className="notification-btn" />
           <button
             onClick={() => {
               toggleNotifications(!notifications);
             }}
+            className="notification-btn"
           >
             <FontAwesomeIcon icon={faBell} /> {notificationBtnText}
           </button>
@@ -240,437 +404,14 @@ const Dashboard = () => {
           onClick={() => {
             toggleNotifications(!notifications);
           }}
+          className="notification-btn"
         >
           <FontAwesomeIcon icon={faBell} /> {notificationBtnText}
         </button>
-      )}
-      <br />
-      <h1 className="header-dark">Active Collabs</h1>
-      {backendData ? (
-        <>
-          <div className="dashboard-header">
-            <div>
-              {backendData.hasUpdatedProfile ? (
-                <h2>
-                  Welcome back, {backendData.firstName} {backendData.lastName}!{" "}
-                </h2>
-              ) : (
-                <>
-                  <h2>
-                    Welcome back, {backendData.firstName} {backendData.lastName}
-                    .{" "}
-                  </h2>
+      )} */}
 
-                  <p>
-                    Please update your profile first so we can match you with
-                    the right projects!{" "}
-                  </p>
-
-                  <button
-                    onClick={() => {
-                      navigate("/updateprofile");
-                    }}
-                    className="register__btn-cta"
-                  >
-                    Update Profile
-                  </button>
-                </>
-              )}
-
-              {backendData.currentProjects[0] ? (
-                <>
-                  <h4>Here are your active projects.</h4>
-                  <p>✨ means we are waiting for your action.</p>
-                </>
-              ) : (
-                <h4>
-                  You don't have any active projects. Go to the Collab Invites
-                  to get started!
-                </h4>
-              )}
-            </div>
-            {/* Create Project (ONLY FOR BRAND REPS) */}
-            {auth.roles.includes(3000) ? (
-              <>
-                <div style={{ BUTTON_WRAPPER_STYLES }}>
-                  <button
-                    onClick={() => {
-                      setShowCreateProjectModal(true);
-                    }}
-                    className="create-project-btn"
-                  >
-                    <FontAwesomeIcon icon={faPlus} className="icon-left" />
-                    Create a New Project
-                  </button>
-                  {showCreateProjectModal ? (
-                    <CreateProjectModal
-                      isOpen={showCreateProjectModal}
-                      onClose={() => {
-                        setShowCreateProjectModal(false);
-                      }}
-                      project={projectModal}
-                      role={auth.roles}
-                      brand={backendData.firstName}
-                    >
-                      Create Project
-                    </CreateProjectModal>
-                  ) : (
-                    ""
-                    // <p>showModal is set to false.</p>
-                  )}
-                </div>
-              </>
-            ) : (
-              ""
-            )}
-          </div>
-          {/* Contains all the active project cards */}
-          <section className="project-container">
-            {currentProjects?.map((project, i) => (
-              <div
-                key={project._id}
-                // Highlight the card for influencers or brand
-                className={
-                  (project.waitingForInfluencer && auth.roles.includes(2000)) ||
-                  (!project.waitingForInfluencer && auth.roles.includes(3000))
-                    ? "project-card project-highlight"
-                    : "project-card"
-                }
-              >
-                <div className="project-card-header">
-                  <h4 className="project-details-header">
-                    {project.title.length > 20
-                      ? project.title.slice(0, 20).concat("...")
-                      : project.title}
-                    {project.waitingForInfluencer &&
-                    auth.roles.includes(2000) ? (
-                      <>✨</>
-                    ) : (
-                      ""
-                    )}
-                  </h4>
-                  <h6>{project.description}</h6>
-                  <button
-                    onClick={() => {
-                      setProjectModal(project);
-                      setShowModal(true);
-                    }}
-                    className="project-details-btn"
-                  >
-                    <FontAwesomeIcon icon={faExpand} />
-                  </button>
-                </div>
-                {/* Status Card Text for Influencers */}
-                <p className="project-details-company">{project.company}</p>
-                {auth.roles.includes(2000) ? (
-                  <>
-                    <p>{project.company} Collab</p>
-                    <p>
-                      {project.status.toLowerCase() === "Reviewing Contract"
-                        ? "Please review contract."
-                        : ""}
-                      {project.status.toLowerCase() ===
-                      "in progress/waiting for submission"
-                        ? "In Progress"
-                        : ""}
-                      {project.status.toLowerCase() === "brand reviewing"
-                        ? "Submitted. Waiting for approval!"
-                        : ""}
-                      {project.status.toLowerCase() === "ready to publish"
-                        ? "Waiting for you to post content!"
-                        : ""}
-                    </p>
-                  </>
-                ) : (
-                  <p>Status: {project.status.toLowerCase()}.</p>
-                )}
-                <p>${project.paymentPrice}</p>
-                <p>{project.paymentProduct ? "🎁 Gifted" : ""}</p>
-              </div>
-            ))}
-          </section>
-        </>
-      ) : (
-        <h3>Backend is loading</h3>
-      )}
-      <br />
-      {auth.roles.includes(3000) || auth.roles.includes(1000) ? (
-        <>
-          {/* to-do: remove this old code. it was moved inside the proejct modal*/}
-          {projectForm ? (
-            <>
-              {/* <h1>Create Project</h1>
-              <form action="submit">
-                <h2 className="create-project-header">Contract Details</h2>
-                <label htmlFor="title">Project Title</label>
-                <input
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                  type="text"
-                  id="title"
-                  autoComplete="off"
-                  value={title}
-                  required
-                  placeholder="E.g., Fall Summer Promo"
-                />
-                <label htmlFor="influencer">
-                  {" "}
-                  <FontAwesomeIcon className="icon-left" icon={faUser} />
-                  Influencer Assigned
-                </label>
-                <input
-                  onChange={(e) => {
-                    setInfluencerAssigned(e.target.value);
-                  }}
-                  type="text"
-                  id="influencer"
-                  autoComplete="off"
-                  value={influencerAssigned}
-                  required
-                  placeholder="For testing: shawnchemicalengineer or shayhayashico"
-                />
-                <label htmlFor="instagramdeliverable">
-                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
-                  Instagram Deliverable
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setInstagramDeliverable(e.target.value);
-                  }}
-                  placeholder="For example: 1 instagram story featuring the product"
-                  value={instagramDeliverable}
-                />
-                <label htmlFor="tiktokdeliverable">
-                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
-                  Tik Tok Deliverable
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setTiktokDeliverable(e.target.value);
-                  }}
-                  placeholder="For example: A 15-20sec tik tok"
-                  value={tiktokDeliverable}
-                />
-                <label htmlFor="youtubedeliverable">
-                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
-                  YouTube Deliverable
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setYoutubeDeliverable(e.target.value);
-                  }}
-                  placeholder="Minimum 30 sec product mention during video"
-                  value={youtubeDeliverable}
-                />
-                <label htmlFor="reviewdeadline">
-                  <FontAwesomeIcon className="icon-left" icon={faCalendar} />
-                  Deadline to Submit for First Review
-                </label>
-                <input
-                  onChange={(e) => {
-                    setReviewDeadline(e.target.value);
-                  }}
-                  type="date"
-                  id="reviewdeadline"
-                  autoComplete="off"
-                  value={reviewDeadline}
-                  required
-                />
-                <label htmlFor="deadline">
-                  <FontAwesomeIcon className="icon-left" icon={faCalendar} />
-                  Deadline to Post the Final Deliverable(s)
-                </label>
-                <input
-                  onChange={(e) => {
-                    setDeadline(e.target.value);
-                  }}
-                  type="date"
-                  id="deadline"
-                  autoComplete="off"
-                  value={deadline}
-                  required
-                />
-                <label htmlFor="time">
-                  <FontAwesomeIcon className="icon-left" icon={faClock} />
-                  Deadline Time
-                </label>
-                <input
-                  onChange={(e) => {
-                    setDeadlineTime(e.target.value);
-                  }}
-                  type="time"
-                  id="time"
-                  autoComplete="off"
-                  value={deadlineTime}
-                  required
-                />
-
-                <label htmlFor="numberofrevisions">
-                  Revisions Required (3 max)
-                </label>
-                <p className="note__italic">
-                  Enter a number from 0-2. More revisions decreases the
-                  likelihood of an influencers to accept the contract.
-                </p>
-                <input type="text" placeholder="Enter a number " />
-                <h2 className="create-project-header">Contract Guidelines</h2>
-                <label htmlFor="keywords">
-                  Please add some keywords that describe your project
-                  <br />
-                  <span className="note__italic">
-                    E.g., sustainability, fashion, fitness, lifestyle
-                  </span>
-                </label>
-                <p></p>
-                <div className="keywords-container">
-                  {keywords.map((keyword, index) => (
-                    <div className="keywords-item" key={index}>
-                      <span className="keywords-text">{keyword}</span>
-                      <span
-                        onClick={() => removeKeyword(index)}
-                        className="keywords-delete"
-                      >
-                        &times;
-                      </span>
-                    </div>
-                  ))}
-                  <input
-                    onKeyDown={handleKeyDown}
-                    type="text"
-                    className="keywords-input"
-                    placeholder="Add a keyword"
-                  />
-                </div>
-                <label htmlFor="hashtags">
-                  Are there any required hashtags?
-                  <br />
-                  <span className="note__italic">
-                    E.g., #glossier, #ad, #bossbabe, #studentlife
-                  </span>
-                </label>
-                <p></p>
-                <div className="keywords-container">
-                  {hashtags.map((hashtag, index) => (
-                    <div className="keywords-item" key={index}>
-                      <span className="keywords-text">{hashtag}</span>
-                      <span
-                        onClick={() => removeKeyword(index)}
-                        className="keywords-delete"
-                      >
-                        &times;
-                      </span>
-                    </div>
-                  ))}
-                  <input
-                    onKeyDown={handleKeyDown}
-                    type="text"
-                    className="hashtags-input"
-                    placeholder="Add a hashtag"
-                  />
-                </div>
-                <label htmlFor="tags">
-                  Are there any required tags?
-                  <br />
-                  <span className="note__italic">
-                    E.g., @glossier, @saje, @nike
-                  </span>
-                </label>
-                <p></p>
-                <div className="keywords-container">
-                  {tags.map((tag, index) => (
-                    <div className="keywords-item" key={index}>
-                      <span className="keywords-text">{tag}</span>
-                      <span
-                        onClick={() => removeKeyword(index)}
-                        className="keywords-delete"
-                      >
-                        &times;
-                      </span>
-                    </div>
-                  ))}
-                  <input
-                    onKeyDown={handleKeyDown}
-                    type="text"
-                    className="tags-input"
-                    placeholder="Add a tag"
-                  />
-                </div>
-                <label htmlFor="phrases">
-                  Are there any recommended phrases?
-                  <br />
-                  <span className="note__italic">
-                    E.g., I love how natural it looks. It's a part of my
-                    everyday makeup look.
-                  </span>
-                </label>
-                <p></p>
-                <div className="keywords-container">
-                  {phrases.map((phrase, index) => (
-                    <div className="keywords-item" key={index}>
-                      <span className="keywords-text">{phrase}</span>
-                      <span
-                        onClick={() => removeKeyword(index)}
-                        className="keywords-delete"
-                      >
-                        &times;
-                      </span>
-                    </div>
-                  ))}
-                  <input
-                    onKeyDown={handleKeyDown}
-                    type="text"
-                    className="phrases-input"
-                    placeholder="Add a phrase"
-                  />
-                </div>
-                <label htmlFor="linkinbio">Link in Bio</label>
-                <span className="note__italic"></span>
-                <input
-                  type="url"
-                  id="linkinbio"
-                  name="linkinbio"
-                  placeholder="https://glossier.com/products/cloud-paint"
-                />
-                <button onClick={submitProject}>Create Project</button>
-              </form>
-              <button
-                onClick={() => {
-                  toggleProjectForm(!projectForm);
-                }}
-              >
-                <FontAwesomeIcon icon={faAngleUp} />
-                {projectBtnText}
-              </button> */}
-            </>
-          ) : (
-            <>
-              {/* <button
-              onClick={() => {
-                toggleProjectForm(!projectForm);
-              }}
-            >
-              <FontAwesomeIcon icon={faClipboardList} />
-              {projectBtnText}
-            </button> */}
-            </>
-          )}
-        </>
-      ) : (
-        ""
-      )}
       {/* to do: remove in-line form */}
-      <div style={BUTTON_WRAPPER_STYLES}>
-        {/* <button
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          Test Button: Expand Project
-        </button> */}
+      {/* <div style={BUTTON_WRAPPER_STYLES}>
         {showModal ? (
           <ProjectModal
             isOpen={showModal}
@@ -687,7 +428,7 @@ const Dashboard = () => {
           ""
           // <p>showModal is set to false.</p>
         )}
-      </div>
+      </div> */}
     </section>
   );
 };

@@ -72,6 +72,10 @@ const upload = multer({ storage: storage });
 
 // Single Image Upload
 app.post("/uploadimage", upload.single("testImage"), (req, res) => {
+  console.log("inside the upload image enpdoint");
+
+  let { name } = req.body;
+
   const saveImage = Image({
     name: req.body.name,
     img: {
@@ -203,6 +207,7 @@ app.post("/api/login", async (req, res) => {
       console.log("Did not sign token");
     }
   } else {
+    console.log("inside the err2");
     return res.json({ status: "error" });
   }
 });
@@ -302,31 +307,10 @@ app.post("/api/getproject", async (req, res) => {
 app.post("/api/updateprofile", async (req, res) => {
   console.log("\n\n\n\n\n", "Inside the Update Profile Endpoint");
 
-  const { token, firstName, lastName, role, dateOfBirth, keywords } = req.body;
+  const { token, instagram, tiktok, youtube, keywords } = req.body;
 
-  console.log(token, firstName, lastName, role, dateOfBirth, keywords);
+  console.log(token, instagram, tiktok, youtube, keywords);
 
-  const roleArray = newRoleArray(role);
-  // Form validation
-  if (!firstName || typeof firstName !== "string") {
-    return res.json({
-      status: "error",
-      error: "First name input invalid",
-    });
-  }
-  if (!lastName || typeof lastName !== "string") {
-    return res.json({
-      status: "error",
-      error: "Last name input invalid",
-    });
-  }
-  if (typeof role !== "string") {
-    console.log("Role", role);
-    return res.json({
-      status: "error",
-      error: "Role chosen invalid",
-    });
-  }
   if (!keywords.length) {
     return res.json({
       status: "error",
@@ -341,25 +325,19 @@ app.post("/api/updateprofile", async (req, res) => {
     await User.updateOne(
       { _id },
       {
-        $set: { firstName: firstName },
+        $set: { instagram: instagram },
       }
     );
     await User.updateOne(
       { _id },
       {
-        $set: { lastName: lastName },
+        $set: { tiktok: tiktok },
       }
     );
     await User.updateOne(
       { _id },
       {
-        $set: { dateOfBirth: new Date(dateOfBirth) },
-      }
-    );
-    await User.updateOne(
-      { _id },
-      {
-        $set: { roles: newRoleArray(role) },
+        $set: { youtube: youtube },
       }
     );
     await User.updateOne(

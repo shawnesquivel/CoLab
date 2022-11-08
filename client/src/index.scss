@@ -121,46 +121,6 @@ select {
   color: black;
 }
 
-.keywords-container {
-  border: 1px solid black;
-  padding: 1rem;
-  border-radius: 3px;
-  width: min(80vw, var(--max-width));
-  margin-top: 1rem;
-  display: flex;
-  flex-flow: wrap;
-  justify-content: left;
-  gap: 5px 15px;
-}
-
-.keywords-item {
-  background-color: var(--background-accessibility-color);
-  color: var(--text-dark-color);
-  display: inline-block;
-  padding: 0.5rem 0.75rem;
-  border-radius: 20px;
-}
-
-.keywords-delete {
-  height: 20px;
-  width: 20px;
-  padding: 0.2rem;
-  color: var(--text-light-color);
-  background: var(--background-dark-color);
-
-  border-radius: 60%;
-  display: inline-flex;
-  justify-content: center;
-  text-align: center;
-  margin-left: 0.5rem;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.keywords-input {
-  padding: 0.5rem;
-}
-
 .note__italic {
   font-style: italic;
   font-size: 0.85rem;
