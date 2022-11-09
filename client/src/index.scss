@@ -126,72 +126,6 @@ select {
   font-size: 0.85rem;
 }
 
-.project-card {
-  border: 1px solid black;
-  padding: 1rem;
-  border-radius: 10%;
-  width: min(80vw, 400px);
-  margin-top: 1rem;
-  gap: 5px 15px;
-  height: 250px;
-}
-.project-card-header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.project-highlight {
-  background: var(--primary-color);
-  color: var(--text-light-color);
-}
-
-.project-modal {
-  position: "fixed";
-  top: 50%;
-  left: 50%;
-  transform: "translate(-50%, -50%)";
-  background-color: (--background-light-color);
-  padding: 50px;
-  z-index: 1000;
-}
-
-.project-modal-overlay {
-  position: "fixed";
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: (var(--transparent-dark-color));
-  z-index: 1000;
-}
-
-.project-container {
-  display: grid;
-  gap: 6px;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.project-details-btn {
-  border-radius: 40%;
-  width: 40px;
-  background-color: (var(--background-accessibility-color));
-  color: (var(--primary-color));
-  margin-top: 0;
-}
-
-.project-details-btn:hover {
-  cursor: pointer;
-}
-
-.project-details-company {
-  font-size: 1.15rem;
-  font-weight: bold;
-}
-
-.project-details-header {
-  font-size: 1.25rem;
-}
-
 .icon-left {
   padding-right: 10px;
 }
@@ -223,10 +157,6 @@ select {
 
 .create-project-close-project-btn {
   width: 100px;
-}
-
-.create-project-btn {
-  font-size: 1.15rem;
 }
 
 .create-project-btn:hover {

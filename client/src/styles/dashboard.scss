@@ -1,3 +1,5 @@
+@use "./partials/index" as *;
+
 .App-inner {
   width: 100%;
 }
@@ -10,6 +12,17 @@
 .dashboard {
   display: flex;
   flex-direction: row;
+
+  // surrounds entire card
+  &-btn {
+    width: 350px;
+    height: 350px;
+    border-radius: 50px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
 
   &-container-left {
     display: flex;
@@ -26,6 +39,89 @@
   &-links {
     display: flex;
     flex-direction: column;
+  }
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      &__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+      }
+    }
+  }
+
+  &-create {
+    display: flex;
+    flex-direction: row-reverse;
+    &__btn {
+      font-size: 0.9rem;
+      border: none;
+      position: "relative";
+      z-index: 1;
+    }
+  }
+}
+
+.project-container {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+
+  &__text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+  }
+
+  &__card {
+    border: 1px solid black;
+    background-color: $background-light-color;
+    border-radius: 10%;
+    // width: min(80vw, 400px);
+    width: 350px;
+    margin-top: 1rem;
+    gap: 5px 15px;
+    height: 350px;
+    &--highlight {
+      border: 4px solid $primary-color;
+    }
+  }
+
+  &__text {
+    color: $text-dark-color;
+    &--company {
+      font-size: 32px;
+    }
+    &--title {
+      font-size: 22px;
+    }
+    &--date {
+      font-size: 16px;
+    }
+    &--status {
+      font-size: 12px;
+      color: $text-dark-grey;
+    }
+  }
+
+  &__img {
+    width: 350px;
+    height: auto;
+  }
+
+  &__btn {
+    border: none;
+    border-radius: 40%;
+    background-color: (var(--background-accessibility-color));
+    color: (var(--primary-color));
+    margin-top: 0;
   }
 }
 
@@ -47,14 +143,36 @@
   gap: 0.7rem;
 }
 
-.header {
+.project-card-header {
   display: flex;
   justify-content: space-between;
-  &-right {
-    &__profile {
-      width: 50px;
-      height: 50px;
-      border-radius: 50px;
-    }
-  }
+}
+
+.project-modal {
+  position: "fixed";
+  top: 50%;
+  left: 50%;
+  transform: "translate(-50%, -50%)";
+  background-color: (--background-light-color);
+  padding: 50px;
+  z-index: 1000;
+}
+
+.project-modal-overlay {
+  position: "fixed";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: (var(--transparent-dark-color));
+  z-index: 1000;
+}
+
+.project-details-company {
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.project-details-header {
+  font-size: 1.25rem;
 }

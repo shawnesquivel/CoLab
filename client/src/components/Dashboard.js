@@ -23,6 +23,8 @@ import "../styles/dashboard.scss";
 import colab from "../assets/colab-text.png";
 import colabFolder from "../assets/colab-logo.png";
 import headshot from "../assets/headshot.png";
+import projectCard from "../assets/project-card.png";
+const moment = require("moment");
 
 // Endpoints
 const GETUSER_URL = "/api/getuser";
@@ -162,14 +164,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     const getProject = async (projectID) => {
-      console.log("Inside the getProject");
-
       try {
         const payload = JSON.stringify({
           token: localStorage.getItem("token"),
           projectID: projectID,
         });
-        console.log("Payload to be sent", payload);
         const response = await axios.post(GETPROJECT_URL, payload, {
           headers: {
             "Content-Type": "application/json",
@@ -267,19 +266,13 @@ const Dashboard = () => {
               )}
             </div>
 
-            <div className="header-right">
+            <div className="dashboard-header-right">
               <FontAwesomeIcon icon={faBell} />
-              <Link
-                to="/updateprofile"
-                className="register__text register__text--subtle text--underline"
-              >
-                {/* To Do: Replace image with backendData.userProfileURL */}
-                <img
-                  src={headshot}
-                  alt="profile"
-                  class="header-right__profile"
-                />
-              </Link>
+              <img
+                className="dashboard-header-right__avatar"
+                src={headshot}
+                alt="profile"
+              />
             </div>
           </header>
         ) : (
@@ -292,12 +285,15 @@ const Dashboard = () => {
               {/* Create Project (ONLY FOR BRAND REPS) */}
               {auth.roles.includes(3000) ? (
                 <>
-                  <div style={{ BUTTON_WRAPPER_STYLES }}>
+                  <div
+                    style={{ BUTTON_WRAPPER_STYLES }}
+                    className="dashboard-create"
+                  >
                     <button
                       onClick={() => {
                         setShowCreateProjectModal(true);
                       }}
-                      className="create-project-btn"
+                      className="dashboard-create__btn"
                     >
                       <FontAwesomeIcon icon={faPlus} className="icon-left" />
                       Create a New Project
@@ -338,55 +334,67 @@ const Dashboard = () => {
                       : "project-card"
                   }
                 >
-                  <div className="project-card-header">
-                    <h4 className="project-details-header">
-                      {project.title.length > 20
-                        ? project.title.slice(0, 20).concat("...")
-                        : project.title}
-                      {project.waitingForInfluencer &&
-                      auth.roles.includes(2000) ? (
-                        <>✨</>
-                      ) : (
-                        ""
-                      )}
-                    </h4>
-                    <h6>{project.description}</h6>
-                    <button
-                      onClick={() => {
-                        setProjectModal(project);
-                        setShowModal(true);
-                      }}
-                      className="project-details-btn"
-                    >
-                      <FontAwesomeIcon icon={faExpand} />
-                    </button>
-                  </div>
-                  {/* Status Card Text for Influencers */}
-                  <p className="project-details-company">{project.company}</p>
-                  {auth.roles.includes(2000) ? (
-                    <>
-                      <p>{project.company} Collab</p>
-                      <p>
-                        {project.status.toLowerCase() === "Reviewing Contract"
-                          ? "Please review contract."
+                  <button
+                    onClick={() => {
+                      setProjectModal(project);
+                      setShowModal(true);
+                    }}
+                    className="dashboard__btn"
+                  >
+                    <img
+                      src={projectCard}
+                      alt="project example"
+                      className="project-container__img"
+                    />
+                    <div className="project-container__text-container">
+                      <h4 className="project-container__text project-container__text--company">
+                        {project.company}
+                      </h4>
+                      <h5 className="project-container__text project-container__text--title">
+                        {" "}
+                        {project.title.length > 20
+                          ? project.title.slice(0, 20).concat("...")
+                          : project.title}
+                        {project.waitingForInfluencer &&
+                        auth.roles.includes(2000) ? (
+                          <>✨</>
+                        ) : (
+                          ""
+                        )}
+                      </h5>
+                      <h6 className="project-container__text project-container__text--date">
+                        {moment(project.deadline).format("MMMM Do YYYY")}
+                      </h6>
+
+                      {/* <button
+                    onClick={() => {
+                      setProjectModal(project);
+                      setShowModal(true);
+                    }}
+                    className="project-details-btn"
+                  >
+                    <FontAwesomeIcon icon={faExpand} />
+                  </button> */}
+
+                      <p>{project.paymentProduct ? "🎁 Gifted" : ""}</p>
+
+                      <p className="project-container__text project-container__text--status">
+                        {project.status.toLowerCase() === "reviewing contract"
+                          ? "Influencer reviewing contract."
                           : ""}
                         {project.status.toLowerCase() ===
                         "in progress/waiting for submission"
-                          ? "In Progress"
+                          ? "Project accepted. Work in progress."
                           : ""}
                         {project.status.toLowerCase() === "brand reviewing"
-                          ? "Submitted. Waiting for approval!"
+                          ? "Influencer submitted draft. Waiting for brand to review."
                           : ""}
                         {project.status.toLowerCase() === "ready to publish"
-                          ? "Waiting for you to post content!"
+                          ? "✅ Waiting for influencer to post."
                           : ""}
                       </p>
-                    </>
-                  ) : (
-                    <p>Status: {project.status.toLowerCase()}.</p>
-                  )}
-                  <p>${project.paymentPrice}</p>
-                  <p>{project.paymentProduct ? "🎁 Gifted" : ""}</p>
+                    </div>
+                  </button>
                 </div>
               ))}
             </section>
@@ -420,8 +428,10 @@ const Dashboard = () => {
         </button>
       )} */}
 
+      <br />
+
       {/* to do: remove in-line form */}
-      {/* <div style={BUTTON_WRAPPER_STYLES}>
+      <div style={BUTTON_WRAPPER_STYLES}>
         {showModal ? (
           <ProjectModal
             isOpen={showModal}
@@ -438,7 +448,7 @@ const Dashboard = () => {
           ""
           // <p>showModal is set to false.</p>
         )}
-      </div> */}
+      </div>
     </section>
   );
 };
