@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -17,11 +19,16 @@ const JWT_SECRET_KEY = "mv(3jfoa.@01va(Adup";
 const MONGOOSE_URL = "mongodb://127.0.0.1:27017/login-app-db";
 const moment = require("moment");
 // Stripe
-require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
+// Upload Images
 const multer = require("multer");
 const fs = require("fs");
 let FormData = require("form-data");
+// AWS Stuff
+const aws = require("aws-sdk");
+const crypto = require("crypto");
+const { promisify } = require("util");
+const randomBytes = promisify(crypto.randomBytes);
 
 // const upload = multer ( { dest: 'uploads/'});
 
@@ -102,6 +109,41 @@ const upload = multer({
 
 //   res.send("image is saved");
 // });
+
+// Amazon S3 Bucket
+
+async function generateUploadURL() {
+  const region = "us-west-2";
+  const bucketName = "colab-images";
+  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_ID;
+  console.log(accessKeyId);
+  console.log(secretAccessKey);
+  const s3 = new aws.S3({
+    region,
+    accessKeyId,
+    secretAccessKey,
+    signatureVersion: "v4",
+  });
+
+  const rawBytes = await randomBytes(16);
+  const imageName = rawBytes.toString("hex");
+
+  const params = {
+    Bucket: bucketName,
+    Key: imageName,
+    Expires: 60,
+  };
+
+  const uploadURL = await s3.getSignedUrlPromise("putObject", params);
+
+  return uploadURL;
+}
+
+app.get("/api/s3", async (req, res) => {
+  const url = await generateUploadURL();
+  res.send({ url });
+});
 
 // Testing
 app.post("/api/uploadimage", upload.single("avatar"), async (req, res) => {

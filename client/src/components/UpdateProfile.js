@@ -7,7 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 import pageOneImg from "../assets/updateprofile.png";
 import pageTwoImg from "../assets/update-profile-photo.png";
 import pageThreeImg from "../assets/update-profile-mediakit.png";
-import headshot from "../assets/headshot.png";
+import greySquare from "../assets/mediakit-grey.png";
 import "../styles/updateprofile.scss";
 const FormData = require("form-data");
 
@@ -26,6 +26,8 @@ const UpdateProfile = () => {
   const [backendData, setBackendData] = useState({
     status: "still fetching user data",
   });
+
+  const [awsImage, setAwsImage] = useState("");
 
   const [showForm, setShowForm] = useState(false);
   const [formButtonText, setFormButtonText] = useState("Change Profile");
@@ -46,7 +48,7 @@ const UpdateProfile = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   // Pages
   const [pageOne, showPageOne] = useState(true);
-  const [pageTwo, showPageTwo] = useState(true);
+  const [pageTwo, showPageTwo] = useState(false);
   const [pageThree, showPageThree] = useState(false);
 
   // get image data from backend on pageload
@@ -126,22 +128,60 @@ const UpdateProfile = () => {
     setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
   };
 
-  const handleUploadProfilePic = async (e) => {
+  // New amazon S3
+  const handleAwsUpload = async (e, type) => {
     e.preventDefault();
-    console.log(...selectedFile);
-    await axios
-      .post(UPLOADPROFILEPIC_URL, selectedFile)
-      .then((res) => {
-        console.log("imageID = ", res.data.data);
-        // Update the user profile
-        updateUserAvatar(res.data.data);
-        // Display the image
-        getImageFromID(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let amazonURL;
+    // get secure url from server
+    try {
+      const res = await axios.get("/api/s3");
+      amazonURL = res.data.url;
+      console.log("got the secure url from S3", amazonURL);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // post the image to S3
+
+    await fetch(amazonURL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "",
+      },
+      // withCredentials: true,
+      body: selectedFile,
+    });
+
+    if (type === "image") {
+      const imageURL = amazonURL.split("?")[0];
+      console.log(imageURL);
+
+      setAwsImage(imageURL);
+
+      updateUserAvatar(imageURL);
+    }
+
+    if (type === "pdf") {
+      const pdfURL = amazonURL.split("?")[0];
+      console.log(pdfURL);
+
+      setMediaKit(pdfURL);
+
+      updateUserMediaKit(pdfURL);
+    }
+
+    // add any extra information to server
   };
+
+  const uploadImgFileHandler = (e) => {
+    console.log("file was chosen", e.target.files[0]);
+    // const formData = new FormData();
+    // formData.append("avatar", e.target.files[0]);
+    // console.log(...formData);
+    setSelectedFile(e.target.files[0]);
+    setIsFilePicked(true);
+  };
+
   // After the image ID is received, update the user
   const updateUserAvatar = async (imageID) => {
     console.log("Image ID", imageID);
@@ -174,75 +214,61 @@ const UpdateProfile = () => {
     }
   };
 
-  const uploadFileHandler = (e) => {
-    console.log(e.target.files[0]);
-    const formData = new FormData();
-    formData.append("avatar", e.target.files[0]);
-    // const formDataFile = [...formData][0][1];
-    console.log(...formData);
-    setSelectedFile(formData);
-    setIsFilePicked(true);
+  const [mediaKit, setMediaKit] = useState("");
+  const uploadMediaKitHandler = (e) => {
+    console.log("File was chosen", e.target.files[0]);
+    setMediaKit(e.target.files[0]);
   };
 
-  // Given the image ID, retrieve the image from database
-  const getImageFromID = async (imageID) => {
+  const updateUserMediaKit = async (mediaKit) => {
     try {
-      console.log("getting the image: ", imageID);
       const payload = JSON.stringify({
         token: localStorage.getItem("token"),
-        imageID,
+        mediaKit,
       });
-      const res = await axios.post(GETIMAGE_URL, payload, {
+      console.log("Update Profile Payload", payload);
+      const response = await axios.post(UPDATE_AVATAR_URL, payload, {
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
       });
-      console.log("Success: Got the image:", res);
+      console.log(
+        "Media kit added to profile",
+        response.data.userProfile.mediaKit
+      );
+
+      if (response.status === 200) {
+      } else {
+        alert(response.status);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
+  // Given the image ID, retrieve the image from database
+  // const getImageFromID = async (imageID) => {
+  //   try {
+  //     console.log("getting the image: ", imageID);
+  //     const payload = JSON.stringify({
+  //       token: localStorage.getItem("token"),
+  //       imageID,
+  //     });
+  //     const res = await axios.post(GETIMAGE_URL, payload, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       withCredentials: true,
+  //     });
+  //     console.log("Success: Got the image:", res);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
   return (
     <>
-      {/* Old  */}
-      {/* <section>
-        <h2>{backendData.status}</h2>
-        <h2>Profile Information</h2>
-        <br /> <br />
-        <h2>Welcome, {backendData?.firstName}</h2>
-        <img src={backendData?.profilePicURL} alt="" />
-        <h3>Username</h3>
-        <p>{backendData?.username}</p>
-        <h3>Company/Brand</h3>
-        <p>{backendData?.company}</p>
-        <h3>Change your password</h3>
-        <button
-          onClick={() => {
-            navigate("/changepassword");
-          }}
-          className="register__btn-cta"
-        >
-          Change Password
-        </button>
-        <div className="update-profile-options">
-          <button className="update-profile-btn">Upload Media Kit</button>
-          <button className="update-profile-btn">
-            <a href={backendData?.socialMediaLinks?.instagram}>Instagram</a>
-          </button>
-          <button
-            className="update-profile-btn"
-            onClick={() => {
-              setShowForm(!showForm);
-            }}
-          >
-            {formButtonText}
-          </button>
-        </div>
-
-      </section> */}
-
       {/* Display back end images */}
       {/* {imgData?.map((obj) => {
           const base64String = btoa(
@@ -274,7 +300,7 @@ const UpdateProfile = () => {
               <p className="update-profile__description mb-1p5 text--bold">
                 Build Your Profile
               </p>
-              <form className="update-profile-form" novalidate>
+              <form className="update-profile-form" noValidate>
                 <label
                   htmlFor="instagram"
                   className="update-profile-form__label"
@@ -384,7 +410,7 @@ const UpdateProfile = () => {
                   type="file"
                   id="avatar"
                   name="avatar"
-                  onChange={uploadFileHandler}
+                  onChange={uploadImgFileHandler}
                   required
                 />
 
@@ -411,15 +437,27 @@ const UpdateProfile = () => {
                 )} */}
 
                 <div className="flex-col-center">
-                  <img
-                    src={headshot}
-                    className="update-profile__profile-pic"
-                    alt="user profile"
-                  />
-                  <p>{backendData.avatar}</p>
+                  {awsImage ? (
+                    <img
+                      className="update-profile__profile-pic"
+                      src={awsImage}
+                      alt="aws avatar"
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {backendData.avatar ? (
+                    <img
+                      className="update-profile__profile-pic"
+                      src={backendData.avatar}
+                      alt="aws avatar"
+                    />
+                  ) : (
+                    ""
+                  )}
                   <button
                     type="submit"
-                    onClick={handleUploadProfilePic}
+                    onClick={(e) => handleAwsUpload(e, "image, type")}
                     className="update-profile__btn-cta"
                   >
                     Upload Photo
@@ -428,10 +466,101 @@ const UpdateProfile = () => {
                     type="button"
                     className="update-profile__btn-cta"
                     onClick={() => {
+                      showPageTwo(false);
                       showPageThree(true);
                     }}
                   >
-                    Skip
+                    Next Page
+                  </button>
+
+                  {errMsg ? (
+                    <p aria-live="assertive" className="update-profile__error">
+                      {errMsg}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </form>
+            </>
+          ) : (
+            ""
+          )}
+
+          {pageThree ? (
+            <>
+              {" "}
+              <p className="update-profile__description mb-1 text--bold">
+                Upload Files
+              </p>
+              <form
+                className="update-profile-form"
+                enctype="multipart/form-data"
+              >
+                {/* {isFilePicked && selectedFile.size > 2e6 ? (
+                  <div>
+                    <p className="update-profile__error">
+                      Error: The image size exceeds the 2MB limit!
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {isFilePicked && selectedFile.type !== "image/png" ? (
+                  <div>
+                    <p className="update-profile__error">
+                      Error: The file uploaded is not a .png image!
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )} */}
+                <label
+                  htmlFor="mediakit"
+                  className="update-profile__description mb-1"
+                >
+                  Media Kit
+                </label>
+                <div className="flex-col-center">
+                  <img
+                    src={greySquare}
+                    alt="grey black square"
+                    className="update-profile-form__media-kit"
+                  />
+                  <input
+                    type="file"
+                    id="mediakit"
+                    name="mediakit"
+                    onChange={uploadMediaKitHandler}
+                    className="update-profile-form__input--file"
+                  />
+
+                  <p id="uidnote" className="login-form__instructions">
+                    PDF, Max 2MB
+                  </p>
+                  {backendData.mediaKit ? (
+                    <p className="mb-1">
+                      Latest Upload: {backendData.mediaKit}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+                  <button
+                    type="submit"
+                    onClick={() => {}}
+                    className="update-profile__btn-cta"
+                  >
+                    Upload Photo
+                  </button>
+                  <button
+                    type="button"
+                    className="update-profile__btn-cta"
+                    onClick={() => {
+                      showPageTwo(false);
+                      showPageThree(true);
+                    }}
+                  >
+                    Next Page
                   </button>
 
                   {errMsg ? (

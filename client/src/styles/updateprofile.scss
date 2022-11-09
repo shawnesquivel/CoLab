@@ -152,6 +152,20 @@
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     border-radius: 12px;
+    &--file {
+      width: 200px;
+      text-align: center;
+      margin: 0.75rem 0;
+      &::file-selector-button {
+        border-radius: 5px;
+        font-family: "DM Sans";
+        background: $background-light-color;
+        color: $text-dark-color;
+        width: 200px;
+        display: block;
+      }
+    }
+
     &--invalid {
       font-size: 16px;
       padding: 0.25rem 0.5rem;

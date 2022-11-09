@@ -270,7 +270,7 @@ const Dashboard = () => {
               <FontAwesomeIcon icon={faBell} />
               <img
                 className="dashboard-header-right__avatar"
-                src={headshot}
+                src={backendData.avatar}
                 alt="profile"
               />
             </div>

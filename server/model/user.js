@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
     lastName: String,
     currentProjects: [{ type: mongoose.Schema.Types.ObjectId }],
     keywords: [{ type: String }],
-    avatar: { type: mongoose.Schema.Types.ObjectId },
+    avatar: String,
     mediaKit: {
       type: String,
       default: "https://drive.google.com/",
