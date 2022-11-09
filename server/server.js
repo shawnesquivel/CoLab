@@ -21,6 +21,8 @@ require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
 const multer = require("multer");
 const fs = require("fs");
+let FormData = require("form-data");
+
 // const upload = multer ( { dest: 'uploads/'});
 
 // To allow requests from client side server
@@ -68,37 +70,82 @@ const storage = multer.diskStorage({
 });
 
 // use the diskStorage from above
-const upload = multer({ storage: storage });
-
-// Single Image Upload
-app.post("/uploadimage", upload.single("testImage"), (req, res) => {
-  console.log("inside the upload image enpdoint");
-
-  let { name } = req.body;
-
-  const saveImage = Image({
-    name: req.body.name,
-    img: {
-      data: fs.readFileSync("uploads/" + req.file.filename),
-      contentType: "image/png",
-    },
-  });
-
-  saveImage
-    .save()
-    .then((res) => {
-      console.log("the image is successfully saved");
-    })
-    .catch((err) => {
-      console.log(err, "an error has occured");
-    });
-
-  res.send("image is saved");
+const maxSize = 2 * 1024 * 1024; // 2.09MB
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: maxSize },
 });
 
-app.get("/uploadimage", async (req, res) => {
-  const allData = await Image.find();
-  res.json(allData);
+// Single Image Upload
+// app.post("/uploadimage", upload.single("avatar"), (req, res) => {
+//   console.log("inside the upload image enpdoint");
+//   const { file } = req.body;
+
+//   console.log(file)
+
+//   const saveImage = Image({
+//     name: file.filename,
+//     img: {
+//       data: fs.readFileSync("uploads/" + req.file.filename),
+//       contentType: "image/png",
+//     },
+//   });
+
+//   saveImage
+//     .save()
+//     .then((res) => {
+//       console.log("the image is successfully saved");
+//     })
+//     .catch((err) => {
+//       console.log(err, "an error has occured");
+//     });
+
+//   res.send("image is saved");
+// });
+
+// Testing
+app.post("/api/uploadimage", upload.single("avatar"), async (req, res) => {
+  /** When using the "single"
+      data come in "req.file" regardless of the attribute "name". **/
+  // let tmp_path = req.file.path;
+  const file = req.file;
+  // Add the file to the Images Collection
+  // const saveImage = Image({
+  //   name: file.filename,
+  //   img: {
+  //     data: fs.readFileSync("uploads/" + req.file.filename),
+  //     contentType: "image/png",
+  //   },
+  // });
+
+  let imageID;
+  try {
+    const res = await Image.create({
+      name: file.filename,
+      img: {
+        data: fs.readFileSync("uploads/" + req.file.filename),
+        contentType: "image/png",
+      },
+    });
+    // Get the Image ID
+    console.log("image was saved", res._id);
+    imageID = res._id;
+    // Return the image Id
+  } catch (err) {
+    console.log(err);
+  }
+
+  res.json({ data: imageID, status: "OK" });
+});
+
+// Find Images
+app.post("/api/getimage", async (req, res) => {
+  const { imageID } = req.body;
+  // const allData = await Image.find({});
+  const imageData = await Image.findOne({ _id: imageID }).exec();
+  console.log("imageData found", imageData);
+  // res.json(imageData);
+  res.json({ data: imageData, status: "OK" });
 });
 
 // Test Endpoint
@@ -252,9 +299,6 @@ app.post("/api/getuser", async (req, res) => {
   console.log(token);
 
   try {
-    // Verify the JWT
-    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
-    // abstracted
     const [user, _id] = verifyJWT(token);
     const userRecord = await findUser(_id);
 
@@ -265,10 +309,6 @@ app.post("/api/getuser", async (req, res) => {
     console.log(err);
     res.json({ status: "Error", error: "Could not verify identity" });
   }
-
-  // If user is
-
-  // Return the user
 });
 
 // GET PROJECT
@@ -347,17 +387,38 @@ app.post("/api/updateprofile", async (req, res) => {
       }
     );
     const userRecord = await findUser(_id);
-    console.log("User Updated Record:", user, _id, userRecord);
+    console.log("Updated user links:", user, _id, userRecord);
 
     res.json({ status: "OK", userProfile: userRecord });
   } catch (err) {
     console.log(err);
     res.json({ status: "Error", error: "Could not verify identity" });
   }
+});
 
-  // If user is
+// Add the Avatar ID to User Profile
+app.post("/api/updateavatar", async (req, res) => {
+  console.log("updating the user avatar");
 
-  // Return the user
+  const { avatar, token } = req.body;
+  console.log(avatar, token);
+
+  try {
+    // Verify the JWT
+    const [user, _id] = verifyJWT(token);
+    await User.updateOne(
+      { _id },
+      {
+        $set: { avatar: avatar },
+      }
+    );
+    const userRecord = await findUser(_id);
+    console.log("User Updated Record:", user, _id, userRecord);
+    res.json({ status: "OK", userProfile: userRecord });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not verify identity" });
+  }
 });
 
 // Create Project

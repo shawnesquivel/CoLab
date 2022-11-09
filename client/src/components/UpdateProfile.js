@@ -9,10 +9,13 @@ import pageTwoImg from "../assets/update-profile-photo.png";
 import pageThreeImg from "../assets/update-profile-mediakit.png";
 import headshot from "../assets/headshot.png";
 import "../styles/updateprofile.scss";
+const FormData = require("form-data");
 
 const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
 const UPLOADPROFILEPIC_URL = "/api/uploadimage";
+const UPDATE_AVATAR_URL = "api/updateavatar";
+const GETIMAGE_URL = "/api/getimage";
 
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
@@ -23,25 +26,6 @@ const UpdateProfile = () => {
   const [backendData, setBackendData] = useState({
     status: "still fetching user data",
   });
-
-  // get image data
-  const [imgData, setImgData] = useState([]);
-  useEffect(() => {
-    console.log("getting the images");
-    axios
-      .get("/uploadimage")
-      .then((res) => {
-        setImgData(res.data);
-        console.log(imgData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  useEffect(() => {
-    console.log(imgData);
-  }, [imgData]);
 
   const [showForm, setShowForm] = useState(false);
   const [formButtonText, setFormButtonText] = useState("Change Profile");
@@ -59,27 +43,21 @@ const UpdateProfile = () => {
   // Page 2
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
-
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   // Pages
   const [pageOne, showPageOne] = useState(true);
   const [pageTwo, showPageTwo] = useState(true);
   const [pageThree, showPageThree] = useState(false);
 
-  // useEffect(() => {
-  //   if (showForm) {
-  //     setFormButtonText("Hide");
-  //   } else {
-  //     setFormButtonText("Update your profile");
-  //   }
-  // }, [showForm]);
+  // get image data from backend on pageload
+  const [imgData, setImgData] = useState([]);
 
   const [errMsg, setErrMsg] = useState("");
   const [err, setErr] = useState(false);
 
-  // Axios GET Request - Fetch user data
+  // Fetch User Data on Page Load
   const fetchUser = async () => {
     const user = auth?.user;
-    console.log(auth);
     // test axios
     // const response = await axios.get("https://yesno.wtf/api");
 
@@ -87,7 +65,6 @@ const UpdateProfile = () => {
       token: localStorage.getItem("token"),
     });
 
-    console.log(payload);
     const response = await axios.post(GETUSER_URL, payload, {
       headers: {
         "Content-Type": "application/json",
@@ -102,7 +79,8 @@ const UpdateProfile = () => {
     fetchUser().catch(console.error);
   }, []);
 
-  const updateProfile = async (e) => {
+  // Add social media links and niche to profile
+  const updateProfileLinks = async (e) => {
     e.preventDefault();
     console.log("Form Data:", instagram, tiktok, youtube, keywords);
 
@@ -134,6 +112,7 @@ const UpdateProfile = () => {
     }
   };
 
+  // Keyword HTML
   const handleKeyDown = async (e) => {
     if (e.key !== "Enter") return;
     const value = e.target.value;
@@ -147,42 +126,82 @@ const UpdateProfile = () => {
     setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
   };
 
-  // To do: fix this - 404 axios error, cannot find endpoint
   const handleUploadProfilePic = async (e) => {
     e.preventDefault();
-    if (!isFilePicked) {
-      alert("you have not uploaded a file!");
-      return;
-    }
-
+    console.log(...selectedFile);
+    await axios
+      .post(UPLOADPROFILEPIC_URL, selectedFile)
+      .then((res) => {
+        console.log("imageID = ", res.data.data);
+        // Update the user profile
+        updateUserAvatar(res.data.data);
+        // Display the image
+        getImageFromID(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // After the image ID is received, update the user
+  const updateUserAvatar = async (imageID) => {
+    console.log("Image ID", imageID);
     try {
       const payload = JSON.stringify({
-        name: "profile picture",
-        testImage: selectedFile,
+        token: localStorage.getItem("token"),
+        avatar: imageID,
       });
       console.log("Update Profile Payload", payload);
-      const response = await axios.post(UPLOADPROFILEPIC_URL, payload, {
+      const response = await axios.post(UPDATE_AVATAR_URL, payload, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
         withCredentials: true,
       });
-      console.log("Response Received", response.data);
+      console.log(
+        "Avatar was added to profile",
+        response.data.userProfile.avatar
+      );
 
-      // if (response.status === 200) {
-      // } else {
-      //   alert(response.status);
-      // }
-      // showPageOne(false);
-      // showPageTwo(true);
+      if (response.status === 200) {
+      } else {
+        alert(response.status);
+      }
+      showPageOne(false);
+      showPageTwo(false);
+      showPageThree(true);
     } catch (err) {
       console.log(err);
     }
   };
 
   const uploadFileHandler = (e) => {
-    setSelectedFile(e.target.files[0]);
+    console.log(e.target.files[0]);
+    const formData = new FormData();
+    formData.append("avatar", e.target.files[0]);
+    // const formDataFile = [...formData][0][1];
+    console.log(...formData);
+    setSelectedFile(formData);
     setIsFilePicked(true);
+  };
+
+  // Given the image ID, retrieve the image from database
+  const getImageFromID = async (imageID) => {
+    try {
+      console.log("getting the image: ", imageID);
+      const payload = JSON.stringify({
+        token: localStorage.getItem("token"),
+        imageID,
+      });
+      const res = await axios.post(GETIMAGE_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      console.log("Success: Got the image:", res);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -337,7 +356,7 @@ const UpdateProfile = () => {
                   <div className="flex-col-center">
                     <button
                       type="button"
-                      onClick={updateProfile}
+                      onClick={updateProfileLinks}
                       className="update-profile__btn-cta"
                     >
                       Update Profile
@@ -360,10 +379,11 @@ const UpdateProfile = () => {
                 className="update-profile-form"
                 enctype="multipart/form-data"
               >
-                <label htmlFor="profilepic"></label>
+                <label htmlFor="avatar"></label>
                 <input
                   type="file"
-                  id="profilepic"
+                  id="avatar"
+                  name="avatar"
                   onChange={uploadFileHandler}
                   required
                 />
@@ -371,19 +391,24 @@ const UpdateProfile = () => {
                 <p id="uidnote" className="login-form__instructions">
                   Max 2MB, .png only
                 </p>
-                {isFilePicked ? (
+                {/* {isFilePicked && selectedFile.size > 2e6 ? (
                   <div>
-                    <p>Name: {selectedFile.name}</p>
-                    <p>Type: {selectedFile.type}</p>
-                    <p>Size: {selectedFile.size / 100000} MB</p>
-                    <p>
-                      lastModifiedDate:{" "}
-                      {selectedFile.lastModifiedDate.toLocaleDateString()}
+                    <p className="update-profile__error">
+                      Error: The image size exceeds the 2MB limit!
                     </p>
                   </div>
                 ) : (
-                  <p>Select a file to show details</p>
+                  ""
                 )}
+                {isFilePicked && selectedFile.type !== "image/png" ? (
+                  <div>
+                    <p className="update-profile__error">
+                      Error: The file uploaded is not a .png image!
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )} */}
 
                 <div className="flex-col-center">
                   <img
@@ -391,6 +416,7 @@ const UpdateProfile = () => {
                     className="update-profile__profile-pic"
                     alt="user profile"
                   />
+                  <p>{backendData.avatar}</p>
                   <button
                     type="submit"
                     onClick={handleUploadProfilePic}

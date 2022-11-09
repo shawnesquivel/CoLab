@@ -16,11 +16,7 @@ const UserSchema = new mongoose.Schema(
     lastName: String,
     currentProjects: [{ type: mongoose.Schema.Types.ObjectId }],
     keywords: [{ type: String }],
-    profilePicURL: {
-      type: String,
-      default:
-        "https://scontent.fcxh2-1.fna.fbcdn.net/v/t1.15752-9/297566251_1034401040586937_7774569904522633283_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=ae9488&_nc_ohc=U_4XvOo4rNEAX_CbBXC&_nc_ht=scontent.fcxh2-1.fna&oh=03_AVIUBDXm5i5apbdHy85MhjjOXuCpJX2XY6JPHjcsPk5nGQ&oe=63219DB0",
-    },
+    avatar: { type: mongoose.Schema.Types.ObjectId },
     mediaKit: {
       type: String,
       default: "https://drive.google.com/",

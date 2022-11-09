@@ -269,7 +269,17 @@ const Dashboard = () => {
 
             <div className="header-right">
               <FontAwesomeIcon icon={faBell} />
-              <img src={headshot} alt="profile" class="header-right__profile" />
+              <Link
+                to="/updateprofile"
+                className="register__text register__text--subtle text--underline"
+              >
+                {/* To Do: Replace image with backendData.userProfileURL */}
+                <img
+                  src={headshot}
+                  alt="profile"
+                  class="header-right__profile"
+                />
+              </Link>
             </div>
           </header>
         ) : (
