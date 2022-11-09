@@ -15,6 +15,7 @@ const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
 const UPLOADPROFILEPIC_URL = "/api/uploadimage";
 const UPDATE_AVATAR_URL = "api/updateavatar";
+const UPDATE_MEDIAKIT_URL = "api/updatemediakit";
 const GETIMAGE_URL = "/api/getimage";
 
 const UpdateProfile = () => {
@@ -132,7 +133,18 @@ const UpdateProfile = () => {
   const handleAwsUpload = async (e, type) => {
     e.preventDefault();
     let amazonURL;
+    let file;
+    let contentType;
     // get secure url from server
+    if (type === "image") {
+      file = selectedFile;
+      contentType = "application/png";
+    }
+    if (type === "pdf") {
+      file = mediaKit;
+      contentType = "application/pdf";
+    }
+
     try {
       const res = await axios.get("/api/s3");
       amazonURL = res.data.url;
@@ -146,10 +158,10 @@ const UpdateProfile = () => {
     await fetch(amazonURL, {
       method: "PUT",
       headers: {
-        "Content-Type": "",
+        "Content-Type": "multipart/form-data",
       },
       // withCredentials: true,
-      body: selectedFile,
+      body: file,
     });
 
     if (type === "image") {
@@ -164,8 +176,6 @@ const UpdateProfile = () => {
     if (type === "pdf") {
       const pdfURL = amazonURL.split("?")[0];
       console.log(pdfURL);
-
-      setMediaKit(pdfURL);
 
       updateUserMediaKit(pdfURL);
     }
@@ -224,10 +234,10 @@ const UpdateProfile = () => {
     try {
       const payload = JSON.stringify({
         token: localStorage.getItem("token"),
-        mediaKit,
+        mediaKit: mediaKit,
       });
       console.log("Update Profile Payload", payload);
-      const response = await axios.post(UPDATE_AVATAR_URL, payload, {
+      const response = await axios.post(UPDATE_MEDIAKIT_URL, payload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -403,7 +413,7 @@ const UpdateProfile = () => {
               </p>
               <form
                 className="update-profile-form"
-                enctype="multipart/form-data"
+                encType="multipart/form-data"
               >
                 <label htmlFor="avatar"></label>
                 <input
@@ -495,7 +505,7 @@ const UpdateProfile = () => {
               </p>
               <form
                 className="update-profile-form"
-                enctype="multipart/form-data"
+                encType="multipart/form-data"
               >
                 {/* {isFilePicked && selectedFile.size > 2e6 ? (
                   <div>
@@ -539,18 +549,21 @@ const UpdateProfile = () => {
                     PDF, Max 2MB
                   </p>
                   {backendData.mediaKit ? (
-                    <p className="mb-1">
-                      Latest Upload: {backendData.mediaKit}
-                    </p>
+                    <a
+                      href={backendData.mediaKit}
+                      className="update-profile-form__media-kit update-profile-form__media-kit--link mb-1"
+                    >
+                      Download Media Kit
+                    </a>
                   ) : (
                     ""
                   )}
                   <button
                     type="submit"
-                    onClick={() => {}}
+                    onClick={(e) => handleAwsUpload(e, "pdf")}
                     className="update-profile__btn-cta"
                   >
-                    Upload Photo
+                    Upload File
                   </button>
                   <button
                     type="button"

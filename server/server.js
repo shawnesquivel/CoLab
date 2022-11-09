@@ -462,6 +462,30 @@ app.post("/api/updateavatar", async (req, res) => {
     res.json({ status: "Error", error: "Could not verify identity" });
   }
 });
+// update Media kit
+app.post("/api/updatemediakit", async (req, res) => {
+  console.log("updating the media kit");
+
+  const { token, mediaKit } = req.body;
+  console.log(token, mediaKit);
+
+  try {
+    // Verify the JWT
+    const [user, _id] = verifyJWT(token);
+    await User.updateOne(
+      { _id },
+      {
+        $set: { mediaKit: mediaKit },
+      }
+    );
+    const userRecord = await findUser(_id);
+    console.log("User Updated Record:", user, _id, userRecord);
+    res.json({ status: "OK", userProfile: userRecord });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not verify identity" });
+  }
+});
 
 // Create Project
 app.post("/api/createproject", async (req, res) => {
