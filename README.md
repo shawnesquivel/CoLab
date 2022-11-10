@@ -28,54 +28,35 @@
 
 ### 1.1 Purpose  {#1-1-purpose}
 
-The purpose of this document is to build a bug tracking system that allows project managers and developers to resolve software bugs with less errors.
-
+The purpose of this project is to build a collaborative platform for microinfluencers and brands to communicate seamlessly throughout a marketing campaign.
 
 ### 1.2 Definitions and Acronyms {#1-2-definitions-and-acronyms}
 
-**“Bug”** - “an error flow or fault in the design, development or operation of computer software that causes it to produce an incorrect or unexpected result, or to behave in unintended ways”
-
- \
-**“Ticket”** - documentation that describes the bug, deadline to resolve, and priority
-
- \
-**“Developer”** - also known as software engineers, are individuals that use problem solving and programming to resolve the bugs
-
-**“Tester”** - an individual that evaluates software for compliance before being accepted into the source code. 
-
-**“Project Manager”** - an individual that manages one or more projects, assigns tickets to the necessary developer.
-
+"Microinfluencer" - influencers with 1K to 10K followers
+"Brand" - any company seeking to do marketing
+"Marketing Campaign" - defined as a project throughout the codebase
 
 ### 1.3 Benefits for the Intended Audience {#1-3-benefits-for-the-intended-audience}
 
 
-#### Developers {#developers}
+#### Microinfluencers {#microinfluencers}
 
-Developers are the individuals tasked with reviewing tickets and resolving the bugs. Once their solution has been implemented, they will submit the ticket to a tester for review. Each ticket is assigned to at least one developer.
+Microinfluencers usually run social media accounts as a part-time job. This means they have a limited amount of time to go through emails, review guidelines, and negotiate payments with brands.
 
+#### Brands {#brands}
 
-#### Testers {#testers}
-
-Testers can either test software for bugs or review submissions from developers. Similar to the developer, they should be able to manage and view their tickets easily without a personal note taking system. Each ticket is assigned to at least one developer.
-
-
-#### Project Manager {#project-manager}
-
-For project managers, it is difficult to keep track of bugs in a large-scale application where there are many issues that arise daily. This application will allow them to view all outstanding tickets and assign tickets to the necessary developers. Each ticket is assigned to at least one project manager. Each project is assigned to at least one project manager.
-
+Brands work with many microinfluencers and it is easy to lose track of the many campaigns and partnerships they have created.
 
 ### 1.4 Project Scope {#1-4-project-scope}
 
-The purpose of this project is to ease and speed up bug tracking and resolution in software development. Without this system, program managers must convey bugs to developers and testers in meetings or through emails. Without a central source of information, miscommunication on the requirements or priorities, or simply losing track of a ticket is possible.
+The purpose of this project is to ease and speed up the project workflow by reducing. By using a project object as a central store of information, we reduce miscommunication on the requirements or priorities. 
 
-The sequential process will be automated, so when one individual has finished their task, the next individual in the process will be immediately notified, reducing the need for human-to-human communication via email/call/meetings which requires time. The following benefits will be seen from this project:
+The sequential process will be automated, so that when an individual has finished their task, the project will determine the next action and notify the necessary partiy. This reduces the need for human-to-human communication via email/call/meetings which requires time. 
 
-
-
-1. Less manual management of tickets, reducing human error
-2. Streamlined bug resolution, reducing frustration within the team
-3. Central database for tickets increases communication across team
-
+The following benefits will be seen from this project:
+1. Less manual management of projects, reducing human error
+2. Streamlined project workflow, reducing frustration between influencer and brand
+3. Central database for projects increases communication across team (e.g. if there are multiple brand reps working with many influencers)
 
 ## 2 Overall Description {#2-overall-description}
 
@@ -84,60 +65,34 @@ The sequential process will be automated, so when one individual has finished th
 
 
 
-1. Login Page (oAuth)
-2. CRUD Users Login
-3. Ability to CRUD tickets
-4. View all tickets
-    1. Filter by priority, deadline, assigned to
-5. Ticket View
-    2. Deadline
+1. User Registration, Authentication, Authorization
+2. User can update profile information and avatar
+3. User can change password
+3. Dashboard: View all projects
+-  Filter by priority, deadline, influencer assigned
+4. Expand project
+- View deadline, guidelines, project examples
+5. Ability to change status on rpoject
 
 
 ### 2.2 User Classes and Characteristics {#2-2-user-classes-and-characteristics}
 
 
-#### Tester {#tester}
-
-
-
+#### Influencer/Brand
 * Login
 * Add comments
-* Modify ticket status 
+* Modify project status (as necessary)
 * Create new tickets to be sent to the PM
 
 
-#### Developer {#developer}
-
-
-
-* Add a profile (tech stack, years of experience)
-* Login
-* View ticket
-* Add comments
-* View all tickets
-* View ticket analytics 
-* Change
-* Modify ticket status / steps to resolve bug
-
-
-#### Project Manager	 {#project-manager}
-
-
-
-* Create new tickets
-* View all tickets in a project
-* Create a new project
-* View all developers and sort by skills, years of experience
-* Assign tickets
-* View how many tickets a developer has, so you don’t overload them
+#### Brand
+* Can create new projects
+* Can view all influencers in the database
 
 
 ### 2.2 Assumptions and Dependencies {#2-2-assumptions-and-dependencies}
 
 I will be using the MERN tech stack [1]
-
-
-
 * **M**ongoDB for database
 * **E**xpress for server
 * **R**eactJS for frontend framework
