@@ -117,8 +117,7 @@ async function generateUploadURL() {
   const bucketName = "colab-images";
   const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
   const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_ID;
-  console.log(accessKeyId);
-  console.log(secretAccessKey);
+
   const s3 = new aws.S3({
     region,
     accessKeyId,
@@ -141,6 +140,7 @@ async function generateUploadURL() {
 }
 
 app.get("/api/s3", async (req, res) => {
+  console.log("inside api/s3");
   const url = await generateUploadURL();
   res.send({ url });
 });
@@ -454,6 +454,12 @@ app.post("/api/updateavatar", async (req, res) => {
         $set: { avatar: avatar },
       }
     );
+    await User.updateOne(
+      { _id },
+      {
+        $set: { hasUpdatedProfile: true },
+      }
+    );
     const userRecord = await findUser(_id);
     console.log("User Updated Record:", user, _id, userRecord);
     res.json({ status: "OK", userProfile: userRecord });
@@ -476,6 +482,12 @@ app.post("/api/updatemediakit", async (req, res) => {
       { _id },
       {
         $set: { mediaKit: mediaKit },
+      }
+    );
+    await User.updateOne(
+      { _id },
+      {
+        $set: { hasUpdatedProfile: true },
       }
     );
     const userRecord = await findUser(_id);

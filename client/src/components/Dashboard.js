@@ -22,6 +22,7 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
 import colab from "../assets/colab-text.png";
 import colabFolder from "../assets/colab-logo.png";
+import colabTextTransparent from "../assets/colab-text-transparent.png";
 import headshot from "../assets/headshot.png";
 import projectCard from "../assets/project-card.png";
 const moment = require("moment");
@@ -162,6 +163,8 @@ const Dashboard = () => {
     }
   };
 
+  const [inProgressProjects, setInProgressProjects] = useState([]);
+
   useEffect(() => {
     const getProject = async (projectID) => {
       try {
@@ -186,12 +189,23 @@ const Dashboard = () => {
       }
     };
 
+    // If the backend data is loaded, fetch each project into currentProjects array
     if (backendData?.currentProjects?.[0]) {
       backendData.currentProjects.forEach((project) => {
         getProject(project).catch(console.error);
       });
     }
   }, [backendData?.currentProjects?.[0]]);
+
+  // every time currentProjects is updated, remove completed projects  and update inProgressProjects
+  useEffect(() => {
+    const filteredProjects = currentProjects.filter(
+      (project) => project.status !== "project complete"
+    );
+    console.log("filtered projects", filteredProjects);
+
+    setInProgressProjects(filteredProjects);
+  }, [currentProjects]);
 
   // Entering keywords, hashtags, etc.
   const handleKeyDown = async (e) => {
@@ -231,28 +245,45 @@ const Dashboard = () => {
             alt="logo folder"
             className="logo-container__logo"
           />
-          <img src={colab} alt="logo text" className="logo-container__logo" />
+          <img
+            src={colabTextTransparent}
+            alt="logo text"
+            className="logo-container__logo"
+          />
         </div>
         <nav className="dashboard-links">
-          <Link to="/dashboard">Dashboard</Link>
-          <Link to="/upcoming">New Collabs</Link>
-          <Link to="/invites">Invites</Link>
-          <Link to="/settings">Settings</Link>
+          <Link to="/dashboard" className="dashboard-links__link">
+            Dashboard
+          </Link>
+          <Link to="/upcoming" className="dashboard-links__link">
+            New Collabs
+          </Link>
+          <Link to="/invites" className="dashboard-links__link">
+            Invites
+          </Link>
+          <Link
+            to="/settings"
+            className="dashboard-links__link dashboard-links__link--last"
+          >
+            Settings
+          </Link>
         </nav>
       </div>
 
       <div className="dashboard-container-right">
         {backendData ? (
           <header className="header">
-            <div className="header-left">
+            <div className="dashboard-header-left">
               {backendData.hasUpdatedProfile ? (
-                <h3>
+                <h3 className="dashboard-header-left__greeting">
                   Welcome back, {backendData.firstName} {backendData.lastName}.
                   👋
                 </h3>
               ) : (
                 <>
-                  <h2>Welcome, {backendData.firstName}. 👋</h2>
+                  <h2 className="header-left__greeting">
+                    Welcome, {backendData.firstName}. 👋
+                  </h2>
 
                   <p className="register__text register__text--subtle">
                     <Link
@@ -322,7 +353,7 @@ const Dashboard = () => {
             </div>
             {/* Contains all the active project cards */}
             <section className="project-container">
-              {currentProjects?.map((project, i) => (
+              {inProgressProjects?.map((project, i) => (
                 <div
                   key={project._id}
                   // Highlight the card for influencers or brand
@@ -330,8 +361,8 @@ const Dashboard = () => {
                     (project.waitingForInfluencer &&
                       auth.roles.includes(2000)) ||
                     (!project.waitingForInfluencer && auth.roles.includes(3000))
-                      ? "project-card project-highlight"
-                      : "project-card"
+                      ? "project-container__card project-highlight"
+                      : "project-container__card"
                   }
                 >
                   <button
@@ -380,14 +411,14 @@ const Dashboard = () => {
 
                       <p className="project-container__text project-container__text--status">
                         {project.status.toLowerCase() === "reviewing contract"
-                          ? "Influencer reviewing contract."
+                          ? "📄 Influencer reviewing contract."
                           : ""}
                         {project.status.toLowerCase() ===
                         "in progress/waiting for submission"
-                          ? "Project accepted. Work in progress."
+                          ? "⚒ Project accepted. Work in progress."
                           : ""}
                         {project.status.toLowerCase() === "brand reviewing"
-                          ? "Influencer submitted draft. Waiting for brand to review."
+                          ? "📝 Influencer submitted draft. Waiting for brand to review."
                           : ""}
                         {project.status.toLowerCase() === "ready to publish"
                           ? "✅ Waiting for influencer to post."

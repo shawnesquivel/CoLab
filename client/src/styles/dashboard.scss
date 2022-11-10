@@ -14,11 +14,11 @@
   flex-direction: row;
 
   // surrounds entire card
-  &-btn {
+  &__btn {
     width: 350px;
     height: 350px;
     border-radius: 50px;
-
+    border: none;
     &:hover {
       cursor: pointer;
     }
@@ -27,13 +27,16 @@
   &-container-left {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 30%;
+    background-color: #ececec;
   }
 
   &-container-right {
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-left: 1rem;
   }
 
   &-links {
@@ -45,6 +48,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     &-right {
       display: flex;
       align-items: center;
@@ -71,8 +75,10 @@
 
 .project-container {
   display: grid;
-  gap: 6px;
+  gap: 2.5rem;
+  // height: 80vh;
   grid-template-columns: repeat(3, 1fr);
+  background-color: #f5f5f5;
 
   &__text-container {
     display: flex;
@@ -81,7 +87,7 @@
   }
 
   &__card {
-    border: 1px solid black;
+    // border: 1px solid black;
     background-color: $background-light-color;
     border-radius: 10%;
     // width: min(80vw, 400px);
@@ -89,9 +95,9 @@
     margin-top: 1rem;
     gap: 5px 15px;
     height: 350px;
-    &--highlight {
-      border: 4px solid $primary-color;
-    }
+    // &--highlight {
+    //   border: 4px solid $primary-color;
+    // }
   }
 
   &__text {
@@ -129,6 +135,7 @@
 .logo-container {
   margin-top: 2rem;
   display: flex;
+  background-color: #ececec;
 
   &__logo {
     height: auto;
@@ -141,6 +148,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
+  background-color: #ececec;
+  &__link {
+    background-color: #ececec;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid hsl(0, 0%, 61%);
+
+    &--last {
+      border-bottom: none;
+    }
+  }
 }
 
 .project-card-header {

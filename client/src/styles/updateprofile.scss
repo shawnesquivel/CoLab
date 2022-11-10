@@ -38,10 +38,6 @@
     line-height: 72px;
   }
 
-  &__description {
-    margin-bottom: 2.5rem;
-  }
-
   // I am an influencer/brand button
   &__btn {
     margin-top: 0;
@@ -65,6 +61,13 @@
 
   &__link {
     text-decoration: underline;
+    &--dashboard {
+      background: inherit;
+      color: $text-light-color;
+      &:visited {
+        color: $text-light-color;
+      }
+    }
   }
 }
 
@@ -129,6 +132,7 @@
   &__media-kit {
     &--link {
       text-decoration: underline;
+      margin-bottom: 0.5rem;
     }
   }
 

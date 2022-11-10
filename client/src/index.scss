@@ -43,9 +43,10 @@ h1 {
   font-weight: bold;
 }
 
-.mb-1 {
-  margin-bottom: 1rem;
+.mb-p5 {
+  margin-bottom: 0.5rem;
 }
+
 .mb-1p5 {
   margin-bottom: 1.5rem;
 }
@@ -99,8 +100,8 @@ section {
 
 a,
 a:visited {
-  color: black;
   text-decoration: none;
+  color: black;
 }
 a:hover {
   color: var(--primary-color);

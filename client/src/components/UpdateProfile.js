@@ -8,6 +8,7 @@ import pageOneImg from "../assets/updateprofile.png";
 import pageTwoImg from "../assets/update-profile-photo.png";
 import pageThreeImg from "../assets/update-profile-mediakit.png";
 import greySquare from "../assets/mediakit-grey.png";
+import greyCircle from "../assets/greycircle.jpg";
 import "../styles/updateprofile.scss";
 const FormData = require("form-data");
 
@@ -52,6 +53,8 @@ const UpdateProfile = () => {
   const [pageTwo, showPageTwo] = useState(false);
   const [pageThree, showPageThree] = useState(false);
 
+  const [successMsg, setSuccessMsg] = useState("");
+
   // get image data from backend on pageload
   const [imgData, setImgData] = useState([]);
 
@@ -76,6 +79,7 @@ const UpdateProfile = () => {
     });
 
     setBackendData(response.data.userProfile);
+    setAwsImage(response.data.avatar);
   };
 
   useEffect(() => {
@@ -138,7 +142,7 @@ const UpdateProfile = () => {
     // get secure url from server
     if (type === "image") {
       file = selectedFile;
-      contentType = "application/png";
+      contentType = "multipart/form-data";
     }
     if (type === "pdf") {
       file = mediaKit;
@@ -178,6 +182,8 @@ const UpdateProfile = () => {
       console.log(pdfURL);
 
       updateUserMediaKit(pdfURL);
+
+      setSuccessMsg("✅ File was uploaded!");
     }
 
     // add any extra information to server
@@ -216,9 +222,6 @@ const UpdateProfile = () => {
       } else {
         alert(response.status);
       }
-      showPageOne(false);
-      showPageTwo(false);
-      showPageThree(true);
     } catch (err) {
       console.log(err);
     }
@@ -397,6 +400,16 @@ const UpdateProfile = () => {
                     >
                       Update Profile
                     </button>
+                    <button
+                      type="button"
+                      className="update-profile__btn-cta"
+                      onClick={() => {
+                        showPageOne(false);
+                        showPageTwo(true);
+                      }}
+                    >
+                      Next Page
+                    </button>
                   </div>
                 </div>
               </form>
@@ -454,20 +467,16 @@ const UpdateProfile = () => {
                       alt="aws avatar"
                     />
                   ) : (
-                    ""
-                  )}
-                  {backendData.avatar ? (
                     <img
                       className="update-profile__profile-pic"
-                      src={backendData.avatar}
-                      alt="aws avatar"
+                      src={greyCircle}
+                      alt="blank avatar"
                     />
-                  ) : (
-                    ""
                   )}
+
                   <button
                     type="submit"
-                    onClick={(e) => handleAwsUpload(e, "image, type")}
+                    onClick={(e) => handleAwsUpload(e, "image")}
                     className="update-profile__btn-cta"
                   >
                     Upload Photo
@@ -500,7 +509,7 @@ const UpdateProfile = () => {
           {pageThree ? (
             <>
               {" "}
-              <p className="update-profile__description mb-1 text--bold">
+              <p className="update-profile__description mb-p5 text--bold">
                 Upload Files
               </p>
               <form
@@ -558,6 +567,7 @@ const UpdateProfile = () => {
                   ) : (
                     ""
                   )}
+                  <p className="mb-1">{successMsg ? `${successMsg}` : ""}</p>
                   <button
                     type="submit"
                     onClick={(e) => handleAwsUpload(e, "pdf")}
@@ -565,15 +575,13 @@ const UpdateProfile = () => {
                   >
                     Upload File
                   </button>
-                  <button
-                    type="button"
-                    className="update-profile__btn-cta"
-                    onClick={() => {
-                      showPageTwo(false);
-                      showPageThree(true);
-                    }}
-                  >
-                    Next Page
+                  <button type="button" className="update-profile__btn-cta">
+                    <Link
+                      to="/dashboard"
+                      className="update-profile__link--dashboard"
+                    >
+                      Go to Dashboard
+                    </Link>
                   </button>
 
                   {errMsg ? (
