@@ -1,0 +1,123 @@
+@use "partials/index" as *;
+
+.create-project {
+  &__close-btn {
+    width: 70%;
+    border: 1px solid black;
+    border-radius: 30px;
+  }
+
+  &__success-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__text {
+    &--header {
+      font-family: "SF Pro";
+    }
+  }
+
+  &__hide-btn {
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 0.4rem;
+    background-color: $background-accessibility-grey;
+  }
+}
+
+.create-project-form {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.5rem;
+  font-size: 0.8rem;
+  width: 500px;
+  &__profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+  }
+  &__media-kit {
+    &--link {
+      text-decoration: underline;
+      margin-bottom: 0.5rem;
+    }
+  }
+  &__text {
+    &--success {
+      color: $success-color;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__label-row-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__instructions {
+    font-size: 14px;
+    color: $text-dark-grey;
+    margin-bottom: 1rem;
+    &--center {
+      text-align: center;
+    }
+    &--offscreen {
+      position: absolute;
+      left: -9999px;
+    }
+  }
+
+  &__label {
+    font-size: 16px;
+    color: #1f1f1f;
+    margin-bottom: 0.1rem;
+  }
+  &__input {
+    font-size: 16px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    &--file {
+      width: 300px;
+      text-align: center;
+      margin: 0.3rem 6rem;
+      &::file-selector-button {
+        border-radius: 5px;
+        font-family: "DM Sans";
+        background: $background-light-color;
+        color: $text-dark-color;
+        width: 200px;
+        display: block;
+      }
+    }
+
+    &--invalid {
+      font-size: 16px;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      border: 1px solid red;
+    }
+    &--password {
+      margin-bottom: 0.2rem;
+    }
+  }
+}
+
+.create-project-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  &__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

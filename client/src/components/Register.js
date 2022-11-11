@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/register.scss";
 import influencerHeadshot from "../assets/register/black-model-afro.png";
+import signUpImg from "../assets/signup.png";
 import RegisterForm from "./RegisterForm";
 import RegisterSelect from "./RegisterSelect";
 
@@ -64,11 +65,19 @@ const Register = () => {
               ""
             )}
           </div>
-          <img
-            src={influencerHeadshot}
-            alt="headshot of a model in a black coat"
-            className="landing__img-right"
-          />
+          {!showInfluencerForm && !showBrandForm ? (
+            <img
+              src={influencerHeadshot}
+              alt="headshot of a model in a black coat"
+              className="landing__img-right"
+            />
+          ) : (
+            <img
+              src={signUpImg}
+              alt="headshot of a model in a black coat"
+              className="landing__img-right"
+            />
+          )}
         </section>
       ) : (
         ""

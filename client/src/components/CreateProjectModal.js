@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ReactDOM from "react-dom";
 import {
@@ -20,6 +20,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
+import greyCircle from "../assets/greycircle.jpg";
+import "../styles/createprojectmodal.scss";
 
 const MODAL_STYLES = {
   position: "fixed",
@@ -43,16 +45,10 @@ const OVERLAY_STYLES = {
 };
 
 const CREATEPROJECT_URL = "/api/createproject";
+const ADD_PROJECT_IMAGES_URL = "/api/addprojectimage";
 
 const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
-  const changeStatus = (status) => {
-    // e.preventDefault();
-    console.log(status);
-  };
   const { auth } = useAuth(AuthContext);
-  // useEffect(() => {
-  //   console.log(auth.roles);
-  // }, []);
 
   // Create New Project
   const [title, setTitle] = useState("Test Project");
@@ -73,6 +69,7 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
   const [showContractDetails, setShowContractDetails] = useState(true);
   const [showContractGuidelines, setShowContractGuidelines] = useState(false);
   const [showContractPayment, setShowContractPayment] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Payment Page
@@ -88,6 +85,10 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
   const [linkInBio, setLinkInBio] = useState(
     "https://glossier.com/products/cloud-paint"
   );
+
+  // Project
+  const [socialExample, setSocialExample] = useState("");
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState("");
 
   // Project Guideline Helper Functions
   const handleKeyDown = async (e) => {
@@ -178,8 +179,107 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
         withCredentials: true,
       });
 
-      console.log("Response Data", response);
+      console.log("Response Data", response, response.data.project);
       setShowSuccess(true);
+      setProject(response.data.project);
+
+      setShowContractGuidelines(false);
+      setShowUpload(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [awsImage, setAwsImage] = useState("");
+  // holds the new project ID after succesful project creation
+  const [project, setProject] = useState("");
+
+  useEffect(() => {
+    console.log(project);
+  }, [project]);
+
+  const uploadImgFileHandler = (e) => {
+    console.log("file was chosen", e.target.files[0]);
+    setSelectedFile(e.target.files[0]);
+    setIsFilePicked(true);
+  };
+
+  const handleAwsUpload = async (e, type) => {
+    e.preventDefault();
+    let amazonURL;
+    let file;
+    let contentType;
+    // get secure url from server
+    if (type === "image") {
+      file = selectedFile;
+      contentType = "multipart/form-data";
+    }
+    try {
+      const res = await axios.get("/api/s3");
+      amazonURL = res.data.url;
+      console.log("got the secure url from S3", amazonURL);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // post the image to S3
+    await fetch(amazonURL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      // withCredentials: true,
+      body: file,
+    });
+
+    if (type === "image") {
+      const imageURL = amazonURL.split("?")[0];
+      console.log(imageURL);
+
+      setAwsImage(imageURL);
+
+      updateProjectExamples(imageURL);
+    }
+  };
+
+  const updateProjectExamples = async (imageID, social) => {
+    console.log("Image ID", imageID);
+    console.log("Project ID", project._id);
+    console.log("Adding an example to:", socialExample);
+
+    try {
+      const payload = JSON.stringify({
+        projectID: project._id,
+        imageURL: imageID,
+        social: socialExample,
+      });
+      console.log("Update Profile Payload", payload);
+      const response = await axios.post(ADD_PROJECT_IMAGES_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      setUploadSuccessMsg(
+        `Example image for ${
+          socialExample[0].toUpperCase() + socialExample.slice(1)
+        } was succesfully uploaded! You may add more files for other socials.`
+      );
+      console.log(
+        "The example image was added to the project",
+        response.data.project
+      );
+
+      // reset
+      setSocialExample("");
+
+      if (response.status === 200) {
+      } else {
+        alert(response.status);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -191,433 +291,560 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
     <div style={OVERLAY_STYLES} className="">
       <div style={MODAL_STYLES} className="">
         <p style={{ color: "black" }}></p>
-        <form action="">
-          <div className="create-project-container">
-            <form>
-              {showContractDetails ? (
-                <div className="create-project-page">
-                  <div className="create-project-header">
-                    <h2 className="create-project-header">
-                      Create a New Project 🎨
-                    </h2>
-                    <button
-                      className="create-project-close-project-btn"
-                      onClick={onClose}
-                      type="button"
-                    >
-                      <FontAwesomeIcon
-                        icon={faSquareMinus}
-                        className="icon-left"
-                      />
-                      Hide
-                    </button>
-                  </div>
-                  <label htmlFor="title">Project Title</label>
-                  <input
-                    onChange={(e) => {
-                      setTitle(e.target.value);
-                    }}
-                    type="text"
-                    id="title"
-                    autoComplete="off"
-                    value={title}
-                    required
-                    placeholder="E.g., Fall Summer Promo"
-                  />
-                  <label htmlFor="influencer">
-                    <FontAwesomeIcon className="icon-left" icon={faUser} />
-                    Influencer Assigned
-                  </label>
-                  <input
-                    onChange={(e) => {
-                      setInfluencerAssigned(e.target.value);
-                    }}
-                    type="text"
-                    id="influencer"
-                    autoComplete="off"
-                    value={influencerAssigned}
-                    required
-                    placeholder="For testing: shawnchemicalengineer or shayhayashico"
-                  />
-                  <label htmlFor="instagramdeliverable">
-                    <FontAwesomeIcon className="icon-left" icon={faInstagram} />
-                    Instagram Deliverable
-                  </label>
-                  <input
-                    type="text"
-                    onChange={(e) => {
-                      setInstagramDeliverable(e.target.value);
-                    }}
-                    placeholder="For example: 1 instagram story featuring the product"
-                    value={instagramDeliverable}
-                  />
-                  <label htmlFor="tiktokdeliverable">
-                    <FontAwesomeIcon className="icon-left" icon={faTiktok} />
-                    Tik Tok Deliverable
-                  </label>
-                  <input
-                    type="text"
-                    onChange={(e) => {
-                      setTiktokDeliverable(e.target.value);
-                    }}
-                    placeholder="For example: A 15-20sec tik tok"
-                    value={tiktokDeliverable}
-                  />
-                  <label htmlFor="youtubedeliverable">
-                    <FontAwesomeIcon className="icon-left" icon={faYoutube} />
-                    YouTube Deliverable
-                  </label>
-                  <input
-                    type="text"
-                    onChange={(e) => {
-                      setYoutubeDeliverable(e.target.value);
-                    }}
-                    placeholder="Minimum 30 sec product mention during video"
-                    value={youtubeDeliverable}
-                  />
-                  <label htmlFor="reviewdeadline">
-                    <FontAwesomeIcon className="icon-left" icon={faCalendar} />
-                    Deadline to Submit for First Review
-                  </label>
-                  <input
-                    onChange={(e) => {
-                      setReviewDeadline(e.target.value);
-                    }}
-                    type="date"
-                    id="reviewdeadline"
-                    autoComplete="off"
-                    value={reviewDeadline}
-                    required
-                  />
-                  <label htmlFor="deadline">
-                    <FontAwesomeIcon className="icon-left" icon={faCalendar} />
-                    Deadline to Post the Final Deliverable(s)
-                  </label>
-                  <input
-                    onChange={(e) => {
-                      setDeadline(e.target.value);
-                    }}
-                    type="date"
-                    id="deadline"
-                    autoComplete="off"
-                    value={deadline}
-                    required
-                  />
-                  <label htmlFor="time">
-                    <FontAwesomeIcon className="icon-left" icon={faClock} />
-                    Deadline Time
-                  </label>
-                  <input
-                    onChange={(e) => {
-                      setDeadlineTime(e.target.value);
-                    }}
-                    type="time"
-                    id="time"
-                    autoComplete="off"
-                    value={deadlineTime}
-                    required
-                  />
-
-                  <label htmlFor="numberofrevisions">
-                    Revisions Required (3 max)
-                  </label>
-                  <p className="note__italic">
-                    Enter a number from 0-2. More revisions decreases the
-                    likelihood of an influencers to accept the contract.
-                  </p>
-                  <input
-                    type="text"
-                    placeholder="Enter a number"
-                    onChange={(e) => {
-                      setNumberOfRevisions(e.target.value);
-                    }}
-                    value={numberOfRevisions}
-                  />
+        {/* <form action=""> */}
+        <div className="create-project-container">
+          <form className="create-project-container__form">
+            {showContractDetails ? (
+              <div className="create-project-page">
+                <div className="create-project-header">
+                  <h2 className="create-project-header">
+                    Create a New Project 🎨
+                  </h2>
                   <button
-                    onClick={() => {
-                      setShowContractDetails(false);
-                      setShowContractPayment(true);
-                    }}
+                    className="create-project-close-project-btn"
+                    onClick={onClose}
                     type="button"
                   >
                     <FontAwesomeIcon
+                      icon={faSquareMinus}
                       className="icon-left"
-                      icon={faArrowRight}
                     />
-                    Next Page
+                    Hide
                   </button>
                 </div>
-              ) : (
-                ""
-              )}
-              {showContractPayment ? (
-                <div className="create-project-page">
-                  <div className="create-project-header">
-                    <h2 className="create-project-header">
-                      Payment Details 💳
-                    </h2>
-                    <button
-                      className="create-project-close-project-btn"
-                      onClick={onClose}
-                      type="button"
-                    >
-                      <FontAwesomeIcon
-                        icon={faSquareMinus}
-                        className="icon-left"
-                      />
-                      Hide
-                    </button>
-                  </div>
+                <label htmlFor="title">Project Title</label>
+                <input
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                  type="text"
+                  id="title"
+                  autoComplete="off"
+                  value={title}
+                  required
+                  placeholder="E.g., Fall Summer Promo"
+                />
+                <label htmlFor="influencer">
+                  <FontAwesomeIcon className="icon-left" icon={faUser} />
+                  Influencer Assigned
+                </label>
+                <input
+                  onChange={(e) => {
+                    setInfluencerAssigned(e.target.value);
+                  }}
+                  type="text"
+                  id="influencer"
+                  autoComplete="off"
+                  value={influencerAssigned}
+                  required
+                  placeholder="For testing: shawnchemicalengineer or shayhayashico"
+                />
+                <label htmlFor="instagramdeliverable">
+                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
+                  Instagram Deliverable
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setInstagramDeliverable(e.target.value);
+                  }}
+                  placeholder="For example: 1 instagram story featuring the product"
+                  value={instagramDeliverable}
+                />
+                <label htmlFor="tiktokdeliverable">
+                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
+                  Tik Tok Deliverable
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setTiktokDeliverable(e.target.value);
+                  }}
+                  placeholder="For example: A 15-20sec tik tok"
+                  value={tiktokDeliverable}
+                />
+                <label htmlFor="youtubedeliverable">
+                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
+                  YouTube Deliverable
+                </label>
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setYoutubeDeliverable(e.target.value);
+                  }}
+                  placeholder="Minimum 30 sec product mention during video"
+                  value={youtubeDeliverable}
+                />
+                <label htmlFor="reviewdeadline">
+                  <FontAwesomeIcon className="icon-left" icon={faCalendar} />
+                  Deadline to Submit for First Review
+                </label>
+                <input
+                  onChange={(e) => {
+                    setReviewDeadline(e.target.value);
+                  }}
+                  type="date"
+                  id="reviewdeadline"
+                  autoComplete="off"
+                  value={reviewDeadline}
+                  required
+                />
+                <label htmlFor="deadline">
+                  <FontAwesomeIcon className="icon-left" icon={faCalendar} />
+                  Deadline to Post the Final Deliverable(s)
+                </label>
+                <input
+                  onChange={(e) => {
+                    setDeadline(e.target.value);
+                  }}
+                  type="date"
+                  id="deadline"
+                  autoComplete="off"
+                  value={deadline}
+                  required
+                />
+                <label htmlFor="time">
+                  <FontAwesomeIcon className="icon-left" icon={faClock} />
+                  Deadline Time
+                </label>
+                <input
+                  onChange={(e) => {
+                    setDeadlineTime(e.target.value);
+                  }}
+                  type="time"
+                  id="time"
+                  autoComplete="off"
+                  value={deadlineTime}
+                  required
+                />
 
-                  <label htmlFor="paymentmethod">
-                    Select your method of payment 💵
-                    <select
-                      value={paymentMethod}
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                        setPaymentMethod(e.target.value);
-                      }}
-                    >
-                      <option value="wire transfer">Stripe</option>
-                      <option value="paypal">Paypal</option>
-                      <option value="none">None - Product Only</option>
-                    </select>
-                  </label>
-                  <label htmlFor="paymentproduct">
-                    Describe the product you are sending
-                    <select
-                      value={paymentProduct}
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                        setPaymentProduct(e.target.value);
-                      }}
-                    >
-                      <option value="lotion">Lotion</option>
-                      <option value="headphones">Headphones</option>
-                      <option value="none">None - Cash Only</option>
-                    </select>
-                  </label>
-                  <label htmlFor="paymentprice">Payment Amount ($CAD)</label>
-                  <input
-                    type="text"
-                    value={paymentPrice}
-                    onChange={(e) => setPaymentPrice(e.target.value)}
-                  />
+                <label htmlFor="numberofrevisions">
+                  Revisions Required (3 max)
+                </label>
+                <p className="note__italic">
+                  Enter a number from 0-2. More revisions decreases the
+                  likelihood of an influencers to accept the contract.
+                </p>
+                <input
+                  type="text"
+                  placeholder="Enter a number"
+                  onChange={(e) => {
+                    setNumberOfRevisions(e.target.value);
+                  }}
+                  value={numberOfRevisions}
+                />
+                <button
+                  onClick={() => {
+                    setShowContractDetails(false);
+                    setShowContractPayment(true);
+                  }}
+                  type="button"
+                >
+                  <FontAwesomeIcon className="icon-left" icon={faArrowRight} />
+                  Next Page
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+            {showContractPayment ? (
+              <div className="create-project-page">
+                <div className="create-project-header">
+                  <h2 className="create-project-header">Payment Details 💳</h2>
                   <button
-                    onClick={() => {
-                      setShowContractPayment(false);
-                      setShowContractDetails(true);
-                    }}
-                    type="button"
-                  >
-                    <FontAwesomeIcon className="icon-left" icon={faArrowLeft} />
-                    Previous Page
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowContractPayment(false);
-                      setShowContractGuidelines(true);
-                    }}
+                    className="create-project-close-project-btn"
+                    onClick={onClose}
                     type="button"
                   >
                     <FontAwesomeIcon
+                      icon={faSquareMinus}
                       className="icon-left"
-                      icon={faArrowRight}
                     />
-                    Next Page
+                    Hide
                   </button>
                 </div>
-              ) : (
-                ""
-              )}
 
-              {showContractGuidelines ? (
-                <div className="create-project-page">
-                  <div className="create-project-header">
-                    <h2 className="create-project-header">
-                      Contract Guidelines
-                    </h2>
-                    <button
-                      className="create-project-close-project-btn"
-                      onClick={onClose}
-                      type="button"
-                    >
-                      <FontAwesomeIcon
-                        icon={faSquareMinus}
-                        className="icon-left"
-                      />
-                      Hide
-                    </button>
-                  </div>
-
-                  <label htmlFor="keywords">
-                    Please add some keywords that describe your project
-                    <br />
-                    <span className="note__italic">
-                      E.g., sustainability, fashion, fitness, lifestyle
-                    </span>
-                  </label>
-                  <p></p>
-                  <div className="keywords-container">
-                    {keywords.map((keyword, index) => (
-                      <div className="keywords-item" key={index}>
-                        <span className="keywords-text">{keyword}</span>
-                        <span
-                          onClick={() => removeKeyword(index)}
-                          className="keywords-delete"
-                        >
-                          &times;
-                        </span>
-                      </div>
-                    ))}
-                    <input
-                      onKeyDown={handleKeyDown}
-                      type="text"
-                      className="keywords-input"
-                      placeholder="Add a keyword"
-                    />
-                  </div>
-                  <label htmlFor="hashtags">
-                    Are there any required hashtags?
-                    <br />
-                    <span className="note__italic">
-                      E.g., #glossier, #ad, #bossbabe, #studentlife
-                    </span>
-                  </label>
-                  <p></p>
-                  <div className="keywords-container">
-                    {hashtags.map((hashtag, index) => (
-                      <div className="keywords-item" key={index}>
-                        <span className="keywords-text">{hashtag}</span>
-                        <span
-                          onClick={() => removeKeyword(index)}
-                          className="keywords-delete"
-                        >
-                          &times;
-                        </span>
-                      </div>
-                    ))}
-                    <input
-                      onKeyDown={handleKeyDown}
-                      type="text"
-                      className="hashtags-input"
-                      placeholder="Add a hashtag"
-                    />
-                  </div>
-                  <label htmlFor="tags">
-                    Are there any required tags?
-                    <br />
-                    <span className="note__italic">
-                      E.g., @glossier, @saje, @nike
-                    </span>
-                  </label>
-                  <p></p>
-                  <div className="keywords-container">
-                    {tags.map((tag, index) => (
-                      <div className="keywords-item" key={index}>
-                        <span className="keywords-text">{tag}</span>
-                        <span
-                          onClick={() => removeKeyword(index)}
-                          className="keywords-delete"
-                        >
-                          &times;
-                        </span>
-                      </div>
-                    ))}
-                    <input
-                      onKeyDown={handleKeyDown}
-                      type="text"
-                      className="tags-input"
-                      placeholder="Add a tag"
-                    />
-                  </div>
-                  <label htmlFor="phrases">
-                    Are there any recommended phrases?
-                    <br />
-                    <span className="note__italic">
-                      E.g., I love how natural it looks. It's a part of my
-                      everyday makeup look.
-                    </span>
-                  </label>
-                  <p></p>
-                  <div className="keywords-container">
-                    {phrases.map((phrase, index) => (
-                      <div className="keywords-item" key={index}>
-                        <span className="keywords-text">{phrase}</span>
-                        <span
-                          onClick={() => removeKeyword(index)}
-                          className="keywords-delete"
-                        >
-                          &times;
-                        </span>
-                      </div>
-                    ))}
-                    <input
-                      onKeyDown={handleKeyDown}
-                      type="text"
-                      className="phrases-input"
-                      placeholder="Add a phrase"
-                    />
-                  </div>
-                  <label htmlFor="linkinbio">Link in Bio</label>
-                  <span className="note__italic"></span>
-                  <input
+                <label htmlFor="paymentmethod">
+                  Select your method of payment 💵
+                  <select
+                    value={paymentMethod}
                     onChange={(e) => {
-                      setLinkInBio(e.target.value);
+                      console.log(e.target.value);
+                      setPaymentMethod(e.target.value);
                     }}
-                    value={linkInBio}
-                    type="url"
-                    id="linkinbio"
-                    name="linkinbio"
-                    placeholder="https://glossier.com/products/cloud-paint"
-                  />
-                  {!showSuccess ? (
-                    <>
-                      <button
-                        onClick={() => {
-                          setShowContractGuidelines(false);
-                          setShowContractPayment(true);
-                        }}
-                        type="button"
+                  >
+                    <option value="wire transfer">Stripe</option>
+                    <option value="paypal">Paypal</option>
+                    <option value="none">None - Product Only</option>
+                  </select>
+                </label>
+                <label htmlFor="paymentproduct">
+                  Describe the product you are sending
+                  <select
+                    value={paymentProduct}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      setPaymentProduct(e.target.value);
+                    }}
+                  >
+                    <option value="lotion">Lotion</option>
+                    <option value="headphones">Headphones</option>
+                    <option value="none">None - Cash Only</option>
+                  </select>
+                </label>
+                <label htmlFor="paymentprice">Payment Amount ($CAD)</label>
+                <input
+                  type="text"
+                  value={paymentPrice}
+                  onChange={(e) => setPaymentPrice(e.target.value)}
+                />
+                <button
+                  onClick={() => {
+                    setShowContractPayment(false);
+                    setShowContractDetails(true);
+                  }}
+                  type="button"
+                >
+                  <FontAwesomeIcon className="icon-left" icon={faArrowLeft} />
+                  Previous Page
+                </button>
+                <button
+                  onClick={() => {
+                    setShowContractPayment(false);
+                    setShowContractGuidelines(true);
+                  }}
+                  type="button"
+                >
+                  <FontAwesomeIcon className="icon-left" icon={faArrowRight} />
+                  Next Page
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {showContractGuidelines ? (
+              <div className="create-project-page">
+                <div className="create-project-header">
+                  <h2 className="create-project-header">Contract Guidelines</h2>
+                  <button
+                    className="create-project-close-project-btn"
+                    onClick={onClose}
+                    type="button"
+                  >
+                    <FontAwesomeIcon
+                      icon={faSquareMinus}
+                      className="icon-left"
+                    />
+                    Hide
+                  </button>
+                </div>
+
+                <label htmlFor="keywords">
+                  Please add some keywords that describe your project
+                  <br />
+                  <span className="note__italic">
+                    E.g., sustainability, fashion, fitness, lifestyle
+                  </span>
+                </label>
+                <p></p>
+                <div className="keywords-container">
+                  {keywords.map((keyword, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{keyword}</span>
+                      <span
+                        onClick={() => removeKeyword(index)}
+                        className="keywords-delete"
                       >
-                        <FontAwesomeIcon
-                          className="icon-left"
-                          icon={faArrowLeft}
-                        />
-                        Previous Page
-                      </button>
-                      <button type="button" onClick={submitProject}>
-                        <FontAwesomeIcon className="icon-left" icon={faPlus} />
-                        Create Project
-                      </button>
-                    </>
-                  ) : (
-                    ""
-                  )}
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                  <input
+                    onKeyDown={handleKeyDown}
+                    type="text"
+                    className="keywords-input"
+                    placeholder="Add a keyword"
+                  />
+                </div>
+                <label htmlFor="hashtags">
+                  Are there any required hashtags?
+                  <br />
+                  <span className="note__italic">
+                    E.g., #glossier, #ad, #bossbabe, #studentlife
+                  </span>
+                </label>
+                <p></p>
+                <div className="keywords-container">
+                  {hashtags.map((hashtag, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{hashtag}</span>
+                      <span
+                        onClick={() => removeKeyword(index)}
+                        className="keywords-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                  <input
+                    onKeyDown={handleKeyDown}
+                    type="text"
+                    className="hashtags-input"
+                    placeholder="Add a hashtag"
+                  />
+                </div>
+                <label htmlFor="tags">
+                  Are there any required tags?
+                  <br />
+                  <span className="note__italic">
+                    E.g., @glossier, @saje, @nike
+                  </span>
+                </label>
+                <p></p>
+                <div className="keywords-container">
+                  {tags.map((tag, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{tag}</span>
+                      <span
+                        onClick={() => removeKeyword(index)}
+                        className="keywords-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                  <input
+                    onKeyDown={handleKeyDown}
+                    type="text"
+                    className="tags-input"
+                    placeholder="Add a tag"
+                  />
+                </div>
+                <label htmlFor="phrases">
+                  Are there any recommended phrases?
+                  <br />
+                  <span className="note__italic">
+                    E.g., I love how natural it looks. It's a part of my
+                    everyday makeup look.
+                  </span>
+                </label>
+                <p></p>
+                <div className="keywords-container">
+                  {phrases.map((phrase, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{phrase}</span>
+                      <span
+                        onClick={() => removeKeyword(index)}
+                        className="keywords-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                  <input
+                    onKeyDown={handleKeyDown}
+                    type="text"
+                    className="phrases-input"
+                    placeholder="Add a phrase"
+                  />
+                </div>
+                <label htmlFor="linkinbio">Link in Bio</label>
+                <span className="note__italic"></span>
+                <input
+                  onChange={(e) => {
+                    setLinkInBio(e.target.value);
+                  }}
+                  value={linkInBio}
+                  type="url"
+                  id="linkinbio"
+                  name="linkinbio"
+                  placeholder="https://glossier.com/products/cloud-paint"
+                />
+
+                {!showSuccess ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        setShowContractGuidelines(false);
+                        setShowContractPayment(true);
+                      }}
+                      type="button"
+                    >
+                      <FontAwesomeIcon
+                        className="icon-left"
+                        icon={faArrowLeft}
+                      />
+                      Previous Page
+                    </button>
+                    <button type="button" onClick={submitProject}>
+                      <FontAwesomeIcon className="icon-left" icon={faPlus} />
+                      Create Project
+                    </button>
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              " "
+            )}
+          </form>
+          {/* Update the example images */}
+
+          {showUpload ? (
+            <>
+              {showSuccess ? (
+                <div className="create-project__success-div">
+                  <h3 className="create-project__text create-project__text--header">
+                    The project was created!
+                  </h3>
+                  <button
+                    className="create-project__hide-btn"
+                    onClick={onClose}
+                    type="button"
+                  >
+                    <FontAwesomeIcon
+                      icon={faSquareMinus}
+                      className="icon-left"
+                    />
+                    Hide
+                  </button>
                 </div>
               ) : (
-                " "
+                ""
               )}
-            </form>
-          </div>
-        </form>
-        {showSuccess ? (
-          <div className="flex-row">
-            <h3 className="create-project-header">
-              Successfully created project!
-            </h3>
-            <button
-              className="create-project-close-project-btn"
-              onClick={onClose}
-              type="button"
-            >
-              <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
-              Hide
-            </button>
-          </div>
-        ) : (
-          ""
-        )}
+              <h4>Upload Examples</h4>
+              <p className="create-project-form__instructions">
+                Please upload any examples for the influencer to reference. E.g.
+                samples, previous work by others, etc.
+              </p>
+              <form
+                className="create-project-form"
+                encType="multipart/form-data"
+              >
+                <label htmlFor="avatar">File Upload</label>
+                <input
+                  type="file"
+                  id="avatar"
+                  name="avatar"
+                  onChange={uploadImgFileHandler}
+                  required
+                  className="create-project-form__input create-project-form__input--file"
+                />
+                <p
+                  id="uidnote"
+                  className="create-project-form__instructions  create-project-form__instructions--center"
+                >
+                  Max 2MB, .png only
+                </p>
+                <label htmlFor="social">Which social is this for?</label>
+                <select
+                  name="social"
+                  id="social"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setSocialExample(e.target.value);
+                  }}
+                  value={socialExample}
+                  className="create-project-form__input create-project-form__input--select "
+                >
+                  <option value="none" className="create-project-form__social">
+                    Select an option below
+                  </option>
+                  <option
+                    value="instagram"
+                    className="create-project-form__social"
+                  >
+                    Instagram
+                  </option>
+                  <option
+                    value="tiktok"
+                    className="create-project-form__social"
+                  >
+                    Tik Tok
+                  </option>
+                  <option
+                    value="youtube"
+                    className="create-project-form__social"
+                  >
+                    Youtube
+                  </option>
+                </select>
+
+                {/* {isFilePicked && selectedFile.size > 2e6 ? (
+                  <div>
+                    <p className="update-profile__error">
+                      Error: The image size exceeds the 2MB limit!
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {isFilePicked && selectedFile.type !== "image/png" ? (
+                  <div>
+                    <p className="update-profile__error">
+                      Error: The file uploaded is not a .png image!
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )} */}
+
+                <div className="flex-col-center">
+                  {awsImage ? (
+                    <img
+                      className="create-project-form__profile-pic"
+                      src={awsImage}
+                      alt="aws avatar"
+                    />
+                  ) : (
+                    <img
+                      className="create-project-form__profile-pic"
+                      src={greyCircle}
+                      alt="blank avatar"
+                    />
+                  )}
+                  {uploadSuccessMsg ? (
+                    <p className="create-project-form__text create-project-form__text--success">
+                      {uploadSuccessMsg}
+                    </p>
+                  ) : (
+                    " "
+                  )}
+                  <button
+                    type="submit"
+                    onClick={(e) => handleAwsUpload(e, "image")}
+                    className="update-profile__btn-cta"
+                  >
+                    Upload Photo
+                  </button>
+                  <button
+                    className="create-project__close-btn"
+                    onClick={onClose}
+                    type="button"
+                  >
+                    <FontAwesomeIcon
+                      icon={faSquareMinus}
+                      className="icon-left"
+                    />
+                    Back to Dashboard
+                  </button>
+                  {/* {errMsg ? (
+                  <p aria-live="assertive" className="update-profile__error">
+                    {errMsg}
+                  </p>
+                ) : (
+                  ""
+                )} */}
+                </div>
+              </form>
+            </>
+          ) : (
+            ""
+          )}
+        </div>
+        {/* </form> */}
       </div>
     </div>,
     document.getElementById("portal")

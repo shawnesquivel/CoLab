@@ -202,39 +202,9 @@ const Dashboard = () => {
     const filteredProjects = currentProjects.filter(
       (project) => project.status !== "project complete"
     );
-    console.log("filtered projects", filteredProjects);
 
     setInProgressProjects(filteredProjects);
   }, [currentProjects]);
-
-  // Entering keywords, hashtags, etc.
-  const handleKeyDown = async (e) => {
-    // console.log(e.target.className);
-    if (e.key !== "Enter") return;
-    const value = e.target.value;
-    if (!value.trim()) return;
-    if (e.target.className === "keywords-input") {
-      setKeywords([...keywords, value]);
-      console.log(keywords);
-    }
-    if (e.target.className === "hashtags-input") {
-      setHashtags([...hashtags, value]);
-      console.log(hashtags);
-    }
-    if (e.target.className === "tags-input") {
-      setTags([...tags, value]);
-      console.log(tags);
-    }
-    if (e.target.className === "phrases-input") {
-      setPhrases([...phrases, value]);
-      console.log(phrases);
-    }
-    e.target.value = "";
-  };
-  // Removing keywords, hashtags, etc.
-  const removeKeyword = (deleteIndex) => {
-    setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
-  };
 
   return (
     <section className="dashboard">
@@ -252,7 +222,10 @@ const Dashboard = () => {
           />
         </div>
         <nav className="dashboard-links">
-          <Link to="/dashboard" className="dashboard-links__link">
+          <Link
+            to="/dashboard"
+            className="dashboard-links__link dashboard-links__link--active"
+          >
             Dashboard
           </Link>
           <Link to="/upcoming" className="dashboard-links__link">
@@ -276,8 +249,7 @@ const Dashboard = () => {
             <div className="dashboard-header-left">
               {backendData.hasUpdatedProfile ? (
                 <h3 className="dashboard-header-left__greeting">
-                  Welcome back, {backendData.firstName} {backendData.lastName}.
-                  👋
+                  Welcome back, {backendData.firstName}. 👋
                 </h3>
               ) : (
                 <>
@@ -354,50 +326,56 @@ const Dashboard = () => {
             {/* Contains all the active project cards */}
             <section className="project-container">
               {inProgressProjects?.map((project, i) => (
-                <div
-                  key={project._id}
-                  // Highlight the card for influencers or brand
-                  className={
-                    (project.waitingForInfluencer &&
-                      auth.roles.includes(2000)) ||
-                    (!project.waitingForInfluencer && auth.roles.includes(3000))
-                      ? "project-container__card project-highlight"
-                      : "project-container__card"
-                  }
+                // <div
+                //   key={project._id}
+                //   // Highlight the card for influencers or brand
+                //   className={
+                //     (project.waitingForInfluencer &&
+                //       auth.roles.includes(2000)) ||
+                //     (!project.waitingForInfluencer && auth.roles.includes(3000))
+                //       ? "project-container__card project-highlight"
+                //       : "project-container__card"
+                //   }
+                // >
+                <button
+                  onClick={() => {
+                    setProjectModal(project);
+                    setShowModal(true);
+                  }}
+                  className="dashboard__btn"
                 >
-                  <button
-                    onClick={() => {
-                      setProjectModal(project);
-                      setShowModal(true);
-                    }}
-                    className="dashboard__btn"
-                  >
+                  <div className="img-container">
                     <img
                       src={projectCard}
                       alt="project example"
                       className="project-container__img"
                     />
-                    <div className="project-container__text-container">
-                      <h4 className="project-container__text project-container__text--company">
-                        {project.company}
-                      </h4>
-                      <h5 className="project-container__text project-container__text--title">
-                        {" "}
-                        {project.title.length > 20
-                          ? project.title.slice(0, 20).concat("...")
-                          : project.title}
-                        {project.waitingForInfluencer &&
-                        auth.roles.includes(2000) ? (
-                          <>✨</>
-                        ) : (
-                          ""
-                        )}
-                      </h5>
-                      <h6 className="project-container__text project-container__text--date">
-                        {moment(project.deadline).format("MMMM Do YYYY")}
-                      </h6>
 
-                      {/* <button
+                    <p className="img-container__text">
+                      {project.paymentProduct ? "🎁 Gifted" : ""}
+                    </p>
+                  </div>
+                  <div className="project-container__text-container">
+                    <h4 className="project-container__text project-container__text--company">
+                      {project.company}
+                    </h4>
+                    <h5 className="project-container__text project-container__text--title">
+                      {" "}
+                      {project.title.length > 20
+                        ? project.title.slice(0, 20).concat("...")
+                        : project.title}
+                      {project.waitingForInfluencer &&
+                      auth.roles.includes(2000) ? (
+                        <>✨</>
+                      ) : (
+                        ""
+                      )}
+                    </h5>
+                    <h6 className="project-container__text project-container__text--date">
+                      {moment(project.deadline).format("MMMM Do YYYY")}
+                    </h6>
+
+                    {/* <button
                     onClick={() => {
                       setProjectModal(project);
                       setShowModal(true);
@@ -407,26 +385,24 @@ const Dashboard = () => {
                     <FontAwesomeIcon icon={faExpand} />
                   </button> */}
 
-                      <p>{project.paymentProduct ? "🎁 Gifted" : ""}</p>
-
-                      <p className="project-container__text project-container__text--status">
-                        {project.status.toLowerCase() === "reviewing contract"
-                          ? "📄 Influencer reviewing contract."
-                          : ""}
-                        {project.status.toLowerCase() ===
-                        "in progress/waiting for submission"
-                          ? "⚒ Project accepted. Work in progress."
-                          : ""}
-                        {project.status.toLowerCase() === "brand reviewing"
-                          ? "📝 Influencer submitted draft. Waiting for brand to review."
-                          : ""}
-                        {project.status.toLowerCase() === "ready to publish"
-                          ? "✅ Waiting for influencer to post."
-                          : ""}
-                      </p>
-                    </div>
-                  </button>
-                </div>
+                    <p className="project-container__text project-container__text--status">
+                      {project.status.toLowerCase() === "reviewing contract"
+                        ? "📄 Influencer reviewing contract."
+                        : ""}
+                      {project.status.toLowerCase() ===
+                      "in progress/waiting for submission"
+                        ? "⚒ Project accepted. Work in progress."
+                        : ""}
+                      {project.status.toLowerCase() === "brand reviewing"
+                        ? "📝 Influencer submitted draft. Waiting for brand to review."
+                        : ""}
+                      {project.status.toLowerCase() === "ready to publish"
+                        ? "✅ Waiting for influencer to post."
+                        : ""}
+                    </p>
+                  </div>
+                </button>
+                // </div>
               ))}
             </section>
           </>

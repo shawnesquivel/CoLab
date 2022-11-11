@@ -18,16 +18,14 @@ import {
   faStripe,
   faPaypal,
 } from "@fortawesome/free-brands-svg-icons";
-
 import {
   faCircleExclamation,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-
 import campaignPhoto from "../assets/cloudpaint.png";
-
 import axios from "../api/axios";
 import StripeContainer from "./StripeContainer";
+import "../styles/projectmodal.scss";
 
 const moment = require("moment");
 
@@ -222,6 +220,8 @@ const ProjectModal = ({
     }
   };
 
+  // To Do: Include the functionality for the user to upload deliverables
+
   if (!isOpen) return null;
   return ReactDOM.createPortal(
     // #to-do: switch from in-line style to className style
@@ -318,21 +318,21 @@ const ProjectModal = ({
                           icon={faInstagram}
                           className="icon-left"
                         />
-                        {project.instagramDeliverable.task}
+                        {project.instagramTask}
                       </p>
                       <p>
                         <FontAwesomeIcon
                           icon={faTiktok}
                           className="icon-left"
                         />
-                        {project.tiktokDeliverable.task}
+                        {project.tiktokTask}
                       </p>
                       <p>
                         <FontAwesomeIcon
                           icon={faYoutube}
                           className="icon-left"
                         />
-                        {project.youtubeDeliverable.task}
+                        {project.youtubeTask}
                       </p>
                     </div>
                   </div>

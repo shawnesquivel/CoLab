@@ -110,8 +110,7 @@ const upload = multer({
 //   res.send("image is saved");
 // });
 
-// Amazon S3 Bucket
-
+// Amazon S3 Bucket Middleware
 async function generateUploadURL() {
   const region = "us-west-2";
   const bucketName = "colab-images";
@@ -138,14 +137,14 @@ async function generateUploadURL() {
 
   return uploadURL;
 }
-
+// Amazon S3 Bucket Middleware
 app.get("/api/s3", async (req, res) => {
   console.log("inside api/s3");
   const url = await generateUploadURL();
   res.send({ url });
 });
 
-// Testing
+// DEPRECATED - TO UPLOAD IMAGES MANUALLY ON POSTMAN
 app.post("/api/uploadimage", upload.single("avatar"), async (req, res) => {
   /** When using the "single"
       data come in "req.file" regardless of the attribute "name". **/
@@ -180,7 +179,7 @@ app.post("/api/uploadimage", upload.single("avatar"), async (req, res) => {
   res.json({ data: imageID, status: "OK" });
 });
 
-// Find Images
+// DEPRECATED - TO UPLOAD IMAGES MANUALLY ON POSTMAN
 app.post("/api/getimage", async (req, res) => {
   const { imageID } = req.body;
   // const allData = await Image.find({});
@@ -468,7 +467,7 @@ app.post("/api/updateavatar", async (req, res) => {
     res.json({ status: "Error", error: "Could not verify identity" });
   }
 });
-// update Media kit
+// Add the Media Kit to User Profile
 app.post("/api/updatemediakit", async (req, res) => {
   console.log("updating the media kit");
 
@@ -550,6 +549,8 @@ app.post("/api/createproject", async (req, res) => {
     linkInBio
   );
 
+  let projectData;
+
   // Verify  project properties
   if (!title || typeof title !== "string") {
     return res.json({
@@ -605,15 +606,9 @@ app.post("/api/createproject", async (req, res) => {
       brandRepAssigned: brandRepRecord._id,
       influencerAssigned: influencerRecord._id,
       deadline: deadline,
-      instagramDeliverable: {
-        task: instagramDeliverable,
-      },
-      tiktokDeliverable: {
-        task: tiktokDeliverable,
-      },
-      youtubeDeliverable: {
-        task: youtubeDeliverable,
-      },
+      instagramTask: instagramDeliverable,
+      tiktokTask: tiktokDeliverable,
+      youtubeTask: youtubeDeliverable,
       reviewDeadline: reviewDeadline,
       deadlineTime: deadlineTime,
       numberOfRevisions: numberOfRevisions,
@@ -628,15 +623,15 @@ app.post("/api/createproject", async (req, res) => {
     });
     console.log("Project was created:", res);
 
+    projectData = res;
+
     // Add project to brandRep and influencer's currentProjects property
-    // brandRep
     await User.updateOne(
       { _id },
       {
         $push: { currentProjects: res._id },
       }
     );
-    // influencer
     console.log("Brand Rep Was Updated");
 
     await User.updateOne(
@@ -657,10 +652,58 @@ app.post("/api/createproject", async (req, res) => {
     }
     throw err;
   }
-  res.json({ status: "OK" });
+  res.json({ status: "OK", project: projectData });
 });
 
-// Update Project
+// TO DO: Add the Example Image Deliverables to Project
+app.post("/api/addprojectimage", async (req, res) => {
+  console.log("adding example deliverable images to project");
+
+  const { projectID: _id, imageURL, social } = req.body;
+
+  console.log(_id, imageURL, social);
+
+  try {
+    if (social === "instagram") {
+      const projectRes = await Project.updateOne(
+        { _id },
+        {
+          $set: { instagramExample: imageURL },
+        }
+      );
+      console.log("Project Updated Image Files:", projectRes);
+    }
+    if (social === "youtube") {
+      const projectRes = await Project.updateOne(
+        { _id },
+        {
+          $set: { youtubeExample: imageURL },
+        }
+      );
+      console.log("Project Updated Image Files:", projectRes);
+    }
+    if (social === "tiktok") {
+      const projectRes = await Project.updateOne(
+        { _id },
+        {
+          $set: { tiktokExample: imageURL },
+        }
+      );
+      console.log("Project Updated Image Files:", projectRes);
+    }
+
+    const projectRecord = await Project.findOne({ _id }).exec();
+
+    console.log("Updated Project:", projectRecord);
+
+    res.json({ status: "OK", project: projectRecord });
+  } catch (err) {
+    console.log(err);
+    res.json({ status: "Error", error: "Could not verify identity" });
+  }
+});
+
+// Update Project Everytime Status Updates
 app.post("/api/updateproject", async (req, res) => {
   const { token, action, comment, project } = req.body;
   try {
