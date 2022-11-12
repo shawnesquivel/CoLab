@@ -40,15 +40,7 @@ const MODAL_STYLES = {
   padding: "30px",
   zIndex: 1000,
 };
-const OVERLAY_STYLES = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, .7)",
-  zIndex: 1000,
-};
+
 const ProjectModal = ({
   isOpen,
   children,
@@ -56,6 +48,7 @@ const ProjectModal = ({
   projectModal,
   role,
   project,
+  OVERLAY_STYLES,
 }) => {
   useEffect(() => {
     console.log(project);
@@ -416,7 +409,7 @@ const ProjectModal = ({
                                   icon={faInstagram}
                                   className="icon-left"
                                 />
-                                {project.instagramDeliverable.task} on Instagram
+                                {project.instagramTask} on Instagram
                               </p>
                               <button
                                 type="button"
@@ -438,7 +431,7 @@ const ProjectModal = ({
                                   icon={faTiktok}
                                   className="icon-left"
                                 />
-                                {project.tiktokDeliverable.task} on Tik Tok
+                                {project.tiktokTask} on Tik Tok
                               </p>
                               <button
                                 type="button"
@@ -460,7 +453,7 @@ const ProjectModal = ({
                                   icon={faYoutube}
                                   className="icon-left"
                                 />
-                                {project.youtubeDeliverable.task} on YouTube
+                                {project.youtubeTask} on YouTube
                               </p>
                               <button
                                 type="button"
@@ -881,15 +874,15 @@ const ProjectModal = ({
             </p>
             <p>
               <FontAwesomeIcon icon={faInstagram} className="icon-left" />
-              1. {project.instagramDeliverable.task} on Instagram.
+              1. {project.instagramTask} on Instagram.
             </p>
             <p>
               <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-              2. {project.tiktokDeliverable.task} on Tik Tok.
+              2. {project.tiktokTask} on Tik Tok.
             </p>
             <p>
               <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-              3. {project.youtubeDeliverable.task} on YouTube.
+              3. {project.youtubeTask} on YouTube.
             </p>
             <p>
               The creator must upload all content on CoLab by{" "}

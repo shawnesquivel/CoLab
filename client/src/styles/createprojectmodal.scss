@@ -1,6 +1,10 @@
 @use "partials/index" as *;
 
 .create-project {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   &__close-btn {
     width: 70%;
     border: 1px solid black;
@@ -18,23 +22,28 @@
   &__text {
     &--header {
       font-family: "SF Pro";
+      font-size: 48px;
     }
   }
 
   &__hide-btn {
     font-size: 16px;
-    border-radius: 10px;
+    border: none;
     padding: 0.4rem;
-    background-color: $background-accessibility-grey;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
 .create-project-form {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   padding-bottom: 0.5rem;
   font-size: 0.8rem;
-  width: 500px;
+  width: 70vw;
+
   &__profile-pic {
     width: 100px;
     height: 100px;
@@ -76,6 +85,7 @@
     font-size: 16px;
     color: #1f1f1f;
     margin-bottom: 0.1rem;
+    text-transform: uppercase;
   }
   &__input {
     font-size: 16px;
@@ -108,16 +118,5 @@
     &--password {
       margin-bottom: 0.2rem;
     }
-  }
-}
-
-.create-project-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  &__form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 }

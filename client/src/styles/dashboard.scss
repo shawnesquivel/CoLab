@@ -79,6 +79,9 @@
       border: none;
       position: "relative";
       z-index: 1;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
@@ -169,7 +172,9 @@
     height: auto;
   }
 }
-
+.select {
+  font-family: FontAwesome;
+}
 // Middle Left
 .dashboard-links {
   margin-top: 2rem;

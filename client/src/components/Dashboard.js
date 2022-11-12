@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 import ProjectModal from "./ProjectModal";
+import NewCollabs from "./NewCollabs";
+import ActiveProjects from "./ActiveProjects";
 import CreateProjectModal from "./CreateProjectModal";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
@@ -37,12 +39,22 @@ const BUTTON_WRAPPER_STYLES = {
   zIndex: 1,
 };
 
-const OTHER_CONTENT_STYLES = {
-  position: "relative",
-  zIndex: 2,
-  backgroundColor: "red",
-  padding: "10px",
+const OVERLAY_STYLES = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0, 0, 0, .7)",
+  zIndex: 100,
 };
+
+// const OTHER_CONTENT_STYLES = {
+//   position: "relative",
+//   zIndex: 2,
+//   backgroundColor: "red",
+//   padding: "10px",
+// };
 
 const Dashboard = () => {
   // Use authContext to get the current logged in user ? ?
@@ -87,6 +99,8 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [projectModal, setProjectModal] = useState({});
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
+  const [showActiveProjects, setShowActiveProjects] = useState(true);
+  const [showNewCollabs, setShowNewCollabs] = useState(false);
 
   // Disable Body Scroll when Modal is open
   showModal ? disableBodyScroll(document) : enableBodyScroll(document);
@@ -112,9 +126,6 @@ const Dashboard = () => {
   }, []);
   const fetchUser = async () => {
     const user = auth?.user;
-    // test axios
-    // const response = await axios.get("https://yesno.wtf/api");
-
     const payload = JSON.stringify({
       token: localStorage.getItem("token"),
     });
@@ -127,12 +138,6 @@ const Dashboard = () => {
 
     setBackendData(response.data.userProfile);
   };
-  // todo: remove this code, gets the project modal ID
-  useEffect(() => {
-    // console.log("Project ID:", projectModal._id);
-    // getProject(projectModal._id);
-    // console.log(projectModal);
-  }, [projectModal]);
 
   // Create a Project
   const submitProject = async (e) => {
@@ -162,8 +167,6 @@ const Dashboard = () => {
       console.log(err);
     }
   };
-
-  const [inProgressProjects, setInProgressProjects] = useState([]);
 
   useEffect(() => {
     const getProject = async (projectID) => {
@@ -197,14 +200,10 @@ const Dashboard = () => {
     }
   }, [backendData?.currentProjects?.[0]]);
 
-  // every time currentProjects is updated, remove completed projects  and update inProgressProjects
-  useEffect(() => {
-    const filteredProjects = currentProjects.filter(
-      (project) => project.status !== "project complete"
-    );
-
-    setInProgressProjects(filteredProjects);
-  }, [currentProjects]);
+  const expandProject = (project) => {
+    setProjectModal(project);
+    setShowModal(true);
+  };
 
   return (
     <section className="dashboard">
@@ -228,9 +227,23 @@ const Dashboard = () => {
           >
             Dashboard
           </Link>
-          <Link to="/upcoming" className="dashboard-links__link">
+          <button
+            onClick={() => {
+              setShowNewCollabs(false);
+              setShowActiveProjects(true);
+            }}
+          >
+            Dashboard
+          </button>
+          <button
+            onClick={() => {
+              setShowActiveProjects(false);
+              setShowNewCollabs(true);
+            }}
+          >
             New Collabs
-          </Link>
+          </button>
+
           <Link to="/invites" className="dashboard-links__link">
             Invites
           </Link>
@@ -284,8 +297,8 @@ const Dashboard = () => {
 
         {backendData ? (
           <>
+            {/* Create Project (ONLY FOR BRAND REPS) */}
             <div className="">
-              {/* Create Project (ONLY FOR BRAND REPS) */}
               {auth.roles.includes(3000) ? (
                 <>
                   <div
@@ -310,6 +323,7 @@ const Dashboard = () => {
                         project={projectModal}
                         role={auth.roles}
                         brand={backendData.firstName}
+                        OVERLAY_STYLES={OVERLAY_STYLES}
                       >
                         Create Project
                       </CreateProjectModal>
@@ -324,87 +338,24 @@ const Dashboard = () => {
               )}
             </div>
             {/* Contains all the active project cards */}
-            <section className="project-container">
-              {inProgressProjects?.map((project, i) => (
-                // <div
-                //   key={project._id}
-                //   // Highlight the card for influencers or brand
-                //   className={
-                //     (project.waitingForInfluencer &&
-                //       auth.roles.includes(2000)) ||
-                //     (!project.waitingForInfluencer && auth.roles.includes(3000))
-                //       ? "project-container__card project-highlight"
-                //       : "project-container__card"
-                //   }
-                // >
-                <button
-                  onClick={() => {
-                    setProjectModal(project);
-                    setShowModal(true);
-                  }}
-                  className="dashboard__btn"
-                >
-                  <div className="img-container">
-                    <img
-                      src={projectCard}
-                      alt="project example"
-                      className="project-container__img"
-                    />
+            {showActiveProjects ? (
+              <ActiveProjects
+                currentProjects={currentProjects}
+                expandProject={expandProject}
+              />
+            ) : (
+              ""
+            )}
 
-                    <p className="img-container__text">
-                      {project.paymentProduct ? "🎁 Gifted" : ""}
-                    </p>
-                  </div>
-                  <div className="project-container__text-container">
-                    <h4 className="project-container__text project-container__text--company">
-                      {project.company}
-                    </h4>
-                    <h5 className="project-container__text project-container__text--title">
-                      {" "}
-                      {project.title.length > 20
-                        ? project.title.slice(0, 20).concat("...")
-                        : project.title}
-                      {project.waitingForInfluencer &&
-                      auth.roles.includes(2000) ? (
-                        <>✨</>
-                      ) : (
-                        ""
-                      )}
-                    </h5>
-                    <h6 className="project-container__text project-container__text--date">
-                      {moment(project.deadline).format("MMMM Do YYYY")}
-                    </h6>
-
-                    {/* <button
-                    onClick={() => {
-                      setProjectModal(project);
-                      setShowModal(true);
-                    }}
-                    className="project-details-btn"
-                  >
-                    <FontAwesomeIcon icon={faExpand} />
-                  </button> */}
-
-                    <p className="project-container__text project-container__text--status">
-                      {project.status.toLowerCase() === "reviewing contract"
-                        ? "📄 Influencer reviewing contract."
-                        : ""}
-                      {project.status.toLowerCase() ===
-                      "in progress/waiting for submission"
-                        ? "⚒ Project accepted. Work in progress."
-                        : ""}
-                      {project.status.toLowerCase() === "brand reviewing"
-                        ? "📝 Influencer submitted draft. Waiting for brand to review."
-                        : ""}
-                      {project.status.toLowerCase() === "ready to publish"
-                        ? "✅ Waiting for influencer to post."
-                        : ""}
-                    </p>
-                  </div>
-                </button>
-                // </div>
-              ))}
-            </section>
+            {/* Contains all the new projects */}
+            {showNewCollabs ? (
+              <NewCollabs
+                currentProjects={currentProjects}
+                expandProject={expandProject}
+              />
+            ) : (
+              ""
+            )}
           </>
         ) : (
           <h3>Backend is loading</h3>
@@ -436,8 +387,9 @@ const Dashboard = () => {
       )} */}
 
       <br />
+      {/* Expand Create Project Form */}
 
-      {/* to do: remove in-line form */}
+      {/* Expand Project */}
       <div style={BUTTON_WRAPPER_STYLES}>
         {showModal ? (
           <ProjectModal
@@ -448,6 +400,7 @@ const Dashboard = () => {
             showModal={setShowModal}
             project={projectModal}
             role={auth.roles}
+            OVERLAY_STYLES={OVERLAY_STYLES}
           >
             Project Modal
           </ProjectModal>

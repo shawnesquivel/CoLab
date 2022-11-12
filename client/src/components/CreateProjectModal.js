@@ -8,6 +8,7 @@ import {
   faArrowRight,
   faArrowLeft,
   faSquareMinus,
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
@@ -22,11 +23,12 @@ import axios from "../api/axios";
 import AuthContext from "../context/AuthProvider";
 import greyCircle from "../assets/greycircle.jpg";
 import "../styles/createprojectmodal.scss";
+import "../styles/dashboard.scss";
 
 const MODAL_STYLES = {
   position: "fixed",
   top: "50%",
-  left: "70%",
+  right: "0%",
   transform: "translate(0%, -50%)",
   backgroundColor: "#fefcfb",
   padding: "50px",
@@ -41,18 +43,23 @@ const OVERLAY_STYLES = {
   bottom: 0,
   backgroundColor: "rgba(0, 0, 0, .7)",
   zIndex: 100,
-  maxHeight: "100vh",
 };
 
 const CREATEPROJECT_URL = "/api/createproject";
 const ADD_PROJECT_IMAGES_URL = "/api/addprojectimage";
 
-const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
+const CreateProjectModal = ({
+  isOpen,
+  onClose,
+  children,
+  brand,
+  OVERLAY_STYLES,
+}) => {
   const { auth } = useAuth(AuthContext);
 
   // Create New Project
   const [title, setTitle] = useState("Test Project");
-  const [influencerAssigned, setInfluencerAssigned] = useState("kyliejenner");
+  const [influencerAssigned, setInfluencerAssigned] = useState("none");
   const [instagramDeliverable, setInstagramDeliverable] =
     useState("Post a story");
   const [tiktokDeliverable, setTiktokDeliverable] =
@@ -288,31 +295,30 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
   if (!isOpen) return null;
   return ReactDOM.createPortal(
     // #to-do: switch from in-line style to className style
-    <div style={OVERLAY_STYLES} className="">
-      <div style={MODAL_STYLES} className="">
+    <div style={OVERLAY_STYLES} className="create-project__overlay-modal">
+      <div style={MODAL_STYLES} className="create-project__project-modal">
         <p style={{ color: "black" }}></p>
         {/* <form action=""> */}
-        <div className="create-project-container">
-          <form className="create-project-container__form">
+        <div className="create-project">
+          <button
+            className="create-project__hide-btn"
+            onClick={onClose}
+            type="button"
+          >
+            <FontAwesomeIcon icon={faX} className="icon-left" />
+          </button>
+          <form className="create-project-form">
+            <h2 className="create-project__text create-project__text--header">
+              Create a Campaign
+            </h2>
             {showContractDetails ? (
               <div className="create-project-page">
                 <div className="create-project-header">
-                  <h2 className="create-project-header">
-                    Create a New Project 🎨
-                  </h2>
-                  <button
-                    className="create-project-close-project-btn"
-                    onClick={onClose}
-                    type="button"
-                  >
-                    <FontAwesomeIcon
-                      icon={faSquareMinus}
-                      className="icon-left"
-                    />
-                    Hide
-                  </button>
+                  <p></p>
                 </div>
-                <label htmlFor="title">Project Title</label>
+                <label htmlFor="title" className="create-project-form__label">
+                  Campaign Title
+                </label>
                 <input
                   onChange={(e) => {
                     setTitle(e.target.value);
@@ -323,10 +329,14 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   value={title}
                   required
                   placeholder="E.g., Fall Summer Promo"
+                  className="create-project-form__input"
                 />
-                <label htmlFor="influencer">
+                <label
+                  htmlFor="influencer"
+                  className="create-project-form__label"
+                >
                   <FontAwesomeIcon className="icon-left" icon={faUser} />
-                  Influencer Assigned
+                  Assign a specific influencer (optional)
                 </label>
                 <input
                   onChange={(e) => {
@@ -338,8 +348,12 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   value={influencerAssigned}
                   required
                   placeholder="For testing: shawnchemicalengineer or shayhayashico"
+                  className="create-project-form__input"
                 />
-                <label htmlFor="instagramdeliverable">
+                <label
+                  htmlFor="instagramdeliverable"
+                  className="create-project-form__label"
+                >
                   <FontAwesomeIcon className="icon-left" icon={faInstagram} />
                   Instagram Deliverable
                 </label>
@@ -350,8 +364,12 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   }}
                   placeholder="For example: 1 instagram story featuring the product"
                   value={instagramDeliverable}
+                  className="create-project-form__input"
                 />
-                <label htmlFor="tiktokdeliverable">
+                <label
+                  htmlFor="tiktokdeliverable"
+                  className="create-project-form__label"
+                >
                   <FontAwesomeIcon className="icon-left" icon={faTiktok} />
                   Tik Tok Deliverable
                 </label>
@@ -363,7 +381,10 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   placeholder="For example: A 15-20sec tik tok"
                   value={tiktokDeliverable}
                 />
-                <label htmlFor="youtubedeliverable">
+                <label
+                  htmlFor="youtubedeliverable"
+                  className="create-project-form__label"
+                >
                   <FontAwesomeIcon className="icon-left" icon={faYoutube} />
                   YouTube Deliverable
                 </label>
@@ -375,7 +396,10 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   placeholder="Minimum 30 sec product mention during video"
                   value={youtubeDeliverable}
                 />
-                <label htmlFor="reviewdeadline">
+                <label
+                  htmlFor="reviewdeadline"
+                  className="create-project-form__label"
+                >
                   <FontAwesomeIcon className="icon-left" icon={faCalendar} />
                   Deadline to Submit for First Review
                 </label>
@@ -389,7 +413,10 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   value={reviewDeadline}
                   required
                 />
-                <label htmlFor="deadline">
+                <label
+                  htmlFor="deadline"
+                  className="create-project-form__label"
+                >
                   <FontAwesomeIcon className="icon-left" icon={faCalendar} />
                   Deadline to Post the Final Deliverable(s)
                 </label>
@@ -403,7 +430,7 @@ const CreateProjectModal = ({ isOpen, onClose, children, brand }) => {
                   value={deadline}
                   required
                 />
-                <label htmlFor="time">
+                <label htmlFor="time" className="create-project-form__label">
                   <FontAwesomeIcon className="icon-left" icon={faClock} />
                   Deadline Time
                 </label>

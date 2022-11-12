@@ -352,7 +352,24 @@ app.post("/api/getuser", async (req, res) => {
   }
 });
 
-// GET PROJECT
+// Get all the projects that do not have an influencer assigned
+app.get("/api/searchprojects", async (req, res) => {
+  try {
+    console.log("getting all projects");
+
+    // step 1: Return all Projects
+    const allProjects = await Project.find({
+      status: "no influencer assigned",
+    });
+
+    res.send(allProjects);
+    // return the projects
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// Get a single project based on its ID
 app.post("/api/getproject", async (req, res) => {
   console.log("Inside the Get Project Endpoint");
   console.log(req.body);
@@ -558,12 +575,12 @@ app.post("/api/createproject", async (req, res) => {
       error: "Project title input invalid",
     });
   }
-  if (!influencerAssigned || typeof title !== "string") {
-    return res.json({
-      status: "error",
-      error: "Influencer input invalid",
-    });
-  }
+  // if (!influencerAssigned || typeof title !== "string") {
+  //   return res.json({
+  //     status: "error",
+  //     error: "Influencer input invalid",
+  //   });
+  // }
   if (!brandRepAssigned || typeof title !== "string") {
     return res.json({
       status: "error",
@@ -595,9 +612,14 @@ app.post("/api/createproject", async (req, res) => {
       });
     }
 
-    // Find the influencer record
-    const influencerRecord = await findUserByUsername(influencerAssigned);
-    console.log("influencerRecord:", influencerRecord);
+    let influencerRecord = "";
+    influencerRecord._id = "";
+
+    // Find the influencer record if one was chosen
+    if (influencerAssigned !== "none") {
+      influencerRecord = await findUserByUsername(influencerAssigned);
+      console.log("influencerRecord:", influencerRecord);
+    }
 
     // Create a project
     const res = await Project.create({
