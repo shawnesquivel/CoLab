@@ -260,44 +260,8 @@ const UpdateProfile = () => {
     }
   };
 
-  // Given the image ID, retrieve the image from database
-  // const getImageFromID = async (imageID) => {
-  //   try {
-  //     console.log("getting the image: ", imageID);
-  //     const payload = JSON.stringify({
-  //       token: localStorage.getItem("token"),
-  //       imageID,
-  //     });
-  //     const res = await axios.post(GETIMAGE_URL, payload, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       withCredentials: true,
-  //     });
-  //     console.log("Success: Got the image:", res);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   return (
     <>
-      {/* Display back end images */}
-      {/* {imgData?.map((obj) => {
-          const base64String = btoa(
-            new Uint8Array(obj.img.data.data).reduce(function (data, byte) {
-              return data + String.fromCharCode(byte);
-            }, "")
-          );
-          return (
-            <img
-              src={`data:image/png;base64,${base64String}`}
-              alt=""
-              width="300"
-            />
-          );
-        })} */}
-
       <section className="update-profile">
         <div className="update-profile__container-left">
           <h1 className="update-profile__header">
@@ -364,7 +328,6 @@ const UpdateProfile = () => {
                 />
 
                 <label htmlFor="keywords">Your niche</label>
-
                 <input
                   onKeyDown={handleKeyDown}
                   type="text"

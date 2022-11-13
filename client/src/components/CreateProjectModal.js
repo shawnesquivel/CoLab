@@ -103,22 +103,27 @@ const CreateProjectModal = ({
 
   // Project Guideline Helper Functions
   const handleKeyDown = async (e) => {
-    // console.log(e.target.className);
     if (e.key !== "Enter") return;
+
     const value = e.target.value;
+
     if (!value.trim()) return;
+
     if (e.target.className === "keywords-input") {
       setKeywords([...keywords, value]);
       console.log(keywords);
     }
+
     if (e.target.className === "hashtags-input") {
       setHashtags([...hashtags, value]);
       console.log(hashtags);
     }
+
     if (e.target.className === "tags-input") {
       setTags([...tags, value]);
       console.log(tags);
     }
+
     if (e.target.className === "phrases-input") {
       setPhrases([...phrases, value]);
       console.log(phrases);
@@ -126,8 +131,21 @@ const CreateProjectModal = ({
     e.target.value = "";
   };
   // Removing keywords, hashtags, etc.
-  const removeKeyword = (deleteIndex) => {
-    setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
+  const removeKeyword = (e, deleteIndex) => {
+    console.log(deleteIndex);
+    console.log(e);
+    if (e.target.className === "keywords-delete") {
+      setKeywords(keywords.filter((keyword, index) => index !== deleteIndex));
+    }
+    if (e.target.className === "hashtags-delete") {
+      setHashtags(hashtags.filter((keyword, index) => index !== deleteIndex));
+    }
+    if (e.target.className === "tags-delete") {
+      setTags(tags.filter((keyword, index) => index !== deleteIndex));
+    }
+    if (e.target.className === "phrases-delete") {
+      setPhrases(phrases.filter((keyword, index) => index !== deleteIndex));
+    }
   };
 
   const [deliverableOneSocial, setDeliverableOneSocial] = useState("");
@@ -492,7 +510,7 @@ const CreateProjectModal = ({
                   <input
                     onKeyDown={handleKeyDown}
                     type="text"
-                    className="form__input"
+                    className="keywords-input"
                     placeholder="Enter a keyword"
                   />
                   <div className="keywords-container">
@@ -500,7 +518,7 @@ const CreateProjectModal = ({
                       <div className="keywords-item" key={index}>
                         <span className="keywords-text">{keyword}</span>
                         <span
-                          onClick={() => removeKeyword(index)}
+                          onClick={(e) => removeKeyword(e, index)}
                           className="keywords-delete"
                         >
                           &times;
@@ -872,22 +890,37 @@ const CreateProjectModal = ({
               <div className="create-project-header">
                 <h2 className="create-project-header">Contract Guidelines</h2>
               </div>
-
-              <label htmlFor="hashtags">
-                Are there any required hashtags?
-                <br />
-                <span className="note__italic">
-                  E.g., #glossier, #ad, #bossbabe, #studentlife
-                </span>
+              <label htmlFor="phrases" className="form__label">
+                Required Phrases
               </label>
+              <div className="keywords-container">
+                {phrases.map((phrase, index) => (
+                  <div className="keywords-item" key={index}>
+                    <span className="keywords-text">{phrase}</span>
+                    <span
+                      onClick={(e) => removeKeyword(e, index)}
+                      className="phrases-delete"
+                    >
+                      &times;
+                    </span>
+                  </div>
+                ))}
+                <input
+                  onKeyDown={handleKeyDown}
+                  type="text"
+                  className="phrases-input"
+                  placeholder="Add a phrase"
+                />
+              </div>
+              <label htmlFor="hashtags">Are there any required hashtags?</label>
               <p></p>
               <div className="keywords-container">
                 {hashtags.map((hashtag, index) => (
                   <div className="keywords-item" key={index}>
                     <span className="keywords-text">{hashtag}</span>
                     <span
-                      onClick={() => removeKeyword(index)}
-                      className="keywords-delete"
+                      onClick={(e) => removeKeyword(e, index)}
+                      className="hashtags-delete"
                     >
                       &times;
                     </span>
@@ -901,7 +934,7 @@ const CreateProjectModal = ({
                 />
               </div>
               <label htmlFor="tags">
-                Are there any required tags?
+                Required Profile Tags
                 <br />
                 <span className="note__italic">
                   E.g., @glossier, @saje, @nike
@@ -913,8 +946,8 @@ const CreateProjectModal = ({
                   <div className="keywords-item" key={index}>
                     <span className="keywords-text">{tag}</span>
                     <span
-                      onClick={() => removeKeyword(index)}
-                      className="keywords-delete"
+                      onClick={(e) => removeKeyword(e, index)}
+                      className="tags-delete"
                     >
                       &times;
                     </span>
@@ -927,34 +960,7 @@ const CreateProjectModal = ({
                   placeholder="Add a tag"
                 />
               </div>
-              <label htmlFor="phrases">
-                Are there any recommended phrases?
-                <br />
-                <span className="note__italic">
-                  E.g., I love how natural it looks. It's a part of my everyday
-                  makeup look.
-                </span>
-              </label>
-              <p></p>
-              <div className="keywords-container">
-                {phrases.map((phrase, index) => (
-                  <div className="keywords-item" key={index}>
-                    <span className="keywords-text">{phrase}</span>
-                    <span
-                      onClick={() => removeKeyword(index)}
-                      className="keywords-delete"
-                    >
-                      &times;
-                    </span>
-                  </div>
-                ))}
-                <input
-                  onKeyDown={handleKeyDown}
-                  type="text"
-                  className="phrases-input"
-                  placeholder="Add a phrase"
-                />
-              </div>
+
               <label htmlFor="linkinbio">Link in Bio</label>
               <span className="note__italic"></span>
               <input
