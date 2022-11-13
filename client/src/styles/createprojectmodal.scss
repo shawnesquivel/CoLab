@@ -1,10 +1,27 @@
 @use "partials/index" as *;
 
-.create-project {
+.btn-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  &--right {
+    justify-content: right;
+  }
 
+  &--center {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  &__hide-btn {
+    font-size: 16px;
+    border: none;
+    padding: 0.4rem;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.create-project {
   &__close-btn {
     width: 70%;
     border: 1px solid black;
@@ -18,81 +35,98 @@
     align-items: center;
     margin-bottom: 1rem;
   }
-
-  &__text {
-    &--header {
-      font-family: "SF Pro";
-      font-size: 48px;
-    }
+  &-modal {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
   }
+}
 
-  &__hide-btn {
-    font-size: 16px;
-    border: none;
-    padding: 0.4rem;
-    &:hover {
-      cursor: pointer;
+.create-project-close-project-btn {
+  width: 100px;
+}
+
+.create-project-btn:hover {
+  cursor: pointer;
+}
+
+.label-row-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    &--keywords {
+      width: 70%;
+    }
+
+    &--revisions {
+      width: 30%;
+    }
+
+    &--compensation {
+      width: 25%;
     }
   }
 }
 
-.create-project-form {
+.form {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 0.5rem;
+  padding: 0 100px 0 50px;
   font-size: 0.8rem;
   width: 70vw;
-
-  &__profile-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    margin-bottom: 1rem;
-  }
-  &__media-kit {
-    &--link {
-      text-decoration: underline;
-      margin-bottom: 0.5rem;
-    }
-  }
-  &__text {
-    &--success {
-      color: $success-color;
-      margin-bottom: 0.5rem;
-    }
+  &__empty-space {
+    height: 300px;
   }
 
-  &__label-row-container {
+  &__btn {
+    &-next {
+      background-color: $btn-grey-color;
+      color: $btn-light-text-color;
+      border: none;
+      border-radius: 91px;
+      padding: 8px 48px;
+      width: 25%;
+    }
+    &-add-deliverable {
+      border: 1px dashed $form-border-color;
+      color: $text-dark-color;
+      border-radius: 91px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
+      width: 15%;
+      font-size: 16px;
+    }
+  }
+
+  &-page {
     display: flex;
-    justify-content: space-between;
-  }
-
-  &__instructions {
-    font-size: 14px;
-    color: $text-dark-grey;
-    margin-bottom: 1rem;
-    &--center {
-      text-align: center;
-    }
-    &--offscreen {
-      position: absolute;
-      left: -9999px;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    padding-bottom: 1rem;
+    &--compact {
+      display: block;
     }
   }
 
-  &__label {
-    font-size: 16px;
-    color: #1f1f1f;
-    margin-bottom: 0.1rem;
-    text-transform: uppercase;
-  }
   &__input {
     font-size: 16px;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.5rem;
     margin-bottom: 1rem;
     border-radius: 12px;
+    border: 1px solid $form-border-color;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
+    &--small {
+      width: 15%;
+    }
+    &--textarea {
+      resize: none;
+    }
     &--file {
       width: 300px;
       text-align: center;
@@ -118,5 +152,63 @@
     &--password {
       margin-bottom: 0.2rem;
     }
+  }
+
+  &__text {
+    &--header {
+      font-family: "SF Pro";
+      font-size: 48px;
+      margin-bottom: 0.5rem;
+    }
+
+    &--subheader {
+      font-size: 22px;
+      margin-bottom: 0.5rem;
+    }
+    &--center {
+      text-align: center;
+    }
+    &--note {
+      color: $text-dark-grey;
+    }
+    &--success {
+      color: $success-color;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+  }
+  &__media-kit {
+    &--link {
+      text-decoration: underline;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__instructions {
+    font-size: 14px;
+    color: $text-dark-grey;
+    margin-bottom: 1rem;
+    &--center {
+      text-align: center;
+    }
+    &--offscreen {
+      position: absolute;
+      left: -9999px;
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    color: #6c6c6c;
+    margin-bottom: 0.1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 24px;
   }
 }
