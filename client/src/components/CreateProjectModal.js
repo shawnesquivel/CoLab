@@ -166,13 +166,6 @@ const CreateProjectModal = ({
     setDeliverableOneSocial(e.target.value);
   };
 
-  // const assignSocialDescription = (e, id) => {
-  //   const num = e.target.id.split("-")[1];
-  //   console.log(num);
-  //   const social = "deliverable-" + num + "-social";
-  //   console.log(`${"deliverable" + ""}`);
-  // };
-
   const updateSocial = (socialPlatform, description) => {
     if (socialPlatform === "none") return;
     if (socialPlatform === "instagram") {
@@ -220,6 +213,7 @@ const CreateProjectModal = ({
       "Project Token:",
       auth.user,
       title,
+      description,
       influencerAssigned,
       instagramDeliverable,
       tiktokDeliverable,
@@ -244,6 +238,7 @@ const CreateProjectModal = ({
         token: localStorage.getItem("token"),
         brandRepAssigned: auth.user,
         title,
+        description,
         brand,
         influencerAssigned,
         instagramDeliverable,

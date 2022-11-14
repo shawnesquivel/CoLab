@@ -14,6 +14,7 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
   const [displayProjects, setDisplayProjects] = useState([]);
   //   Queries
   const [socialQuery, setSocialQuery] = useState("");
+  const [companyQuery, setCompanyQuery] = useState("");
   const [keywordQuery, setKeywordQuery] = useState("");
 
   // on page load, only show projects without an influencer
@@ -25,28 +26,25 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
     setDisplayProjects(noInfluencerProjects);
   }, [currentProjects]);
 
-  const filterProjectByQuery = (query, queryType) => {
-    setSocialQuery(query);
+  // Search by Property Value
+  const [textQuery, setTextQuery] = useState({});
 
-    // social query
+  // Search by Contains Keys
+
+  const filterProjectByQuery = (query, queryType) => {
+    if (queryType === "text") {
+      setTextQuery(query);
+    }
     if (queryType === "social") {
-      // property name on object in schema
-      query += "Task";
-      // if the socialTask exists, return that project
-      //   setDisplayProjects(
-      //     displayProjects.filter((project) => project[query] ? project : project[``])
-      //   );
+      setSocialQuery(query);
     }
   };
 
-  //   Get all the projects in the database that don't have
-  //
-
   useEffect(() => {
-    console.log("triggering use effect");
     getallNewProjects();
   }, []);
 
+  // Retrieves all projects with "no influencer assigned"
   const getallNewProjects = async () => {
     console.log("Getting projects");
     try {
@@ -63,89 +61,242 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
     }
   };
 
+  const [filteredProjects, setFilteredProjects] = useState([]);
+
+  useEffect(() => {
+    console.log(textQuery);
+
+    const filtered = displayProjects.filter((project) => {
+      if (
+        project?.company?.toLowerCase().includes(textQuery) ||
+        project?.title?.toLowerCase().includes(textQuery) ||
+        project?.keywords?.includes(textQuery) ||
+        project?.description?.toLowerCase().includes(textQuery)
+      )
+        return true;
+    });
+
+    setFilteredProjects(filtered);
+
+    console.log(filtered);
+  }, [textQuery]);
+  const [socialQueries, setSocialQueries] = [];
+  const [instagramChecked, setInstagramChecked] = useState("");
+  const [tiktokChecked, setTiktokChecked] = useState("");
+  const [youtubeChecked, setYouTubeChecked] = useState("");
+  useEffect(() => {
+    const socialQuery = [];
+
+    if (instagramChecked) {
+      socialQuery.push("instagramTask");
+    }
+    if (tiktokChecked) {
+      socialQuery.push("tiktokTask");
+    }
+    if (youtubeChecked) {
+      socialQuery.push("youtubeTask");
+    }
+
+    let projectsToFilter;
+    console.log("filteredProjects", filteredProjects);
+
+    if (filteredProjects?.length === 0 || filteredProjects === undefined) {
+      console.log("no objects in filter");
+      projectsToFilter = displayProjects;
+    }
+
+    const filtered = projectsToFilter?.filter((project) => {
+      console.log("adding a second filter", socialQuery);
+
+      for (let socialTask of socialQuery) {
+        console.log(socialTask);
+        if (project[socialTask]) {
+          console.log(project[socialTask]);
+          return true;
+        }
+      }
+    });
+    setFilteredProjects(filtered);
+    console.log(filtered);
+  }, [instagramChecked, youtubeChecked, tiktokChecked]);
+
+  // check arr
+  // Object.prototype.toString.call(data) == '[object Array]'
+
   return (
     <section className="new-collabs">
-      <div>
-        <form action="">
-          <h4>Filter New Projects</h4>
-          <label htmlFor="social">Which social is this for?</label>
-          <select
-            name="social"
-            id="social"
-            onChange={(e) => {
-              filterProjectByQuery(e.target.value, "social");
-            }}
-            value={socialQuery}
-            className="create-project-form__input create-project-form__input--select "
-          >
-            <option value="none" className="create-project-form__social">
-              Select an option below
-            </option>
-            <option value="instagram" className="create-project-form__social">
-              Instagram
-            </option>
-            <option value="tiktok" className="create-project-form__social">
-              Tik Tok
-            </option>
-            <option value="youtube" className="create-project-form__social">
-              Youtube
-            </option>
-          </select>
-        </form>
-      </div>
-      <p>These are the projects which have no influencers assigned yet.</p>
-      {displayProjects?.map((project, i) => (
-        <button
-          onClick={() => {
-            expandProject(project);
-          }}
-          className="dashboard__btn"
-        >
-          <div className="img-container">
-            <img
-              src={projectCard}
-              alt="project example"
-              className="project-container__img"
-            />
+      <div className="new-collabs__header">
+        <form action="form">
+          <h4 className="form__text form__text--subheader">New Collabs</h4>
+          <p className="form__instructions">
+            Use the filters to refine your search.
+          </p>
+          <div className="label-row-container  label-row-container--half">
+            <div className="label-col-container">
+              <div className="label-col-container__row">
+                <label htmlFor="ig" className="form__label">
+                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
+                  Instagram
+                </label>
+                <input
+                  type="checkbox"
+                  checked={instagramChecked}
+                  onChange={(e) => {
+                    setInstagramChecked(!instagramChecked);
+                  }}
+                />
+              </div>
+              <div className="label-col-container__row">
+                <label htmlFor="ig" className="form__label">
+                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
+                  Tik Tok
+                </label>
+                <input
+                  type="checkbox"
+                  checked={tiktokChecked}
+                  onChange={(e) => {
+                    setTiktokChecked(!tiktokChecked);
+                  }}
+                />
+              </div>
+              <div className="label-col-container__row">
+                <label htmlFor="ig" className="form__label">
+                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
+                  Youtube
+                </label>
+                <input
+                  type="checkbox"
+                  checked={youtubeChecked}
+                  onChange={(e) => {
+                    setYouTubeChecked(!youtubeChecked);
+                  }}
+                />
+              </div>
+            </div>
 
-            <p className="img-container__text">
-              {project.paymentProduct ? "🎁 Gifted" : ""}
-            </p>
-          </div>
-          <div className="project-container__text-container">
-            <h4 className="project-container__text project-container__text--company">
-              {project.company}
-            </h4>
-            <h5 className="project-container__text project-container__text--title">
-              {" "}
-              {project.title.length > 20
-                ? project.title.slice(0, 20).concat("...")
-                : project.title}
-            </h5>
-            <h6 className="project-container__text project-container__text--date">
-              Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
-            </h6>
-
-            <div className="">
-              {project.instagramTask ? (
-                <FontAwesomeIcon className="icon-left" icon={faInstagram} />
-              ) : (
-                ""
-              )}
-              {project.tiktokTask ? (
-                <FontAwesomeIcon className="icon-left" icon={faTiktok} />
-              ) : (
-                ""
-              )}
-              {project.youtubeTask ? (
-                <FontAwesomeIcon className="icon-left" icon={faYoutube} />
-              ) : (
-                ""
-              )}
+            <div className="label-row-container__col">
+              <label htmlFor="search" className="form__label">
+                Search
+              </label>
+              <input
+                type="text"
+                className="form__input "
+                onChange={(e) => {
+                  filterProjectByQuery(e.target.value, "text");
+                }}
+              />
             </div>
           </div>
-        </button>
-      ))}
+        </form>
+      </div>
+      <section className="project-container">
+        {displayProjects?.map((project, i) => (
+          <button
+            onClick={() => {
+              expandProject(project);
+            }}
+            className="dashboard__btn"
+          >
+            <div className="img-container">
+              <img
+                src={projectCard}
+                alt="project example"
+                className="project-container__img"
+              />
+
+              <p className="img-container__text">
+                {project.paymentProduct ? "🎁 Gifted" : ""}
+              </p>
+            </div>
+            <div className="project-container__text-container">
+              <h4 className="project-container__text project-container__text--company">
+                {project.company}
+              </h4>
+              <h5 className="project-container__text project-container__text--title">
+                {" "}
+                {project.title.length > 20
+                  ? project.title.slice(0, 20).concat("...")
+                  : project.title}
+              </h5>
+              <h6 className="project-container__text project-container__text--date">
+                Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
+              </h6>
+
+              <div className="">
+                {project.instagramTask ? (
+                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
+                ) : (
+                  ""
+                )}
+                {project.tiktokTask ? (
+                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
+                ) : (
+                  ""
+                )}
+                {project.youtubeTask ? (
+                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </button>
+        ))}
+      </section>
+      <section className="project-container">
+        {filteredProjects?.map((project, i) => (
+          <button
+            onClick={() => {
+              expandProject(project);
+            }}
+            className="dashboard__btn"
+          >
+            <div className="img-container">
+              <img
+                src={projectCard}
+                alt="project example"
+                className="project-container__img"
+              />
+
+              <p className="img-container__text">
+                {project.paymentProduct ? "🎁 Gifted" : ""}
+              </p>
+            </div>
+            <div className="project-container__text-container">
+              <h4 className="project-container__text project-container__text--company">
+                {project.company}
+              </h4>
+              <h5 className="project-container__text project-container__text--title">
+                {" "}
+                {project.title.length > 20
+                  ? project.title.slice(0, 20).concat("...")
+                  : project.title}
+              </h5>
+              <h6 className="project-container__text project-container__text--date">
+                Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
+              </h6>
+
+              <div className="">
+                {project.instagramTask ? (
+                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
+                ) : (
+                  ""
+                )}
+                {project.tiktokTask ? (
+                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
+                ) : (
+                  ""
+                )}
+                {project.youtubeTask ? (
+                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </button>
+        ))}
+      </section>
     </section>
   );
 };

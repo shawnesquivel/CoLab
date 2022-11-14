@@ -524,6 +524,7 @@ app.post("/api/createproject", async (req, res) => {
   const {
     token,
     title,
+    description,
     influencerAssigned,
     brandRepAssigned,
     deadline,
@@ -547,6 +548,7 @@ app.post("/api/createproject", async (req, res) => {
     "Received Request:",
     token,
     title,
+    description,
     influencerAssigned,
     brandRepAssigned,
     deadline,
@@ -575,35 +577,18 @@ app.post("/api/createproject", async (req, res) => {
       error: "Project title input invalid",
     });
   }
-  // if (!influencerAssigned || typeof title !== "string") {
-  //   return res.json({
-  //     status: "error",
-  //     error: "Influencer input invalid",
-  //   });
-  // }
+
   if (!brandRepAssigned || typeof title !== "string") {
     return res.json({
       status: "error",
       error: "Brand rep input invalid",
     });
   }
-  // if (typeof deadline !== "object") {
-  //   return res.json({
-  //     status: "error",
-  //     error: "please provide a valid date",
-  //   });
-  // }
-
-  // todo: add validation for other form inputs
 
   try {
-    // Verify brand representative
-    // const user = jwt.verify(JSON.parse(token).token, JWT_SECRET_KEY);
     const [user, _id] = verifyJWT(token);
     const brandRepRecord = await findUser(_id);
     console.log("Brand Rep Record", user, _id, brandRepRecord);
-    // Check brand representative
-    // TO DO: change this to be the Admin (1000) or Brand (3000)
 
     if (!brandRepRecord?.roles?.Influencer == 2000) {
       return res.json({
@@ -624,6 +609,7 @@ app.post("/api/createproject", async (req, res) => {
     // Create a project
     const res = await Project.create({
       title: title,
+      description: description,
       company: brandRepRecord.company,
       brandRepAssigned: brandRepRecord._id,
       influencerAssigned: influencerRecord._id,

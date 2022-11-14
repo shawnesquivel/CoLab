@@ -56,6 +56,15 @@
   justify-content: space-between;
   gap: 1rem;
 
+  &--left {
+    justify-content: left;
+    gap: 2rem;
+  }
+
+  &--half {
+    width: 50%;
+  }
+
   &__col {
     display: flex;
     flex-direction: column;
@@ -71,6 +80,17 @@
     &--compensation {
       width: 25%;
     }
+  }
+}
+
+.label-col-container {
+  display: flex;
+  flex-direction: column;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
   }
 }
 
@@ -128,6 +148,11 @@
     &--small {
       width: 15%;
     }
+
+    &--medium {
+      width: 25%;
+    }
+
     &--textarea {
       resize: none;
     }
@@ -214,5 +239,11 @@
     text-transform: uppercase;
     font-weight: 700;
     line-height: 24px;
+  }
+}
+
+.new-collabs {
+  &__header {
+    padding-left: 1rem;
   }
 }
