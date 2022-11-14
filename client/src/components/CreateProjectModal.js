@@ -65,8 +65,8 @@ const CreateProjectModal = ({
   const [tiktokDeliverable, setTiktokDeliverable] = useState("");
   const [youtubeDeliverable, setYoutubeDeliverable] = useState("");
 
-  const [reviewDeadline, setReviewDeadline] = useState("2023-01-31");
-  const [deadline, setDeadline] = useState("2025-01-31");
+  const [reviewDeadline, setReviewDeadline] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [deadlineTime, setDeadlineTime] = useState("23:59");
   const [numberOfRevisions, setNumberOfRevisions] = useState("2");
 
@@ -249,8 +249,8 @@ const CreateProjectModal = ({
         instagramDeliverable,
         tiktokDeliverable,
         youtubeDeliverable,
-        reviewDeadline: new Date(),
-        deadline: new Date(),
+        reviewDeadline,
+        deadline,
         deadlineTime,
         numberOfRevisions,
         paymentMethod,
@@ -390,42 +390,48 @@ const CreateProjectModal = ({
           </button>
         </div>
         <form className="form">
-          <h2 className="form__text form__text--header">Create a Campaign</h2>
+          <h2 className="form__text form__text--header">
+            {!showSuccess ? "Create a Campaign" : "Success!"}
+          </h2>
           {showContractDetails ? (
             <div className="form-page">
               <h4 className="form__text form__text--subheader">Overview</h4>
-              <label htmlFor="title" className="form__label">
-                Campaign Title
-              </label>
-              <input
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                }}
-                type="text"
-                id="title"
-                autoComplete="off"
-                value={title}
-                required
-                placeholder="title"
-                className="form__input"
-              />
-              <label htmlFor="description" className="form__label">
-                Campaign Description (200 Words Max)
-              </label>
-              <textarea
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-                type="text"
-                id="description"
-                autoComplete="off"
-                value={description}
-                required
-                placeholder="description"
-                className="form__input form__input--textarea"
-                rows="6"
-                cols="50"
-              />
+              <div className="label-row-container__col">
+                <label htmlFor="title" className="form__label">
+                  Campaign Title
+                </label>
+                <input
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                  type="text"
+                  id="title"
+                  autoComplete="off"
+                  value={title}
+                  required
+                  placeholder="title"
+                  className="form__input"
+                />
+              </div>
+              <div className="label-row-container__col">
+                <label htmlFor="description" className="form__label">
+                  Campaign Description (200 Words Max)
+                </label>
+                <textarea
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                  type="text"
+                  id="description"
+                  autoComplete="off"
+                  value={description}
+                  required
+                  placeholder="description"
+                  className="form__input form__input--textarea"
+                  rows="6"
+                  cols="50"
+                />
+              </div>
               <div className="label-row-container">
                 <div className="label-row-container__col">
                   <label htmlFor="influencer" className="form__label">
@@ -566,127 +572,140 @@ const CreateProjectModal = ({
           {showDeliverables ? (
             <div className="form-page">
               <h4 className="form__text form__text--subheader">Deliverables</h4>
-              <label
-                className="form__label"
-                htmlFor="social"
-                id="deliverable-one-social"
-              >
-                Platform
-              </label>
-              <select
-                name="social"
-                id="deliverable-one-social"
-                onChange={(e) => {
-                  setDeliverableOneSocial(e.target.value);
-                }}
-                value={deliverableOneSocial}
-                className="form__input form__input--select form__input--small"
-              >
-                <option value="none" className="create-project-form__social">
-                  Select Platform
-                </option>
-                <option
-                  value="instagram"
-                  className="create-project-form__social"
+              <div className="label-row-container__col">
+                <label
+                  className="form__label"
+                  htmlFor="social"
+                  id="deliverable-one-social"
                 >
-                  Instagram
-                </option>
-                <option value="tiktok" className="create-project-form__social">
-                  Tik Tok
-                </option>
-                <option value="youtube" className="create-project-form__social">
-                  Youtube
-                </option>
-              </select>
-              <label
-                htmlFor="description"
-                className="form__label"
-                id="deliverable-one-description"
-              >
-                Campaign Description (200 Words Max)
-              </label>
-              <textarea
-                onChange={(e) => {
-                  setDeliverableOneDescription(e.target.value);
-                  // assignSocialDescription(e);
-                }}
-                type="text"
-                id="deliverable-one-description"
-                autoComplete="off"
-                value={deliverableOneDescription}
-                required
-                placeholder="description"
-                className="form__input form__input--textarea"
-                rows="6"
-                cols="50"
-              />
+                  Platform
+                </label>
+                <select
+                  name="social"
+                  id="deliverable-one-social"
+                  onChange={(e) => {
+                    setDeliverableOneSocial(e.target.value);
+                  }}
+                  value={deliverableOneSocial}
+                  className="form__input form__input--select form__input--small"
+                >
+                  <option value="none" className="create-project-form__social">
+                    Select Platform
+                  </option>
+                  <option
+                    value="instagram"
+                    className="create-project-form__social"
+                  >
+                    Instagram
+                  </option>
+                  <option
+                    value="tiktok"
+                    className="create-project-form__social"
+                  >
+                    Tik Tok
+                  </option>
+                  <option
+                    value="youtube"
+                    className="create-project-form__social"
+                  >
+                    Youtube
+                  </option>
+                </select>
+              </div>
+              <div className="label-row-container__col">
+                <label
+                  htmlFor="description"
+                  className="form__label"
+                  id="deliverable-one-description"
+                >
+                  Campaign Description (200 Words Max)
+                </label>
+                <textarea
+                  onChange={(e) => {
+                    setDeliverableOneDescription(e.target.value);
+                    // assignSocialDescription(e);
+                  }}
+                  type="text"
+                  id="deliverable-one-description"
+                  autoComplete="off"
+                  value={deliverableOneDescription}
+                  required
+                  placeholder="description"
+                  className="form__input form__input--textarea"
+                  rows="6"
+                  cols="50"
+                />
+              </div>
               {/* Deliverable Two */}
               {showDeliverableTwo ? (
                 <>
-                  {" "}
-                  <label
-                    className="form__label"
-                    htmlFor="social"
-                    id="deliverable-two-social"
-                  >
-                    Platform
-                  </label>
-                  <select
-                    name="social"
-                    id="deliverable-two-social"
-                    onChange={(e) => {
-                      setDeliverableTwoSocial(e.target.value);
-                    }}
-                    value={deliverableTwoSocial}
-                    className="form__input form__input--select "
-                  >
-                    <option
-                      value="none"
-                      className="create-project-form__social"
+                  <div className="label-row-container__col">
+                    <label
+                      className="form__label"
+                      htmlFor="social"
+                      id="deliverable-two-social"
                     >
-                      Select Platform
-                    </option>
-                    <option
-                      value="instagram"
-                      className="create-project-form__social"
+                      Platform
+                    </label>
+                    <select
+                      name="social"
+                      id="deliverable-two-social"
+                      onChange={(e) => {
+                        setDeliverableTwoSocial(e.target.value);
+                      }}
+                      value={deliverableTwoSocial}
+                      className="form__input form__input--select "
                     >
-                      Instagram
-                    </option>
-                    <option
-                      value="tiktok"
-                      className="create-project-form__social"
+                      <option
+                        value="none"
+                        className="create-project-form__social"
+                      >
+                        Select Platform
+                      </option>
+                      <option
+                        value="instagram"
+                        className="create-project-form__social"
+                      >
+                        Instagram
+                      </option>
+                      <option
+                        value="tiktok"
+                        className="create-project-form__social"
+                      >
+                        Tik Tok
+                      </option>
+                      <option
+                        value="youtube"
+                        className="create-project-form__social"
+                      >
+                        Youtube
+                      </option>
+                    </select>
+                  </div>
+                  <div className="label-row-container__col">
+                    <label
+                      htmlFor="description"
+                      className="form__label"
+                      id="deliverable-two-description"
                     >
-                      Tik Tok
-                    </option>
-                    <option
-                      value="youtube"
-                      className="create-project-form__social"
-                    >
-                      Youtube
-                    </option>
-                  </select>
-                  <label
-                    htmlFor="description"
-                    className="form__label"
-                    id="deliverable-two-description"
-                  >
-                    Campaign Description (200 Words Max)
-                  </label>
-                  <textarea
-                    onChange={(e) => {
-                      setDeliverableTwoDescription(e.target.value);
-                      // assignSocialDescription(e);
-                    }}
-                    type="text"
-                    id="deliverable-one-description"
-                    autoComplete="off"
-                    value={deliverableTwoDescription}
-                    required
-                    placeholder="description"
-                    className="form__input form__input--textarea"
-                    rows="6"
-                    cols="50"
-                  />
+                      Campaign Description (200 Words Max)
+                    </label>
+                    <textarea
+                      onChange={(e) => {
+                        setDeliverableTwoDescription(e.target.value);
+                        // assignSocialDescription(e);
+                      }}
+                      type="text"
+                      id="deliverable-one-description"
+                      autoComplete="off"
+                      value={deliverableTwoDescription}
+                      required
+                      placeholder="description"
+                      className="form__input form__input--textarea"
+                      rows="6"
+                      cols="50"
+                    />
+                  </div>
                 </>
               ) : (
                 ""
@@ -694,70 +713,73 @@ const CreateProjectModal = ({
               {/* Deliverable Three */}
               {showDeliverableThree ? (
                 <>
-                  {" "}
-                  <label
-                    className="form__label"
-                    htmlFor="social"
-                    id="deliverable-three-social"
-                  >
-                    Platform
-                  </label>
-                  <select
-                    name="social"
-                    id="deliverable-three-social"
-                    onChange={(e) => {
-                      setDeliverableThreeSocial(e.target.value);
-                    }}
-                    value={deliverableThreeSocial}
-                    className="form__input form__input--select "
-                  >
-                    <option
-                      value="none"
-                      className="create-project-form__social"
+                  <div className="label-row-container__col">
+                    <label
+                      className="form__label"
+                      htmlFor="social"
+                      id="deliverable-three-social"
                     >
-                      Select Platform
-                    </option>
-                    <option
-                      value="instagram"
-                      className="create-project-form__social"
+                      Platform
+                    </label>
+                    <select
+                      name="social"
+                      id="deliverable-three-social"
+                      onChange={(e) => {
+                        setDeliverableThreeSocial(e.target.value);
+                      }}
+                      value={deliverableThreeSocial}
+                      className="form__input form__input--select "
                     >
-                      Instagram
-                    </option>
-                    <option
-                      value="tiktok"
-                      className="create-project-form__social"
+                      <option
+                        value="none"
+                        className="create-project-form__social"
+                      >
+                        Select Platform
+                      </option>
+                      <option
+                        value="instagram"
+                        className="create-project-form__social"
+                      >
+                        Instagram
+                      </option>
+                      <option
+                        value="tiktok"
+                        className="create-project-form__social"
+                      >
+                        Tik Tok
+                      </option>
+                      <option
+                        value="youtube"
+                        className="create-project-form__social"
+                      >
+                        Youtube
+                      </option>
+                    </select>
+                  </div>
+                  <div className="label-row-container__col">
+                    <label
+                      htmlFor="description"
+                      className="form__label"
+                      id="deliverable-three-description"
                     >
-                      Tik Tok
-                    </option>
-                    <option
-                      value="youtube"
-                      className="create-project-form__social"
-                    >
-                      Youtube
-                    </option>
-                  </select>
-                  <label
-                    htmlFor="description"
-                    className="form__label"
-                    id="deliverable-three-description"
-                  >
-                    Campaign Description (200 Words Max)
-                  </label>
-                  <textarea
-                    onChange={(e) => {
-                      setDeliverableThreeDescription(e.target.value);
-                      // assignSocialDescription(e);
-                    }}
-                    type="text"
-                    id="deliverable-one-description"
-                    autoComplete="off"
-                    value={deliverableThreeDescription}
-                    required
-                    placeholder="description"
-                    className="form__input form__input--textarea"
-                    rows="6"
-                    cols="50"
-                  />
+                      Campaign Description (200 Words Max)
+                    </label>
+                    <textarea
+                      onChange={(e) => {
+                        setDeliverableThreeDescription(e.target.value);
+                        // assignSocialDescription(e);
+                      }}
+                      type="text"
+                      id="deliverable-one-description"
+                      autoComplete="off"
+                      value={deliverableThreeDescription}
+                      required
+                      placeholder="description"
+                      className="form__input form__input--textarea"
+                      rows="6"
+                      cols="50"
+                    />
+                  </div>
                 </>
               ) : (
                 ""
@@ -780,6 +802,16 @@ const CreateProjectModal = ({
               {/* <AddDeliverableBtn /> */}
 
               <div className="btn-container btn-container--center">
+                <button
+                  onClick={() => {
+                    setShowDeliverables(false);
+                    setShowContractDetails(true);
+                  }}
+                  type="button"
+                  className="form__btn-next"
+                >
+                  Previous Page
+                </button>
                 <button
                   onClick={() => {
                     setShowDeliverables(false);
@@ -825,32 +857,36 @@ const CreateProjectModal = ({
 
               {showPaymentDetails ? (
                 <>
-                  <label htmlFor="paymentprice" className="form__label">
-                    Payment Amount ($CAD)
-                  </label>
-                  <input
-                    type="text"
-                    value={paymentPrice}
-                    onChange={(e) => setPaymentPrice(e.target.value)}
-                    className="form__input"
-                    placeholder="$XXX"
-                  />
-                  <label htmlFor="paymentproduct" className="form__label">
-                    Describe the product you are sending
-                  </label>
-                  <textarea
-                    type="text"
-                    autoComplete="off"
-                    placeholder="description"
-                    value={paymentProduct}
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      setPaymentProduct(e.target.value);
-                    }}
-                    className="form__input form__input--textarea"
-                    rows="6"
-                    cols="50"
-                  />
+                  <div className="label-row-container__col">
+                    <label htmlFor="paymentprice" className="form__label">
+                      Payment Amount ($CAD)
+                    </label>
+                    <input
+                      type="text"
+                      value={paymentPrice}
+                      onChange={(e) => setPaymentPrice(e.target.value)}
+                      className="form__input"
+                      placeholder="$XXX"
+                    />
+                  </div>
+                  <div className="label-row-container__col">
+                    <label htmlFor="paymentproduct" className="form__label">
+                      Describe the product you are sending
+                    </label>
+                    <textarea
+                      type="text"
+                      autoComplete="off"
+                      placeholder="description"
+                      value={paymentProduct}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setPaymentProduct(e.target.value);
+                      }}
+                      className="form__input form__input--textarea"
+                      rows="6"
+                      cols="50"
+                    />
+                  </div>
                 </>
               ) : (
                 <>
@@ -886,110 +922,118 @@ const CreateProjectModal = ({
           )}
 
           {showContractGuidelines ? (
-            <div className="create-project-page">
-              <div className="create-project-header">
-                <h2 className="create-project-header">Contract Guidelines</h2>
-              </div>
-              <label htmlFor="phrases" className="form__label">
-                Required Phrases
-              </label>
-              <div className="keywords-container">
-                {phrases.map((phrase, index) => (
-                  <div className="keywords-item" key={index}>
-                    <span className="keywords-text">{phrase}</span>
-                    <span
-                      onClick={(e) => removeKeyword(e, index)}
-                      className="phrases-delete"
-                    >
-                      &times;
-                    </span>
-                  </div>
-                ))}
+            <div className="form-page ">
+              <h2 className="form-header">Contract Guidelines</h2>
+              <div className="label-row-container__col">
+                <label htmlFor="phrases" className="form__label">
+                  Required Phrases
+                </label>
                 <input
                   onKeyDown={handleKeyDown}
                   type="text"
                   className="phrases-input"
                   placeholder="Add a phrase"
                 />
+                <div className="keywords-container">
+                  {phrases.map((phrase, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{phrase}</span>
+                      <span
+                        onClick={(e) => removeKeyword(e, index)}
+                        className="phrases-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <label htmlFor="hashtags">Are there any required hashtags?</label>
-              <p></p>
-              <div className="keywords-container">
-                {hashtags.map((hashtag, index) => (
-                  <div className="keywords-item" key={index}>
-                    <span className="keywords-text">{hashtag}</span>
-                    <span
-                      onClick={(e) => removeKeyword(e, index)}
-                      className="hashtags-delete"
-                    >
-                      &times;
-                    </span>
-                  </div>
-                ))}
+              <div className="label-row-container__col">
+                <label htmlFor="hashtags" className="form__label">
+                  Required Hashtags
+                </label>
                 <input
                   onKeyDown={handleKeyDown}
                   type="text"
                   className="hashtags-input"
                   placeholder="Add a hashtag"
                 />
+                <div className="keywords-container">
+                  {hashtags.map((hashtag, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{hashtag}</span>
+                      <span
+                        onClick={(e) => removeKeyword(e, index)}
+                        className="hashtags-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <label htmlFor="tags">
-                Required Profile Tags
-                <br />
-                <span className="note__italic">
-                  E.g., @glossier, @saje, @nike
-                </span>
-              </label>
-              <p></p>
-              <div className="keywords-container">
-                {tags.map((tag, index) => (
-                  <div className="keywords-item" key={index}>
-                    <span className="keywords-text">{tag}</span>
-                    <span
-                      onClick={(e) => removeKeyword(e, index)}
-                      className="tags-delete"
-                    >
-                      &times;
-                    </span>
-                  </div>
-                ))}
+              <div className="label-row-container__col">
+                <label htmlFor="tags" className="form__label">
+                  Required Profile Tags
+                </label>
                 <input
                   onKeyDown={handleKeyDown}
                   type="text"
                   className="tags-input"
                   placeholder="Add a tag"
                 />
+                <div className="keywords-container">
+                  {tags.map((tag, index) => (
+                    <div className="keywords-item" key={index}>
+                      <span className="keywords-text">{tag}</span>
+                      <span
+                        onClick={(e) => removeKeyword(e, index)}
+                        className="tags-delete"
+                      >
+                        &times;
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-
-              <label htmlFor="linkinbio">Link in Bio</label>
-              <span className="note__italic"></span>
-              <input
-                onChange={(e) => {
-                  setLinkInBio(e.target.value);
-                }}
-                value={linkInBio}
-                type="url"
-                id="linkinbio"
-                name="linkinbio"
-                placeholder="https://glossier.com/products/cloud-paint"
-              />
+              <div className="label-row-container__col">
+                <label htmlFor="linkinbio" className="form__label">
+                  Link in Bio
+                </label>
+                <input
+                  onChange={(e) => {
+                    setLinkInBio(e.target.value);
+                  }}
+                  value={linkInBio}
+                  type="url"
+                  id="linkinbio"
+                  name="linkinbio"
+                  placeholder="https://glossier.com/products/cloud-paint"
+                  className="form__input"
+                />
+              </div>
 
               {!showSuccess ? (
                 <>
-                  <button
-                    onClick={() => {
-                      setShowContractGuidelines(false);
-                      setShowContractPayment(true);
-                    }}
-                    type="button"
-                  >
-                    <FontAwesomeIcon className="icon-left" icon={faArrowLeft} />
-                    Previous Page
-                  </button>
-                  <button type="button" onClick={submitProject}>
-                    <FontAwesomeIcon className="icon-left" icon={faPlus} />
-                    Create Project
-                  </button>
+                  <div className="btn-container btn-container--center">
+                    <button
+                      onClick={() => {
+                        setShowContractGuidelines(false);
+                        setShowContractPayment(true);
+                      }}
+                      type="button"
+                      className="form__btn-next"
+                    >
+                      Previous Page
+                    </button>
+                    <button
+                      type="button"
+                      onClick={submitProject}
+                      className="form__btn-next"
+                    >
+                      Create Project
+                    </button>
+                  </div>
                 </>
               ) : (
                 ""
@@ -1003,30 +1047,25 @@ const CreateProjectModal = ({
 
         {showUpload ? (
           <>
-            {showSuccess ? (
+            {/* {showSuccess ? (
               <div className="create-project__success-div">
-                <h3 className="create-project__text create-project__text--header">
+                <h3 className="form__text form__text--header">
                   The project was created!
                 </h3>
-                <button
-                  className="create-project__hide-btn"
-                  onClick={onClose}
-                  type="button"
-                >
-                  <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
-                  Hide
-                </button>
               </div>
             ) : (
               ""
-            )}
-            <h4>Upload Examples</h4>
-            <p className="create-project-form__instructions">
-              Please upload any examples for the influencer to reference. E.g.
-              samples, previous work by others, etc.
-            </p>
-            <form className="create-project-form" encType="multipart/form-data">
-              <label htmlFor="avatar">File Upload</label>
+            )} */}
+
+            <form className="form " encType="multipart/form-data">
+              <h4>Upload Examples</h4>
+              <p className="form__instructions">
+                Please upload any examples for the influencer to reference. E.g.
+                samples, previous work by others, etc.
+              </p>
+              <label htmlFor="avatar" className="form__label">
+                File Upload
+              </label>
               <input
                 type="file"
                 id="avatar"
@@ -1035,13 +1074,12 @@ const CreateProjectModal = ({
                 required
                 className="create-project-form__input create-project-form__input--file"
               />
-              <p
-                id="uidnote"
-                className="create-project-form__instructions  create-project-form__instructions--center"
-              >
+              <p id="uidnote" className="form__instructions">
                 Max 2MB, .png only
               </p>
-              <label htmlFor="social">Which social is this for?</label>
+              <label htmlFor="social">
+                Which deliverable is this an example for?
+              </label>
               <select
                 name="social"
                 id="social"
@@ -1050,9 +1088,9 @@ const CreateProjectModal = ({
                   setSocialExample(e.target.value);
                 }}
                 value={socialExample}
-                className="create-project-form__input create-project-form__input--select "
+                className="form__input form__input--select "
               >
-                <option value="none" className="create-project-form__social">
+                <option value="none" className="form__social">
                   Select Platform
                 </option>
                 <option
@@ -1091,19 +1129,19 @@ const CreateProjectModal = ({
               <div className="flex-col-center">
                 {awsImage ? (
                   <img
-                    className="create-project-form__profile-pic"
+                    className="form__profile-pic"
                     src={awsImage}
                     alt="aws avatar"
                   />
                 ) : (
                   <img
-                    className="create-project-form__profile-pic"
+                    className="form__profile-pic"
                     src={greyCircle}
                     alt="blank avatar"
                   />
                 )}
                 {uploadSuccessMsg ? (
-                  <p className="create-project-form__text create-project-form__text--success">
+                  <p className="form__text form__text--success">
                     {uploadSuccessMsg}
                   </p>
                 ) : (

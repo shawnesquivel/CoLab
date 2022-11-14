@@ -35,8 +35,6 @@ const ProjectSchema = new mongoose.Schema(
     instagramSubmission: String,
     tiktokSubmission: String,
     youtubeSubmission: String,
-    submissions: [String],
-    examples: [String],
     numberOfRevisions: { type: Number, default: 1 },
     keywords: [String],
     commentList: [String],

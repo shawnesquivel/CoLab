@@ -59,6 +59,7 @@
   &__col {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     &--keywords {
       width: 70%;
     }
@@ -80,6 +81,9 @@
   padding: 0 100px 0 50px;
   font-size: 0.8rem;
   width: 70vw;
+  &--no-padding {
+    padding: 0;
+  }
   &__empty-space {
     height: 300px;
   }
@@ -91,7 +95,7 @@
       border: none;
       border-radius: 91px;
       padding: 8px 48px;
-      width: 25%;
+      width: 35%;
     }
     &-add-deliverable {
       border: 1px dashed $form-border-color;
@@ -178,8 +182,8 @@
   }
 
   &__profile-pic {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     border-radius: 50px;
     margin-bottom: 1rem;
   }
