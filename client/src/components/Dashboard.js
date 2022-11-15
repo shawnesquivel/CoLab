@@ -221,38 +221,44 @@ const Dashboard = () => {
           />
         </div>
         <nav className="dashboard-links">
-          <Link
-            to="/dashboard"
-            className="dashboard-links__link dashboard-links__link--active"
-          >
-            Dashboard
-          </Link>
-          <button
-            onClick={() => {
-              setShowNewCollabs(false);
-              setShowActiveProjects(true);
-            }}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => {
-              setShowActiveProjects(false);
-              setShowNewCollabs(true);
-            }}
-          >
-            New Collabs
-          </button>
-
-          <Link to="/invites" className="dashboard-links__link">
-            Invites
-          </Link>
-          <Link
-            to="/settings"
-            className="dashboard-links__link dashboard-links__link--last"
-          >
-            Settings
-          </Link>
+          <ul className="dashboard-links__ul">
+            <li className="dashboard-links__li">
+              <button
+                className={
+                  showActiveProjects
+                    ? "dashboard-links__link dashboard-links__link--active"
+                    : "dashboard-links__link "
+                }
+                onClick={() => {
+                  setShowNewCollabs(false);
+                  setShowActiveProjects(true);
+                }}
+              >
+                Dashboard
+              </button>
+            </li>
+            <li className="dashboard-links__li">
+              <button
+                className={
+                  showNewCollabs
+                    ? "dashboard-links__link dashboard-links__link--active"
+                    : "dashboard-links__link "
+                }
+                onClick={() => {
+                  setShowActiveProjects(false);
+                  setShowNewCollabs(true);
+                }}
+              >
+                New Collabs
+              </button>
+            </li>
+            <li className="dashboard-links__li">
+              <button className="dashboard-links__link">Invites</button>
+            </li>
+            <li className="dashboard-links__li dashboard-links__li--last">
+              <button className="dashboard-links__link">Settings</button>
+            </li>
+          </ul>
         </nav>
       </div>
 
@@ -298,45 +304,42 @@ const Dashboard = () => {
         {backendData ? (
           <>
             {/* Create Project (ONLY FOR BRAND REPS) */}
-            <div className="">
-              {auth.roles.includes(3000) ? (
-                <>
-                  <div
-                    style={{ BUTTON_WRAPPER_STYLES }}
-                    className="dashboard-create"
+            {auth.roles.includes(3000) &&
+            showActiveProjects &&
+            !showNewCollabs ? (
+              <>
+                <div className="dashboard-header dashboard-header--justify-right">
+                  <button
+                    onClick={() => {
+                      setShowCreateProjectModal(true);
+                    }}
+                    className="form__btn-add-deliverable"
                   >
-                    <button
-                      onClick={() => {
-                        setShowCreateProjectModal(true);
+                    <FontAwesomeIcon icon={faPlus} className="icon-left" />
+                    Create a New Project
+                  </button>
+                  {showCreateProjectModal ? (
+                    <CreateProjectModal
+                      isOpen={showCreateProjectModal}
+                      onClose={() => {
+                        setShowCreateProjectModal(false);
                       }}
-                      className="dashboard-create__btn"
+                      project={projectModal}
+                      role={auth.roles}
+                      brand={backendData.firstName}
+                      OVERLAY_STYLES={OVERLAY_STYLES}
                     >
-                      <FontAwesomeIcon icon={faPlus} className="icon-left" />
-                      Create a New Project
-                    </button>
-                    {showCreateProjectModal ? (
-                      <CreateProjectModal
-                        isOpen={showCreateProjectModal}
-                        onClose={() => {
-                          setShowCreateProjectModal(false);
-                        }}
-                        project={projectModal}
-                        role={auth.roles}
-                        brand={backendData.firstName}
-                        OVERLAY_STYLES={OVERLAY_STYLES}
-                      >
-                        Create Project
-                      </CreateProjectModal>
-                    ) : (
-                      ""
-                      // <p>showModal is set to false.</p>
-                    )}
-                  </div>
-                </>
-              ) : (
-                ""
-              )}
-            </div>
+                      Create Project
+                    </CreateProjectModal>
+                  ) : (
+                    ""
+                    // <p>showModal is set to false.</p>
+                  )}
+                </div>
+              </>
+            ) : (
+              ""
+            )}
             {/* Contains all the active project cards */}
             {showActiveProjects ? (
               <ActiveProjects

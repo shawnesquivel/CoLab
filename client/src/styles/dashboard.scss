@@ -54,9 +54,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4rem;
     padding-top: 2rem;
-    height: 300px;
+    &--justify-right {
+      justify-content: right;
+      padding: 1rem;
+      padding-right: 0;
+    }
     &-left {
       padding-left: 1rem;
       &__greeting {
@@ -187,15 +190,26 @@
   flex-direction: column;
   gap: 0.7rem;
   background-color: #ececec;
-  &__link {
-    background-color: #ececec;
-    // padding-bottom: 0.5rem;
+
+  &__ul {
+    text-align: left;
+  }
+
+  &__li {
     border-bottom: 1px solid hsl(0, 0%, 61%);
-    border-radius: 9px;
-    margin-bottom: 0.5rem;
+    background-color: #ececec;
     &--last {
       border-bottom: none;
     }
+  }
+
+  &__link {
+    background-color: #ececec;
+    // padding-bottom: 0.5rem;
+    border: none;
+    border-radius: 9px;
+    margin-top: 0.3rem;
+    margin-bottom: 0.5rem;
 
     &--active {
       background-color: $background-dark-grey;

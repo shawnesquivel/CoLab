@@ -195,112 +195,123 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
         </form>
       </div>
       <section className="project-container">
-        {displayProjects?.map((project, i) => (
-          <button
-            onClick={() => {
-              expandProject(project);
-            }}
-            className="dashboard__btn"
-          >
-            <div className="img-container">
-              <img
-                src={projectCard}
-                alt="project example"
-                className="project-container__img"
-              />
+        {filteredProjects?.length === 0 || filteredProjects === undefined ? (
+          <>
+            {displayProjects?.map((project, i) => (
+              <button
+                onClick={() => {
+                  expandProject(project);
+                }}
+                className="dashboard__btn"
+              >
+                <div className="img-container">
+                  <img
+                    src={projectCard}
+                    alt="project example"
+                    className="project-container__img"
+                  />
 
-              <p className="img-container__text">
-                {project.paymentProduct ? "🎁 Gifted" : ""}
-              </p>
-            </div>
-            <div className="project-container__text-container">
-              <h4 className="project-container__text project-container__text--company">
-                {project.company}
-              </h4>
-              <h5 className="project-container__text project-container__text--title">
-                {" "}
-                {project.title.length > 20
-                  ? project.title.slice(0, 20).concat("...")
-                  : project.title}
-              </h5>
-              <h6 className="project-container__text project-container__text--date">
-                Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
-              </h6>
+                  <p className="img-container__text">
+                    {project.paymentProduct ? "🎁 Gifted" : ""}
+                  </p>
+                </div>
+                <div className="project-container__text-container">
+                  <h4 className="project-container__text project-container__text--company">
+                    {project.company}
+                  </h4>
+                  <h5 className="project-container__text project-container__text--title">
+                    {" "}
+                    {project.title.length > 20
+                      ? project.title.slice(0, 20).concat("...")
+                      : project.title}
+                  </h5>
+                  <h6 className="project-container__text project-container__text--date">
+                    Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
+                  </h6>
 
-              <div className="">
-                {project.instagramTask ? (
-                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
-                ) : (
-                  ""
-                )}
-                {project.tiktokTask ? (
-                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
-                ) : (
-                  ""
-                )}
-                {project.youtubeTask ? (
-                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
-                ) : (
-                  ""
-                )}
-              </div>
-            </div>
-          </button>
-        ))}
-      </section>
-      <section className="project-container">
-        {filteredProjects?.map((project, i) => (
-          <button
-            onClick={() => {
-              expandProject(project);
-            }}
-            className="dashboard__btn"
-          >
-            <div className="img-container">
-              <img
-                src={projectCard}
-                alt="project example"
-                className="project-container__img"
-              />
+                  <div className="">
+                    {project.instagramTask ? (
+                      <FontAwesomeIcon
+                        className="icon-left"
+                        icon={faInstagram}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    {project.tiktokTask ? (
+                      <FontAwesomeIcon className="icon-left" icon={faTiktok} />
+                    ) : (
+                      ""
+                    )}
+                    {project.youtubeTask ? (
+                      <FontAwesomeIcon className="icon-left" icon={faYoutube} />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </>
+        ) : (
+          <>
+            {filteredProjects?.map((project, i) => (
+              <button
+                onClick={() => {
+                  expandProject(project);
+                }}
+                className="dashboard__btn"
+              >
+                <div className="img-container">
+                  <img
+                    src={projectCard}
+                    alt="project example"
+                    className="project-container__img"
+                  />
 
-              <p className="img-container__text">
-                {project.paymentProduct ? "🎁 Gifted" : ""}
-              </p>
-            </div>
-            <div className="project-container__text-container">
-              <h4 className="project-container__text project-container__text--company">
-                {project.company}
-              </h4>
-              <h5 className="project-container__text project-container__text--title">
-                {" "}
-                {project.title.length > 20
-                  ? project.title.slice(0, 20).concat("...")
-                  : project.title}
-              </h5>
-              <h6 className="project-container__text project-container__text--date">
-                Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
-              </h6>
+                  <p className="img-container__text">
+                    {project.paymentProduct ? "🎁 Gifted" : ""}
+                  </p>
+                </div>
+                <div className="project-container__text-container">
+                  <h4 className="project-container__text project-container__text--company">
+                    {project.company}
+                  </h4>
+                  <h5 className="project-container__text project-container__text--title">
+                    {" "}
+                    {project.title.length > 20
+                      ? project.title.slice(0, 20).concat("...")
+                      : project.title}
+                  </h5>
+                  <h6 className="project-container__text project-container__text--date">
+                    Due Date: {moment(project.deadline).format("MMMM Do YYYY")}
+                  </h6>
 
-              <div className="">
-                {project.instagramTask ? (
-                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
-                ) : (
-                  ""
-                )}
-                {project.tiktokTask ? (
-                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
-                ) : (
-                  ""
-                )}
-                {project.youtubeTask ? (
-                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
-                ) : (
-                  ""
-                )}
-              </div>
-            </div>
-          </button>
-        ))}
+                  <div className="">
+                    {project.instagramTask ? (
+                      <FontAwesomeIcon
+                        className="icon-left"
+                        icon={faInstagram}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    {project.tiktokTask ? (
+                      <FontAwesomeIcon className="icon-left" icon={faTiktok} />
+                    ) : (
+                      ""
+                    )}
+                    {project.youtubeTask ? (
+                      <FontAwesomeIcon className="icon-left" icon={faYoutube} />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </>
+        )}
       </section>
     </section>
   );
