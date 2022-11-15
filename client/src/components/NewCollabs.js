@@ -12,37 +12,9 @@ const moment = require("moment");
 // to do: make current projects the entire Projects database.
 const NewCollabs = ({ currentProjects, expandProject }) => {
   const [displayProjects, setDisplayProjects] = useState([]);
-  //   Queries
-  const [socialQuery, setSocialQuery] = useState("");
-  const [companyQuery, setCompanyQuery] = useState("");
-  const [keywordQuery, setKeywordQuery] = useState("");
-
-  // on page load, only show projects without an influencer
-  useEffect(() => {
-    const noInfluencerProjects = currentProjects.filter(
-      (project) => !project.influencerAssigned
-    );
-
-    setDisplayProjects(noInfluencerProjects);
-  }, [currentProjects]);
-
-  // Search by Property Value
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [textQuery, setTextQuery] = useState({});
-
-  // Search by Contains Keys
-
-  const filterProjectByQuery = (query, queryType) => {
-    if (queryType === "text") {
-      setTextQuery(query);
-    }
-    if (queryType === "social") {
-      setSocialQuery(query);
-    }
-  };
-
-  useEffect(() => {
-    getallNewProjects();
-  }, []);
+  const [socialQuery, setSocialQuery] = useState({});
 
   // Retrieves all projects with "no influencer assigned"
   const getallNewProjects = async () => {
@@ -61,8 +33,28 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
     }
   };
 
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  useEffect(() => {
+    getallNewProjects();
+  }, []);
 
+  // on page load, only show projects without an influencer
+  // wrong: only shows user's projects with no influencer
+  // useEffect(() => {
+  //   const noInfluencerProjects = currentProjects.filter(
+  //     (project) => !project.influencerAssigned
+  //   );
+
+  //   setDisplayProjects(noInfluencerProjects);
+  // }, [currentProjects]);
+
+  // Search by Property Value
+
+  // Search by Contains Keys
+  const filterProjectByQuery = (query, queryType) => {
+    setTextQuery(query);
+  };
+
+  // Filter by Search Query
   useEffect(() => {
     console.log(textQuery);
 
@@ -78,9 +70,10 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
 
     setFilteredProjects(filtered);
 
-    console.log(filtered);
+    console.log("filteredProjects", filtered);
   }, [textQuery]);
-  const [socialQueries, setSocialQueries] = [];
+
+  // Filter by Platform
   const [instagramChecked, setInstagramChecked] = useState("");
   const [tiktokChecked, setTiktokChecked] = useState("");
   const [youtubeChecked, setYouTubeChecked] = useState("");
@@ -120,9 +113,6 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
     console.log(filtered);
   }, [instagramChecked, youtubeChecked, tiktokChecked]);
 
-  // check arr
-  // Object.prototype.toString.call(data) == '[object Array]'
-
   return (
     <section className="new-collabs">
       <div className="new-collabs__header">
@@ -131,49 +121,7 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
           <p className="form__instructions">
             Use the filters to refine your search.
           </p>
-          <div className="label-row-container  label-row-container--half">
-            <div className="label-col-container">
-              <div className="label-col-container__row">
-                <label htmlFor="ig" className="form__label">
-                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
-                  Instagram
-                </label>
-                <input
-                  type="checkbox"
-                  checked={instagramChecked}
-                  onChange={(e) => {
-                    setInstagramChecked(!instagramChecked);
-                  }}
-                />
-              </div>
-              <div className="label-col-container__row">
-                <label htmlFor="ig" className="form__label">
-                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
-                  Tik Tok
-                </label>
-                <input
-                  type="checkbox"
-                  checked={tiktokChecked}
-                  onChange={(e) => {
-                    setTiktokChecked(!tiktokChecked);
-                  }}
-                />
-              </div>
-              <div className="label-col-container__row">
-                <label htmlFor="ig" className="form__label">
-                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
-                  Youtube
-                </label>
-                <input
-                  type="checkbox"
-                  checked={youtubeChecked}
-                  onChange={(e) => {
-                    setYouTubeChecked(!youtubeChecked);
-                  }}
-                />
-              </div>
-            </div>
-
+          <div className="label-row-container  label-row-container--left">
             <div className="label-row-container__col">
               <label htmlFor="search" className="form__label">
                 Search
@@ -185,6 +133,63 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
                   filterProjectByQuery(e.target.value, "text");
                 }}
               />
+            </div>
+            <div className="label-col-container">
+              <p className="form__label">Platform</p>
+              <div className="label-col-container__row">
+                <label
+                  htmlFor="instagramChecked"
+                  className="form__label--checkbox"
+                >
+                  <input
+                    className="form__checkbox"
+                    name="instagramChecked"
+                    type="checkbox"
+                    checked={instagramChecked}
+                    onChange={(e) => {
+                      setInstagramChecked(!instagramChecked);
+                    }}
+                  />
+                  {/* <FontAwesomeIcon className="icon-left" icon={faInstagram} /> */}
+                  Instagram
+                </label>
+              </div>
+              <div className="label-col-container__row">
+                <label
+                  htmlFor="tiktokChecked"
+                  className="form__label--checkbox"
+                >
+                  <input
+                    className="form__checkbox"
+                    name="tiktokChecked"
+                    type="checkbox"
+                    checked={tiktokChecked}
+                    onChange={(e) => {
+                      setTiktokChecked(!tiktokChecked);
+                    }}
+                  />
+                  {/* <FontAwesomeIcon className="icon-left" icon={faTiktok} /> */}
+                  Tik Tok
+                </label>
+              </div>
+              <div className="label-col-container__row">
+                <label
+                  htmlFor="youtubeChecked"
+                  className="form__label--checkbox"
+                >
+                  <input
+                    className="form__checkbox"
+                    name="youtubeChecked"
+                    type="checkbox"
+                    checked={youtubeChecked}
+                    onChange={(e) => {
+                      setYouTubeChecked(!youtubeChecked);
+                    }}
+                  />
+                  {/* <FontAwesomeIcon className="icon-left" icon={faYoutube} /> */}
+                  YouTube
+                </label>
+              </div>
             </div>
           </div>
         </form>

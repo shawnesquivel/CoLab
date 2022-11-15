@@ -9,6 +9,7 @@ import {
   faArrowLeft,
   faSquareMinus,
   faX,
+  faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
@@ -25,6 +26,7 @@ import greyCircle from "../assets/greycircle.jpg";
 import "../styles/createprojectmodal.scss";
 import "../styles/dashboard.scss";
 import AddDeliverableBtn from "./AddDeliverableBtn";
+import CreateProjectSummary from "./CreateProjectSummary";
 
 const MODAL_STYLES = {
   position: "fixed",
@@ -75,6 +77,7 @@ const CreateProjectModal = ({
   const [showDeliverables, setShowDeliverables] = useState(false);
   const [showContractGuidelines, setShowContractGuidelines] = useState(false);
   const [showContractPayment, setShowContractPayment] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -92,6 +95,27 @@ const CreateProjectModal = ({
   const [linkInBio, setLinkInBio] = useState(
     "https://glossier.com/products/cloud-paint"
   );
+
+  // testing
+  const data = {
+    title: title,
+    description: description,
+    influencerAssigned: influencerAssigned,
+    reviewDeadline: reviewDeadline,
+    instagramDeliverable: instagramDeliverable,
+    tiktokDeliverable: tiktokDeliverable,
+    youtubeDeliverable: youtubeDeliverable,
+    deadlineTime: deadlineTime,
+    numberOfRevisions: numberOfRevisions,
+    paymentMethod: paymentMethod,
+    paymentPrice: paymentPrice,
+    paymentProduct: paymentProduct,
+    keywords: keywords,
+    hashtags: hashtags,
+    tags: tags,
+    phrases: phrases,
+    linkInBio: linkInBio,
+  };
 
   // Deliverables
   const [showDeliverableTwo, setShowDeliverableTwo] = useState(false);
@@ -1019,14 +1043,17 @@ const CreateProjectModal = ({
                       type="button"
                       className="form__btn-next"
                     >
-                      Previous Page
+                      Back to Guidelines
                     </button>
                     <button
+                      onClick={() => {
+                        setShowContractGuidelines(false);
+                        setShowSummary(true);
+                      }}
                       type="button"
-                      onClick={submitProject}
                       className="form__btn-next"
                     >
-                      Create Project
+                      Preview
                     </button>
                   </div>
                 </>
@@ -1036,6 +1063,34 @@ const CreateProjectModal = ({
             </div>
           ) : (
             " "
+          )}
+
+          {showSummary ? <CreateProjectSummary {...data} /> : ""}
+          {showSummary ? (
+            <>
+              <div className="btn-container btn-container--center">
+                <button
+                  onClick={() => {
+                    setShowSummary(false);
+                    setShowContractGuidelines(true);
+                  }}
+                  type="button"
+                  className="form__btn-next"
+                >
+                  Back to Guidelines
+                </button>
+
+                <button
+                  type="button"
+                  onClick={submitProject}
+                  className="form__btn-next"
+                >
+                  Create Project
+                </button>
+              </div>
+            </>
+          ) : (
+            ""
           )}
         </form>
         {/* Update the example images */}

@@ -26,6 +26,7 @@ import campaignPhoto from "../assets/cloudpaint.png";
 import axios from "../api/axios";
 import StripeContainer from "./StripeContainer";
 import "../styles/projectmodal.scss";
+import ReviewContract from "./ReviewContract";
 
 const moment = require("moment");
 
@@ -280,7 +281,9 @@ const ProjectModal = ({
                 src={campaignPhoto}
                 alt="Campaign Product"
               />
-              {project.status === "Reviewing Contract" ? (
+
+              {project.status === "Reviewing Contract" ||
+              project.status === "no influencer assigned" ? (
                 <>
                   <h1 className="project-modal-title">Campaign Description</h1>
                   <p>
@@ -293,7 +296,7 @@ const ProjectModal = ({
                   <div className="project-modal-card">
                     <FontAwesomeIcon icon={faCircleExclamation} />
                     <div>
-                      <h2>Select Products</h2>
+                      <h2>Products</h2>
                       <p>
                         0/2 Products Selected{" "}
                         <span style={{ fontWeight: "bold", color: "red" }}>
@@ -735,15 +738,7 @@ const ProjectModal = ({
                 ""
               )}
             </section>
-            {/* Show Comments - Always Active */}
-            <button
-              onClick={() => {
-                setShowProjectComments(!showProjectComments);
-              }}
-              className="btn-dark btn-small"
-            >
-              {!showProjectComments ? "Show Comments" : "Hide Comments"}
-            </button>
+
             {project.commentList && showProjectComments ? (
               <div className="comment-list">
                 <h3 className="comment-list__header">Recent Activity</h3>
@@ -767,7 +762,16 @@ const ProjectModal = ({
               ""
             )}
 
-            <div className="div-center">
+            <div className="btn-container btn-container--center">
+              {/* Show Comments - Always Active */}
+              <button
+                onClick={() => {
+                  setShowProjectComments(!showProjectComments);
+                }}
+                className="form__btn-add-deliverable"
+              >
+                {!showProjectComments ? "Show Comments" : "Hide Comments"}
+              </button>
               <button
                 className="btn-light btn-small"
                 type="button"
@@ -788,7 +792,7 @@ const ProjectModal = ({
           <section className="project-modal-page">
             <h1 className="project-modal-title">
               {project.status === "Reviewing Contract"
-                ? "Select Products"
+                ? "Products"
                 : "Shipped Products"}
             </h1>
             {project.status === "Reviewing Contract" ? (

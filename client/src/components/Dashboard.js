@@ -258,7 +258,7 @@ const Dashboard = () => {
 
       <div className="dashboard-container-right">
         {backendData ? (
-          <header className="header">
+          <header className="dashboard-header">
             <div className="dashboard-header-left">
               {backendData.hasUpdatedProfile ? (
                 <h3 className="dashboard-header-left__greeting">

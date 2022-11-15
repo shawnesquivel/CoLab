@@ -58,7 +58,7 @@
 
   &--left {
     justify-content: left;
-    gap: 2rem;
+    gap: 5rem;
   }
 
   &--half {
@@ -86,11 +86,17 @@
 .label-col-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 
   &__row {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
+  }
+
+  &--preview {
+    width: 50%;
   }
 }
 
@@ -101,6 +107,7 @@
   padding: 0 100px 0 50px;
   font-size: 0.8rem;
   width: 70vw;
+
   &--no-padding {
     padding: 0;
   }
@@ -138,6 +145,10 @@
     }
   }
 
+  &__checkbox {
+    margin-right: 0.5rem;
+  }
+
   &__input {
     font-size: 16px;
     padding: 0.25rem 0.5rem;
@@ -145,6 +156,11 @@
     border-radius: 12px;
     border: 1px solid $form-border-color;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
+
+    &--checkbox {
+      color: grey;
+    }
+
     &--small {
       width: 15%;
     }
@@ -239,11 +255,89 @@
     text-transform: uppercase;
     font-weight: 700;
     line-height: 24px;
+    &--checkbox {
+      color: $text-dark-color;
+      font-size: 16px;
+    }
   }
 }
 
 .new-collabs {
   &__header {
     padding-left: 1rem;
+    background-color: #f5f5f5;
+  }
+}
+
+.preview {
+  &__prop {
+    color: $text-dark-grey;
+    font-size: 12px;
+  }
+
+  &__value {
+    font-family: "DM Sans";
+    font-size: 16px;
+  }
+
+  &-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  &-left {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+  &-right {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+
+  &-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    &--left {
+      justify-content: left;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+
+  &-col {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-table {
+    width: 100%;
+    border: 1px solid $form-border-color;
+    border-radius: 10px;
+    &__tbody {
+      width: 100%;
+    }
+    // row
+    &__tr {
+      width: 100%;
+    }
+    // header
+    &__th {
+      text-align: left;
+      color: $text-dark-grey;
+      font-size: 12px;
+      font-weight: 400;
+      width: 35%;
+    }
+    // data
+    &__td {
+      color: $text-dark-color;
+      font-size: 16px;
+      width: 100%;
+    }
   }
 }
