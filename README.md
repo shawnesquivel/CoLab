@@ -11,6 +11,14 @@ Solarized dark             |  Solarized Ocean
 </p>
 
 
+<p float="left">
+  <img src="/img1.png" width="100" />
+  <img src="/img2.png" width="100" /> 
+  <img src="/img3.png" width="100" />
+</p>
+
+![Alt text](/screenshots/brand-creates-project.gif?raw=true "Optional Title")
+
 <p align="center">
 
 ### Register
