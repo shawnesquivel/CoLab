@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
-import Notifications from "./Notifications";
-import {
-  faBell,
-  faClipboardList,
-  faAngleUp,
-  faUser,
-  faClock,
-  faPlus,
-  faExpand,
-  faExclamationCircle,
-} from "@fortawesome/free-solid-svg-icons";
+// import Notifications from "./Notifications";
+import { faBell, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
@@ -22,12 +13,8 @@ import ActiveProjects from "./ActiveProjects";
 import CreateProjectModal from "./CreateProjectModal";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
-import colab from "../assets/colab-text.png";
 import colabFolder from "../assets/colab-logo.png";
 import colabTextTransparent from "../assets/colab-text-transparent.png";
-import headshot from "../assets/headshot.png";
-import projectCard from "../assets/project-card.png";
-const moment = require("moment");
 
 // Endpoints
 const GETUSER_URL = "/api/getuser";
@@ -57,16 +44,11 @@ const OVERLAY_STYLES = {
 // };
 
 const Dashboard = () => {
-  // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
 
-  // useEffect(() => {
-  //   console.log(auth.roles);
-  // }, []);
-
   // STATE
-  const [backendData, setBackendData] = useState("");
+  const [backendData, setBackendData] = useState(""); //stores the user
   const [currentProjects, setCurrentProjects] = useState([]);
   // Form
   const [notifications, toggleNotifications] = useState(false);
@@ -78,22 +60,22 @@ const Dashboard = () => {
   const [influencerAssigned, setInfluencerAssigned] = useState("");
   const [title, setTitle] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [reviewDeadline, setReviewDeadline] = useState("");
-  const [deadlineTime, setDeadlineTime] = useState("");
-  const [instagramDeliverable, setInstagramDeliverable] =
-    useState("Post a story");
-  const [tiktokDeliverable, setTiktokDeliverable] =
-    useState("10-20sec Tik Tok");
-  const [youtubeDeliverable, setYoutubeDeliverable] =
-    useState("15-30 sec ad read");
-  const [numberOfRevisions, setNumberOfRevisions] =
-    useState("15-30 sec ad read");
+  // const [reviewDeadline, setReviewDeadline] = useState("");
+  // const [deadlineTime, setDeadlineTime] = useState("");
+  // const [instagramDeliverable, setInstagramDeliverable] =
+  //   useState("Post a story");
+  // const [tiktokDeliverable, setTiktokDeliverable] =
+  //   useState("10-20sec Tik Tok");
+  // const [youtubeDeliverable, setYoutubeDeliverable] =
+  //   useState("15-30 sec ad read");
+  // const [numberOfRevisions, setNumberOfRevisions] =
+  //   useState("15-30 sec ad read");
 
   // Project Guidelines
-  const [keywords, setKeywords] = useState(["lifestyle"]);
-  const [hashtags, setHashtags] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [phrases, setPhrases] = useState([]);
+  // const [keywords, setKeywords] = useState(["lifestyle"]);
+  // const [hashtags, setHashtags] = useState([]);
+  // const [tags, setTags] = useState([]);
+  // const [phrases, setPhrases] = useState([]);
 
   // Open Modals
   const [showModal, setShowModal] = useState(false);
@@ -120,10 +102,12 @@ const Dashboard = () => {
       setProjectBtnText(" Create Project");
     }
   }, [projectForm]);
-  // On Page Load, Get User from Backend
+  // Get User from Backend
+
   useEffect(() => {
     fetchUser().catch(console.error);
   }, []);
+
   const fetchUser = async () => {
     const user = auth?.user;
     const payload = JSON.stringify({
@@ -137,8 +121,8 @@ const Dashboard = () => {
     });
 
     setBackendData(response.data.userProfile);
+    console.log("updating user");
   };
-
   // Create a Project
   const submitProject = async (e) => {
     e.preventDefault();
@@ -163,46 +147,54 @@ const Dashboard = () => {
       });
 
       console.log("Response Data", response);
+
+      fetchUser().catch(console.error);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getProject = async (projectID) => {
+    try {
+      const payload = JSON.stringify({
+        token: localStorage.getItem("token"),
+        projectID: projectID,
+      });
+      const response = await axios.post(GETPROJECT_URL, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      // console.log("Response:", response);
+      setCurrentProjects((currentProjects) => [
+        ...currentProjects,
+        response.data.project,
+      ]);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
-    const getProject = async (projectID) => {
-      try {
-        const payload = JSON.stringify({
-          token: localStorage.getItem("token"),
-          projectID: projectID,
-        });
-        const response = await axios.post(GETPROJECT_URL, payload, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        });
+    refreshDashboard();
+    // Dependency => if the backend data has any projects in it
+  }, [backendData?.currentProjects?.[0]]);
 
-        // console.log("Response:", response);
-        setCurrentProjects((currentProjects) => [
-          ...currentProjects,
-          response.data.project,
-        ]);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const expandProject = (project) => {
+    setProjectModal(project);
+    setShowModal(true);
+  };
 
+  const refreshDashboard = () => {
+    console.log("refreshing the dashboard");
     // If the backend data is loaded, fetch each project into currentProjects array
     if (backendData?.currentProjects?.[0]) {
       backendData.currentProjects.forEach((project) => {
         getProject(project).catch(console.error);
       });
     }
-  }, [backendData?.currentProjects?.[0]]);
-
-  const expandProject = (project) => {
-    setProjectModal(project);
-    setShowModal(true);
   };
 
   return (
@@ -313,7 +305,7 @@ const Dashboard = () => {
                     onClick={() => {
                       setShowCreateProjectModal(true);
                     }}
-                    className="form__btn-add-deliverable"
+                    className="form__btn-dotted"
                   >
                     <FontAwesomeIcon icon={faPlus} className="icon-left" />
                     Create a New Project
@@ -323,6 +315,8 @@ const Dashboard = () => {
                       isOpen={showCreateProjectModal}
                       onClose={() => {
                         setShowCreateProjectModal(false);
+                        setShowActiveProjects(false);
+                        setShowNewCollabs(true);
                       }}
                       project={projectModal}
                       role={auth.roles}
@@ -404,6 +398,8 @@ const Dashboard = () => {
             project={projectModal}
             role={auth.roles}
             OVERLAY_STYLES={OVERLAY_STYLES}
+            user={backendData}
+            refreshDashboard={refreshDashboard}
           >
             Project Modal
           </ProjectModal>

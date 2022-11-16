@@ -713,9 +713,10 @@ app.post("/api/addprojectimage", async (req, res) => {
 
 // Update Project Everytime Status Updates
 app.post("/api/updateproject", async (req, res) => {
-  const { token, action, comment, project } = req.body;
+  const { token, action, comment, project, user } = req.body;
   try {
     console.log(token, action, comment);
+    console.log("user", user);
     // Create a baseline comment that will be updated depending on the update
     var newCommentWithDate = moment(new Date()).format(
       "MMMM Do YYYY @ h:mm:ss a"
@@ -724,10 +725,10 @@ app.post("/api/updateproject", async (req, res) => {
     //  Update comment string based based on influencer accept/reject/modify contract
     // Add Comment
     if (action === "accept") {
-      newCommentWithDate += ": The influencer accepted the project.";
+      newCommentWithDate += `: ${user.firstName} ${user.lastName} (influencer) accepted the project.`;
     }
     if (action === "reject") {
-      newCommentWithDate += ": The influencer rejected the project.";
+      newCommentWithDate += `: ${user.firstName} ${user.lastName} (influencer) rejected the project.`;
     }
     if (action === "modify") {
       newCommentWithDate +=
@@ -735,13 +736,29 @@ app.post("/api/updateproject", async (req, res) => {
     }
     // Step 1A - Influencer Accepts Contract/Project
     if (action === "accept") {
+      // Update Status
       await Project.updateOne(
         { _id: project._id },
         {
-          $set: { status: "in progress/waiting for submission" },
+          $set: {
+            status: "in progress/waiting for submission",
+            influencerAssigned: user._id,
+          },
           $push: { commentList: newCommentWithDate },
         }
       );
+      // if influencer is not already assigned the project
+      console.log("current projects", user.currentProjects);
+      console.log("projectID", project._id);
+      if (!user.currentProjects.includes(project._id)) {
+        console.log("adding the project to current projects!");
+        await User.updateOne(
+          { _id: user._id },
+          {
+            $push: { currentProjects: `${project._id}` },
+          }
+        );
+      }
     }
     // Step 1B - Influencer Reject Contract/Project
     if (action === "reject") {
@@ -955,6 +972,9 @@ app.post("/api/updateproject", async (req, res) => {
     const projectRecord = await findProjectByID(project._id);
 
     console.log(projectRecord);
+    const userRecord = await findUser(project._id);
+
+    console.log(userRecord);
   } catch (err) {
     console.log(err);
   }

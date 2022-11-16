@@ -2,6 +2,13 @@
 
 .btn-container {
   display: flex;
+  flex-direction: row;
+
+  &--col {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   &--right {
     justify-content: right;
   }
@@ -123,14 +130,24 @@
       border-radius: 91px;
       padding: 8px 48px;
       width: 35%;
+      &--white {
+        background-color: $background-light-color;
+        color: $text-dark-color;
+      }
     }
-    &-add-deliverable {
+    &-dotted {
       border: 1px dashed $form-border-color;
       color: $text-dark-color;
       border-radius: 91px;
       box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
       width: 15%;
       font-size: 16px;
+      &--medium {
+        width: 25%;
+      }
+      &--large {
+        width: 35%;
+      }
     }
   }
 
@@ -200,6 +217,13 @@
   }
 
   &__text {
+    font-size: 16px;
+    &--bold {
+      font-weight: 600;
+    }
+    &--description {
+      font-size: 20px;
+    }
     &--header {
       font-family: "SF Pro";
       font-size: 48px;
@@ -239,6 +263,10 @@
     font-size: 14px;
     color: $text-dark-grey;
     margin-bottom: 1rem;
+
+    &--large {
+      font-size: 22px;
+    }
     &--center {
       text-align: center;
     }
@@ -270,14 +298,8 @@
 }
 
 .preview {
-  &__prop {
-    color: $text-dark-grey;
-    font-size: 12px;
-  }
-
-  &__value {
-    font-family: "DM Sans";
-    font-size: 16px;
+  &__header {
+    margin-bottom: 1rem;
   }
 
   &-container {
@@ -285,7 +307,7 @@
     flex-direction: row;
     justify-content: space-between;
     gap: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0.75rem;
   }
   &-left {
     display: flex;

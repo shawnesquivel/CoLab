@@ -371,6 +371,9 @@ select {
   justify-content: left;
   gap: 5px 15px;
   margin-bottom: 1rem;
+  &--guidelines {
+    margin-bottom: 0;
+  }
 }
 
 .keywords-item {
@@ -380,6 +383,10 @@ select {
   display: inline-block;
   padding: 0.3rem 0.75rem;
   border-radius: 20px;
+}
+
+.keywords-text {
+  font-size: 16px;
 }
 
 .keywords-delete {

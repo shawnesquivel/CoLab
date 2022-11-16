@@ -1,11 +1,92 @@
 @use "partials/index" as *;
 
-.project-modal-navbar {
+.comments-container {
   display: flex;
-  flex-wrap: row;
-  margin: 15px;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 44px;
+}
+
+.guidelines-card {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 50px;
+  border: 1px solid $form-border-color;
+  border-radius: 25px;
+  padding: 1rem 1.5rem;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 20px;
+    align-items: center;
+    color: $text-dark-color;
+    font-weight: 400;
+  }
+
+  &__btn-expand {
+    margin-top: 0;
+    border: none;
+    background-color: transparent;
+  }
+}
+
+.guidelines-card-header {
+}
+
+.project-modal-guidelines-btn {
+}
+
+.project-modal {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+
+  &-container {
+    // width: 70vw;
+  }
+  &-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: row;
+    align-items: center;
+    border: 1px solid #000;
+    border-radius: 15px;
+    padding: 10px;
+    gap: 30px;
+    padding-left: 2rem;
+    margin-bottom: 15px;
+
+    &--column {
+      flex-direction: column;
+    }
+  }
+
+  &__header {
+    font-size: 36px;
+  }
+
+  &-navbar {
+    display: flex;
+    flex-wrap: row;
+    margin: 15px;
+    justify-content: center;
+    gap: 50px;
+  }
+  //
+  /* Project Modal - Page One - Overview */
+
+  &__product {
+    max-width: 100%;
+    height: 150px;
+    align-items: center;
+    object-fit: cover;
+    object-position: 0 100%;
+    border: 2px solid #000;
+    border-radius: 15px;
+  }
 }
 
 .project-modal-page-highlight {
@@ -22,32 +103,11 @@
   color: var(--text-dark-color);
 }
 
-/* Project Modal - Page One - Overview */
-
-.project-modal-campaign-photo {
-  max-width: 100%;
-  height: 150px;
-  align-items: center;
-  object-fit: cover;
-  object-position: 0 100%;
-  border: 2px solid #000;
-  border-radius: 15px;
-}
-
 .project-modal-page {
   display: flex;
   flex-wrap: column;
   gap: 20px;
-}
-
-.project-modal-card {
-  display: flex;
-  flex-wrap: row;
-  border: 1px solid #000;
-  border-radius: 15px;
-  padding: 10px;
-  gap: 30px;
-  margin-bottom: 15px;
+  padding: 0 2rem;
 }
 
 /* Page 2: Products */
@@ -87,27 +147,6 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.project-modal-guidelines-card {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #000;
-  border-radius: 25px;
-  padding: 30px;
-}
-
-.project-modal-guidelines-card-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 1.5rem;
-}
-
-.project-modal-guidelines-btn {
-  margin-top: 0;
-  border: none;
-  background-color: transparent;
 }
 
 .deadline-text {

@@ -5,19 +5,12 @@ import {
   faUser,
   faClock,
   faPlus,
-  faArrowRight,
-  faArrowLeft,
   faSquareMinus,
   faX,
-  faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import {
-  faInstagram,
-  faTiktok,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
@@ -25,7 +18,6 @@ import AuthContext from "../context/AuthProvider";
 import greyCircle from "../assets/greycircle.jpg";
 import "../styles/createprojectmodal.scss";
 import "../styles/dashboard.scss";
-import AddDeliverableBtn from "./AddDeliverableBtn";
 import CreateProjectSummary from "./CreateProjectSummary";
 
 const MODAL_STYLES = {
@@ -70,7 +62,7 @@ const CreateProjectModal = ({
   const [reviewDeadline, setReviewDeadline] = useState("");
   const [deadline, setDeadline] = useState("");
   const [deadlineTime, setDeadlineTime] = useState("23:59");
-  const [numberOfRevisions, setNumberOfRevisions] = useState("2");
+  const [numberOfRevisions, setNumberOfRevisions] = useState("1");
 
   // Form Pages
   const [showContractDetails, setShowContractDetails] = useState(true);
@@ -96,15 +88,15 @@ const CreateProjectModal = ({
     "https://glossier.com/products/cloud-paint"
   );
 
-  // testing
+  // Used to pass in props
   const data = {
     title: title,
     description: description,
     influencerAssigned: influencerAssigned,
     reviewDeadline: reviewDeadline,
-    instagramDeliverable: instagramDeliverable,
-    tiktokDeliverable: tiktokDeliverable,
-    youtubeDeliverable: youtubeDeliverable,
+    instagramTask: instagramDeliverable,
+    tiktokTask: tiktokDeliverable,
+    youtubeTask: youtubeDeliverable,
     deadlineTime: deadlineTime,
     numberOfRevisions: numberOfRevisions,
     paymentMethod: paymentMethod,
@@ -182,13 +174,13 @@ const CreateProjectModal = ({
   const [deliverableThreeDescription, setDeliverableThreeDescription] =
     useState("");
 
-  // Dynamically choose which platform's state to update
-  const choosePlatform = (e) => {
-    // if the div's container is for instagram, change hte instagram deliverable
-    console.log(e.target.id, e.target.value);
-    const social = e.target.value;
-    setDeliverableOneSocial(e.target.value);
-  };
+  // // Dynamically choose which platform's state to update
+  // const choosePlatform = (e) => {
+  //   // if the div's container is for instagram, change hte instagram deliverable
+  //   console.log(e.target.id, e.target.value);
+  //   const social = e.target.value;
+  //   setDeliverableOneSocial(e.target.value);
+  // };
 
   const updateSocial = (socialPlatform, description) => {
     if (socialPlatform === "none") return;
@@ -223,11 +215,12 @@ const CreateProjectModal = ({
     updateSocial(deliverableThreeSocial, deliverableThreeDescription);
   }, [deliverableThreeDescription, deliverableThreeSocial]);
 
-  useEffect(() => {
-    console.log("instagram:", instagramDeliverable);
-    console.log("youtube:", youtubeDeliverable);
-    console.log("tiktok:", tiktokDeliverable);
-  }, [instagramDeliverable, youtubeDeliverable, tiktokDeliverable]);
+  // Debugging
+  // useEffect(() => {
+  //   console.log("instagram:", instagramDeliverable);
+  //   console.log("youtube:", youtubeDeliverable);
+  //   console.log("tiktok:", tiktokDeliverable);
+  // }, [instagramDeliverable, youtubeDeliverable, tiktokDeliverable]);
 
   // Create Project
   const submitProject = async (e) => {
@@ -295,7 +288,8 @@ const CreateProjectModal = ({
       setShowSuccess(true);
       setProject(response.data.project);
 
-      setShowContractGuidelines(false);
+      setShowSummary(false);
+
       setShowUpload(true);
     } catch (err) {
       console.log(err);
@@ -408,6 +402,7 @@ const CreateProjectModal = ({
             <FontAwesomeIcon icon={faX} className="icon-left" />
           </button>
         </div>
+        {/*  */}
         <form className="form">
           <h2 className="form__text form__text--header">
             {!showSuccess ? "Create a Campaign" : "Success!"}
@@ -805,7 +800,7 @@ const CreateProjectModal = ({
               )}
 
               <button
-                className="form__btn-add-deliverable"
+                className="form__btn-dotted"
                 onClick={() => {
                   // if deliverableTwoSocial does not exist, show it
                   if (!showDeliverableTwo) {
@@ -852,7 +847,9 @@ const CreateProjectModal = ({
           )}
           {showContractPayment ? (
             <div className={!showPaymentDetails ? "form-page" : "form-page"}>
-              <h2 className="form__header">Payment Details</h2>
+              <h2 className="form__text form__text--subheader">
+                Payment Details
+              </h2>
               <div className="label-row-container__col label-row-container__col--compensation">
                 <label htmlFor="paymentmethod" className="form__label">
                   Compensation Type
@@ -943,6 +940,7 @@ const CreateProjectModal = ({
           {showContractGuidelines ? (
             <div className="form-page ">
               <h2 className="form-header">Contract Guidelines</h2>
+              {/* Phrases */}
               <div className="label-row-container__col">
                 <label htmlFor="phrases" className="form__label">
                   Required Phrases
@@ -967,6 +965,7 @@ const CreateProjectModal = ({
                   ))}
                 </div>
               </div>
+              {/* Hashtags */}
               <div className="label-row-container__col">
                 <label htmlFor="hashtags" className="form__label">
                   Required Hashtags
@@ -991,6 +990,7 @@ const CreateProjectModal = ({
                   ))}
                 </div>
               </div>
+              {/* Tags */}
               <div className="label-row-container__col">
                 <label htmlFor="tags" className="form__label">
                   Required Profile Tags
@@ -1015,6 +1015,7 @@ const CreateProjectModal = ({
                   ))}
                 </div>
               </div>
+              {/* Link In Bio */}
               <div className="label-row-container__col">
                 <label htmlFor="linkinbio" className="form__label">
                   Link in Bio
@@ -1031,7 +1032,7 @@ const CreateProjectModal = ({
                   className="form__input"
                 />
               </div>
-
+              {/* Buttons */}
               {!showSuccess ? (
                 <>
                   <div className="btn-container btn-container--center">
@@ -1106,7 +1107,6 @@ const CreateProjectModal = ({
             ) : (
               ""
             )} */}
-
             <form className="form " encType="multipart/form-data">
               <h4>Upload Examples</h4>
               <p className="form__instructions">
@@ -1210,8 +1210,9 @@ const CreateProjectModal = ({
                   type="button"
                 >
                   <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
-                  Back to Dashboard
+                  Go to New Collabs
                 </button>
+
                 {/* {errMsg ? (
                   <p aria-live="assertive" className="update-profile__error">
                     {errMsg}

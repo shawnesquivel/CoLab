@@ -48,8 +48,11 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
             </h6>
 
             <p className="project-container__text project-container__text--status">
+              {project.status.toLowerCase() === "no influencer assigned"
+                ? "📄 No influencer assigned yet."
+                : ""}
               {project.status.toLowerCase() === "reviewing contract"
-                ? "📄 Influencer reviewing contract."
+                ? "📩 Contract sent to influencer."
                 : ""}
               {project.status.toLowerCase() ===
               "in progress/waiting for submission"
