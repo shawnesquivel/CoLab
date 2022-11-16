@@ -5,13 +5,27 @@ Register             |  Login
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png" width="500"> | <img src="https://user-images.githubusercontent.com/94336773/202241457-7889fe43-5c21-490c-b05d-17f4735bbbe4.png" width="500"> 
 
-### Brand Creates Marketing Campaign
-![image](https://user-images.githubusercontent.com/94336773/202241509-cbc00269-2f8c-4a4d-9043-3c719f9bb235.png)
-
-  ### Dashboard (Shows Current Projects)
+  ### After logging in, you can see the Dashboard, which shows your current active marketing campaigns
 ![image](https://user-images.githubusercontent.com/94336773/202241557-bd88f608-8926-4e1a-9a35-982b2e8ebd7b.png)
 
-### User Views New Projects, and Accepts One!
+# 1. Brands: Create a New Project
+
+## 1A - Describe the Project
+![image](https://user-images.githubusercontent.com/94336773/202252342-bba58637-16e7-4f5c-809d-993b1b040058.png)
+## 1B - Outline the deliverables
+![image](https://user-images.githubusercontent.com/94336773/202252451-d50fec31-58fd-42e0-b38a-5e42df3ff0cf.png)
+## 1C - Outline how much you will be paying and/or what products you will be sending
+![image](https://user-images.githubusercontent.com/94336773/202252593-597ae5e6-7bd9-4730-96c2-7b45cbb6dfda.png)
+## 1D - Outline any specifics for the contract
+![image](https://user-images.githubusercontent.com/94336773/202252863-93c5ebed-9671-49b2-b80d-d7693d174c42.png)
+## 1E - Review the contract
+![image](https://user-images.githubusercontent.com/94336773/202252968-a101d54c-3813-4cd4-9694-dcfc07f1acad.png)
+
+
+
+
+
+### Influencers can browse and filter through the New Collabs page to find a project that fits them 
 ![image](https://user-images.githubusercontent.com/94336773/202245921-17433cef-8712-42ff-a663-51b28df0a0fd.png)
 
 ### Once Submissions Are Reviewed, Brand can pay with Stripe
