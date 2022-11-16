@@ -1,27 +1,14 @@
 ## CoLab
 
-<p align="center">
-  <img 
-    width="20%"
-    height="20%"
-    src="https://user-images.githubusercontent.com/94336773/184672457-30ff9fe4-075d-41d8-96a7-1a4ca128d2bd.png"
-  >
-  <img 
-    width="22%"
-    height="22%"
-    src="https://user-images.githubusercontent.com/94336773/184673048-4640a94b-aa68-4a6a-9b40-bfba37cd6d7f.png"
-  >
-  <img 
-    width="20%"
-    height="20%"
-    src="https://user-images.githubusercontent.com/94336773/184673070-b4c52638-91d9-47b3-b758-a9c0043356a7.png"
-  >
-  <img 
-    width="20%"
-    height="20%"
-    src="https://user-images.githubusercontent.com/94336773/184673125-fe0a508e-4290-490b-970d-49c41d61768e.png"
-  >
-</p>
+![image](https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png)
+
+![image](https://user-images.githubusercontent.com/94336773/202241356-3919dc0e-2de8-48d3-8956-31bfe0f22148.png)
+![image](https://user-images.githubusercontent.com/94336773/202241457-7889fe43-5c21-490c-b05d-17f4735bbbe4.png)
+
+![image](https://user-images.githubusercontent.com/94336773/202241509-cbc00269-2f8c-4a4d-9043-3c719f9bb235.png)
+![image](https://user-images.githubusercontent.com/94336773/202241557-bd88f608-8926-4e1a-9a35-982b2e8ebd7b.png)
+
+
 
 ## 1 Introduction {#1-introduction}
 
