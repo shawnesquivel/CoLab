@@ -44,7 +44,7 @@ View All              |  Filter by "Instagram"
 ### 2E - Now, the influencer can open the project on their Dashboard. Let's say they want to upload their submission for the brand to review.
 ![image](https://user-images.githubusercontent.com/94336773/202255676-8a1d9ec8-68f7-4fc7-b4dd-b1f6474dcdb3.png)
 
-# 3. Brand can reveiw influencer's submissions, and approve/reject it!
+# 3. Brand can review influencer's submissions, and approve/reject it!
 ![image](https://user-images.githubusercontent.com/94336773/202255895-c943496c-21b5-4eaf-a9f0-ce97b6db2aae.png)
 
 # 4. The influencer will be notified, that they can upload it to social media.
