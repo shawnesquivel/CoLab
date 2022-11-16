@@ -16,6 +16,9 @@ const ProjectModalPageOneReview = ({
   instagramTask,
   youtubeTask,
   tiktokTask,
+  instagramSubmission,
+  youtubeSubmission,
+  tiktokSubmission,
 }) => {
   return (
     <>

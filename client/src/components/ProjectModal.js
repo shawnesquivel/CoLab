@@ -26,6 +26,7 @@ import ProjectModalPageOneSubmitted from "./ProjectModalPageOneSubmitted";
 import ProjectModalPageTwo from "./ProjectModalPageTwo";
 import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
+import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
 const UPDATEPROJECT_URL = "/api/updateproject";
 
 const MODAL_STYLES = {
@@ -60,16 +61,6 @@ const ProjectModal = ({
 
   // 2 -  Influencer Upload
 
-  // 3 - Brand Accept/Reject Submission
-  const [showRejectProjectComment, setShowRejectProjectComment] =
-    useState(false);
-  const [rejectProjectcomment, setRejectProjectComment] = useState(
-    "The YouTube video at 3min 40sec is missing the brand logo."
-  );
-  // Brand Reviews Project
-  const [reviewSuccess, setReviewSuccess] = useState(false);
-  const [reviewSuccessMsg, setReviewSuccessMsg] = useState(false);
-
   // Page Five - Accept Project
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -79,6 +70,7 @@ const ProjectModal = ({
   const [showProjectComments, setShowProjectComments] = useState(false);
 
   const data = {
+    id: project._id,
     status: project.status,
     title: project.title,
     description: project.description,
@@ -90,6 +82,9 @@ const ProjectModal = ({
     instagramExample: project.instagramExample,
     tiktokExample: project.tiktokExample,
     youtubeExample: project.youtubeExample,
+    instagramSubmission: project.instagramSubmission,
+    tiktokSubmission: project.tiktokSubmission,
+    youtubeSubmission: project.youtubeSubmission,
     deadlineTime: project.deadlineTime,
     numberOfRevisions: project.numberOfRevisions,
     paymentMethod: project.paymentMethod,
@@ -160,7 +155,7 @@ const ProjectModal = ({
         const payload = JSON.stringify({
           token: localStorage.getItem("token"),
           action,
-          comment: rejectProjectcomment,
+          comment: "Project was rejected",
           project,
         });
 
@@ -340,111 +335,11 @@ const ProjectModal = ({
                 {/* Brand is reviewing the project */}
                 {role.includes(3000) && project.status === "brand reviewing" ? (
                   <>
-                    <p>Please review the submission.</p>
-                    <p>
-                      <FontAwesomeIcon
-                        icon={faInstagram}
-                        className="icon-left"
-                      />
-                      1. {project.instagramSubmission} on Instagram.
-                    </p>
-                    <p>
-                      <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-                      2. {project.tiktokSubmission} on Tik Tok.
-                    </p>
-                    <p>
-                      <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-                      3. {project.youtubeSubmission} on YouTube.
-                    </p>
-                    {!showRejectProjectComment ? (
-                      <div className="btn-holder">
-                        <button
-                          type="button"
-                          className="btn-dark btn-page-five"
-                          onClick={(e) => {
-                            handleSubmit("brand approves submission", e);
-                            setReviewSuccess(true);
-                            setReviewSuccessMsg("Project was approved");
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faCheck}
-                            className="icon-left"
-                          />
-                          Approve Submission
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-dark btn-page-five"
-                          onClick={(e) => {
-                            setShowRejectProjectComment(true);
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTimes}
-                            className="icon-left"
-                          />
-                          Project Needs to be Updated
-                        </button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-
-                    {showRejectProjectComment ? (
-                      <form action="">
-                        <label htmlFor="comments">
-                          <h4>What needs to be changed?</h4>
-                        </label>
-                        <p>Please be as specific as possible!</p>
-                        <input
-                          type="text"
-                          value={rejectProjectcomment}
-                          onChange={(e) =>
-                            setRejectProjectComment(e.target.value)
-                          }
-                        ></input>
-
-                        <button
-                          type="submit"
-                          className="btn-dark btn-page-five"
-                          onClick={(e) => {
-                            handleSubmit(
-                              "brand requests changes to submission",
-                              e
-                            );
-                            setReviewSuccess(true);
-                            setReviewSuccessMsg(
-                              "Comments have been sent to influencer to change. Please wait for the influencer to re-submit the project."
-                            );
-                          }}
-                        >
-                          Request changes to submission
-                          <FontAwesomeIcon icon={faPencil} />
-                        </button>
-                      </form>
-                    ) : (
-                      ""
-                    )}
-
-                    {reviewSuccess ? (
-                      <>
-                        <p>{reviewSuccessMsg}</p>
-                        <button
-                          className="create-project__close-btn"
-                          onClick={onClose}
-                          type="button"
-                        >
-                          <FontAwesomeIcon
-                            icon={faSquareMinus}
-                            className="icon-left"
-                          />
-                          Close
-                        </button>
-                      </>
-                    ) : (
-                      " "
-                    )}
+                    <ProjectModalPageOneBrandReview
+                      {...data}
+                      handleSubmit={handleSubmit}
+                      onClose={onClose}
+                    />
                   </>
                 ) : (
                   ""

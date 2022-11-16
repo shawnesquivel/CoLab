@@ -174,14 +174,6 @@ const CreateProjectModal = ({
   const [deliverableThreeDescription, setDeliverableThreeDescription] =
     useState("");
 
-  // // Dynamically choose which platform's state to update
-  // const choosePlatform = (e) => {
-  //   // if the div's container is for instagram, change hte instagram deliverable
-  //   console.log(e.target.id, e.target.value);
-  //   const social = e.target.value;
-  //   setDeliverableOneSocial(e.target.value);
-  // };
-
   const updateSocial = (socialPlatform, description) => {
     if (socialPlatform === "none") return;
     if (socialPlatform === "instagram") {
@@ -1107,6 +1099,7 @@ const CreateProjectModal = ({
             ) : (
               ""
             )} */}
+
             <form className="form " encType="multipart/form-data">
               <h4>Upload Examples</h4>
               <p className="form__instructions">
@@ -1156,25 +1149,6 @@ const CreateProjectModal = ({
                   Youtube
                 </option>
               </select>
-
-              {/* {isFilePicked && selectedFile.size > 2e6 ? (
-                  <div>
-                    <p className="update-profile__error">
-                      Error: The image size exceeds the 2MB limit!
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {isFilePicked && selectedFile.type !== "image/png" ? (
-                  <div>
-                    <p className="update-profile__error">
-                      Error: The file uploaded is not a .png image!
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )} */}
 
               <div className="flex-col-center">
                 {awsImage ? (

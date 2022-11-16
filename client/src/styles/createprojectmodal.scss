@@ -115,6 +115,10 @@
   font-size: 0.8rem;
   width: 70vw;
 
+  &--small {
+    width: 30vw;
+  }
+
   &--no-padding {
     padding: 0;
   }
@@ -147,6 +151,10 @@
       }
       &--large {
         width: 35%;
+      }
+      &--success {
+        background-color: var(--success-color);
+        color: var(--text-light-color);
       }
     }
   }
@@ -233,6 +241,9 @@
     &--subheader {
       font-size: 22px;
       margin-bottom: 0.5rem;
+      &-large {
+        font-size: 36px;
+      }
     }
     &--center {
       text-align: center;

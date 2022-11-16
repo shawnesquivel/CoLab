@@ -155,28 +155,11 @@ select {
   gap: 20px;
 }
 
-/* Manual Flexbox Settings for ProjectModal Tasks */
-.flex-item-one {
-  margin: 0 20px 0 0;
-}
-
-/* .flex-item-two {
-  margin: 0 200px 0 0;
-} */
-
-.flex-item-three {
-  margin-left: auto;
-}
-
 .project-modal-tasks-expand-container {
   margin-top: 1rem;
   border: none;
   display: flex;
   flex-direction: column;
-}
-
-.project-card-text {
-  font-size: 1.1rem;
 }
 
 .project-task {
@@ -269,11 +252,6 @@ select {
 
 .div-center {
   text-align: center;
-}
-
-.submit-btn {
-  background-color: var(--success-color);
-  color: var(--text-light-color);
 }
 
 .comment-list {

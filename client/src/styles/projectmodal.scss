@@ -30,12 +30,24 @@
     border: none;
     background-color: transparent;
   }
+
+  &__flex-one {
+    margin: 0 20px 0 0;
+  }
+  &__flex-three {
+    margin-left: auto;
+  }
 }
 
-.guidelines-card-header {
+/* Manual Flexbox Settings for ProjectModal Tasks */
+.flex-item-one {
 }
 
-.project-modal-guidelines-btn {
+/* .flex-item-two {
+  margin: 0 200px 0 0;
+} */
+
+.flex-item-three {
 }
 
 .project-modal {
@@ -44,8 +56,8 @@
   flex-direction: column;
   padding: 50px;
 
-  &-container {
-    // width: 70vw;
+  &__submission {
+    border-radius: 10px;
   }
   &-card {
     display: flex;

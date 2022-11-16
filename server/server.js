@@ -667,12 +667,12 @@ app.post("/api/createproject", async (req, res) => {
 app.post("/api/addprojectimage", async (req, res) => {
   console.log("adding example deliverable images to project");
 
-  const { projectID: _id, imageURL, social } = req.body;
+  const { projectID: _id, imageURL, social, type } = req.body;
 
-  console.log(_id, imageURL, social);
+  console.log(_id, imageURL, social, type);
 
   try {
-    if (social === "instagram") {
+    if (social === "instagram" && type === "example") {
       const projectRes = await Project.updateOne(
         { _id },
         {
@@ -681,7 +681,7 @@ app.post("/api/addprojectimage", async (req, res) => {
       );
       console.log("Project Updated Image Files:", projectRes);
     }
-    if (social === "youtube") {
+    if (social === "youtube" && type === "example") {
       const projectRes = await Project.updateOne(
         { _id },
         {
@@ -690,11 +690,39 @@ app.post("/api/addprojectimage", async (req, res) => {
       );
       console.log("Project Updated Image Files:", projectRes);
     }
-    if (social === "tiktok") {
+    if (social === "tiktok" && type === "example") {
       const projectRes = await Project.updateOne(
         { _id },
         {
           $set: { tiktokExample: imageURL },
+        }
+      );
+      console.log("Project Updated Image Files:", projectRes);
+    }
+
+    if (social === "instagram" && type === "Submission") {
+      const projectRes = await Project.updateOne(
+        { _id },
+        {
+          $set: { instagramSubmission: imageURL },
+        }
+      );
+      console.log("Project Updated Image Files:", projectRes);
+    }
+    if (social === "youtube" && type === "Submission") {
+      const projectRes = await Project.updateOne(
+        { _id },
+        {
+          $set: { youtubeSubmission: imageURL },
+        }
+      );
+      console.log("Project Updated Image Files:", projectRes);
+    }
+    if (social === "tiktok" && type === "Submission") {
+      const projectRes = await Project.updateOne(
+        { _id },
+        {
+          $set: { tiktokSubmission: imageURL },
         }
       );
       console.log("Project Updated Image Files:", projectRes);
@@ -800,24 +828,24 @@ app.post("/api/updateproject", async (req, res) => {
           $push: { commentList: newCommentWithDate },
         }
       );
-      await Project.updateOne(
-        { _id: project._id },
-        {
-          $set: { instagramSubmission: "selfie" },
-        }
-      );
-      await Project.updateOne(
-        { _id: project._id },
-        {
-          $set: { tiktokSubmission: "some tik tok" },
-        }
-      );
-      await Project.updateOne(
-        { _id: project._id },
-        {
-          $set: { youtubeSubmission: "some video" },
-        }
-      );
+      // await Project.updateOne(
+      //   { _id: project._id },
+      //   {
+      //     $set: { instagramSubmission: "selfie" },
+      //   }
+      // );
+      // await Project.updateOne(
+      //   { _id: project._id },
+      //   {
+      //     $set: { tiktokSubmission: "some tik tok" },
+      //   }
+      // );
+      // await Project.updateOne(
+      //   { _id: project._id },
+      //   {
+      //     $set: { youtubeSubmission: "some video" },
+      //   }
+      // );
       await Project.updateOne(
         { _id: project._id },
         {

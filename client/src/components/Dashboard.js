@@ -305,7 +305,7 @@ const Dashboard = () => {
                     onClick={() => {
                       setShowCreateProjectModal(true);
                     }}
-                    className="form__btn-dotted"
+                    className="form__btn-dotted form__btn-dotted--medium"
                   >
                     <FontAwesomeIcon icon={faPlus} className="icon-left" />
                     Create a New Project
