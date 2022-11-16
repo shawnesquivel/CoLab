@@ -1,5 +1,10 @@
 ## CoLab
 
+![brand creates proejct](https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif)
+![user-accepts-proejct](https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif)
+</p>
+
+
 <p align="center">
 
 ### Register
@@ -11,15 +16,14 @@
 ### Brand Creates Marketing Campaign
 ![image](https://user-images.githubusercontent.com/94336773/202241509-cbc00269-2f8c-4a4d-9043-3c719f9bb235.png)
 
+  ### Dashboard (Shows Current Projects)
 ![image](https://user-images.githubusercontent.com/94336773/202241557-bd88f608-8926-4e1a-9a35-982b2e8ebd7b.png)
 
-![brand creates proejct](https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif)
-
-### User Accepts Marketing Campaign
+### User Views New Projects, and Accepts One!
 ![image](https://user-images.githubusercontent.com/94336773/202245921-17433cef-8712-42ff-a663-51b28df0a0fd.png)
-![user-accepts-proejct](https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif)
-</p>
 
+### Once Submissions Are Reviewed, Brand can pay with Stripe
+![brand-stripe-payment](https://user-images.githubusercontent.com/94336773/202248672-9adc8d91-b6e1-4fec-b29f-354b73406175.gif)
 
 
 ## 1 Introduction {#1-introduction}
