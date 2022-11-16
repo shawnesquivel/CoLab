@@ -1,34 +1,8 @@
 # CoLab (Screenshots may be blurry due to file size limit)
-## Allowing microinfluencers to work with brands to create a seamless workflow, including Campaign Creation, Submission Review, and Payment (Stripe)
+Allowing microinfluencers to work with brands to create a seamless workflow, including Campaign Creation, Submission Review, and Payment (Stripe)
 Register             |  Login
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png" width="500"> | <img src="https://user-images.githubusercontent.com/94336773/202241457-7889fe43-5c21-490c-b05d-17f4735bbbe4.png" width="500"> 
-
-
-
-<img src="https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif" width="300">
-<img src="https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif" width="300">
-
-![brand creates proejct](https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif)
-![user-accepts-proejct](https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif)
-</p>
-
-
-<p float="left">
-  <img src="/img1.png" width="100" />
-  <img src="/img2.png" width="100" /> 
-  <img src="/img3.png" width="100" />
-</p>
-
-![Alt text](/screenshots/brand-creates-project.gif?raw=true "Optional Title")
-
-<p align="center">
-
-### Register
-![image](https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png)
-
-### Login
-![image](https://user-images.githubusercontent.com/94336773/202241457-7889fe43-5c21-490c-b05d-17f4735bbbe4.png)
 
 ### Brand Creates Marketing Campaign
 ![image](https://user-images.githubusercontent.com/94336773/202241509-cbc00269-2f8c-4a4d-9043-3c719f9bb235.png)
