@@ -6,6 +6,10 @@ Solarized dark             |  Solarized Ocean
 </p>
 
 
+
+<img src="https://github.com/favicon.ico](https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif" width="48">
+<img src="https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif" width="48">
+
 ![brand creates proejct](https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif)
 ![user-accepts-proejct](https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif)
 </p>
