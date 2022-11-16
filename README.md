@@ -1,21 +1,24 @@
 ## CoLab
 
+<p align="center">
+
 ### Register
 ![image](https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png)
 
-
 ### Login
-![image](https://user-images.githubusercontent.com/94336773/202241356-3919dc0e-2de8-48d3-8956-31bfe0f22148.png)
 ![image](https://user-images.githubusercontent.com/94336773/202241457-7889fe43-5c21-490c-b05d-17f4735bbbe4.png)
 
 ### Brand Creates Marketing Campaign
 ![image](https://user-images.githubusercontent.com/94336773/202241509-cbc00269-2f8c-4a4d-9043-3c719f9bb235.png)
+
 ![image](https://user-images.githubusercontent.com/94336773/202241557-bd88f608-8926-4e1a-9a35-982b2e8ebd7b.png)
+
 ![brand creates proejct](https://user-images.githubusercontent.com/94336773/202247789-a14b5620-f06c-461e-b901-138d91f2ce6c.gif)
 
 ### User Accepts Marketing Campaign
 ![image](https://user-images.githubusercontent.com/94336773/202245921-17433cef-8712-42ff-a663-51b28df0a0fd.png)
 ![user-accepts-proejct](https://user-images.githubusercontent.com/94336773/202247800-3436b65c-7e0a-4836-80af-d7bec69f1b60.gif)
+</p>
 
 
 
