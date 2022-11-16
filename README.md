@@ -20,7 +20,11 @@ Register             |  Login
 ![image](https://user-images.githubusercontent.com/94336773/202252863-93c5ebed-9671-49b2-b80d-d7693d174c42.png)
 ## 1E - Review the contract
 ![image](https://user-images.githubusercontent.com/94336773/202252968-a101d54c-3813-4cd4-9694-dcfc07f1acad.png)
-
+## 1F - Upload any past examples from previous campaigns
+![image](https://user-images.githubusercontent.com/94336773/202253466-e220a621-6e15-406f-a65d-a88f79083b2a.png)
+Upload              |  Upload Success
+:-------------------------:|:-------------------------:
+<img src="https://user-images.githubusercontent.com/94336773/202253466-e220a621-6e15-406f-a65d-a88f79083b2a.png" width="500"> | <img src="https://user-images.githubusercontent.com/94336773/202253592-7dcb6c15-3345-4593-9f7a-f310bb410960.png" width="500"> 
 
 
 
