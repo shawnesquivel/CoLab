@@ -21,7 +21,6 @@ Register             |  Login
 ## 1E - Review the contract
 ![image](https://user-images.githubusercontent.com/94336773/202252968-a101d54c-3813-4cd4-9694-dcfc07f1acad.png)
 ## 1F - Upload any past examples from previous campaigns
-![image](https://user-images.githubusercontent.com/94336773/202253466-e220a621-6e15-406f-a65d-a88f79083b2a.png)
 Upload              |  Upload Success
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/94336773/202253466-e220a621-6e15-406f-a65d-a88f79083b2a.png" width="500"> | <img src="https://user-images.githubusercontent.com/94336773/202253592-7dcb6c15-3345-4593-9f7a-f310bb410960.png" width="500"> 
@@ -29,9 +28,23 @@ Upload              |  Upload Success
 
 
 
-### Influencers can browse and filter through the New Collabs page to find a project that fits them 
+# 2. Influencers can browse and filter through the New Collabs page to find a project that fits them 
 ![image](https://user-images.githubusercontent.com/94336773/202245921-17433cef-8712-42ff-a663-51b28df0a0fd.png)
+## 2A - Influencer can go to New Collabs Page to view all new projects that need influencers
+![image](https://user-images.githubusercontent.com/94336773/202254064-74135b3f-8d7b-4872-987a-81ec784c1f24.png)
 
+## 2B - Influencer can filter by keywords or by social media platform 
+View All              |  Filter by "Instagram"
+:-------------------------:|:-------------------------:
+<img src="https://user-images.githubusercontent.com/94336773/202254217-5182792a-9bb1-4798-9538-8d4722cb25b2.png" width="500"> | <img src="https://user-images.githubusercontent.com/94336773/202254333-45eaf233-8643-44d3-91d6-16284ee38c2c.png" width="500"> 
+
+![image](https://user-images.githubusercontent.com/94336773/202254217-5182792a-9bb1-4798-9538-8d4722cb25b2.png)
+![image](https://user-images.githubusercontent.com/94336773/202254333-45eaf233-8643-44d3-91d6-16284ee38c2c.png)
+
+
+View All              |  Filter by "Instagram"
+:-------------------------:|:-------------------------:
+<img src="" width="500"> | <img src="" width="500"> 
 ### Once Submissions Are Reviewed, Brand can pay with Stripe
 ![brand-stripe-payment](https://user-images.githubusercontent.com/94336773/202248672-9adc8d91-b6e1-4fec-b29f-354b73406175.gif)
 
