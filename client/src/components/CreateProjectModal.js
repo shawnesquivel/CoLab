@@ -348,6 +348,7 @@ const CreateProjectModal = ({
         projectID: project._id,
         imageURL: imageID,
         social: socialExample,
+        type: "example",
       });
       console.log("Update Profile Payload", payload);
       const response = await axios.post(ADD_PROJECT_IMAGES_URL, payload, {

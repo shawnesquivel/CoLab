@@ -360,45 +360,52 @@ const ProjectModal = ({
                         icon={faInstagram}
                         className="icon-left"
                       />
-                      1. {project.instagramSubmission} on Instagram.
+                      1. {project.instagramTask} on Instagram.
                     </p>
-                    <p>
+                    <img
+                      src={project.instagramSubmission}
+                      alt="instagram submission"
+                      className="project-modal__submission project-modal__submission--small"
+                    />
+                    {/* <p>
                       <FontAwesomeIcon icon={faTiktok} className="icon-left" />
                       2. {project.tiktokSubmission} on Tik Tok.
                     </p>
                     <p>
                       <FontAwesomeIcon icon={faYoutube} className="icon-left" />
                       3. {project.youtubeSubmission} on YouTube.
-                    </p>
+                    </p> */}
                     <h3>Select your Payment Method</h3>
                     <h4>Project Price: ${project.paymentPrice} CAD</h4>
                     <div className="btn-holder">
                       <button
-                        className="btn-small btn-dark reset-margin-top"
+                        className="form__btn-dotted form__btn-dotted--large"
                         onClick={() => {
                           setShowStripe(!showStripe);
                         }}
                       >
-                        <FontAwesomeIcon
+                        {/* <FontAwesomeIcon
                           icon={faStripe}
                           className="icon-right"
                           style={{ fontSize: "1.2rem", padding: "" }}
-                        />
+                        /> */}
+                        Stripe
                       </button>
-                      <a
+                      {/* <a
                         href="https://paypal.com"
                         target="_blank"
                         rel="noreferrer"
-                      >
-                        <button className="btn-small btn-dark reset-margin-top">
-                          <FontAwesomeIcon
+                      > */}
+
+                      <button className="form__btn-dotted form__btn-dotted--large">
+                        {/* <FontAwesomeIcon
                             style={{ fontSize: "0.8rem" }}
                             icon={faPaypal}
-                            className="icon-left"
-                          />
-                          Paypal
-                        </button>
-                      </a>
+                            className="icon-left"  */}
+                        Paypal
+                      </button>
+
+                      {/* </a>  */}
                     </div>
                     {showStripe ? <StripeContainer project={project} /> : ""}
                   </>

@@ -58,6 +58,10 @@
 
   &__submission {
     border-radius: 10px;
+    &--small {
+      width: 300px;
+      height: auto;
+    }
   }
   &-card {
     display: flex;

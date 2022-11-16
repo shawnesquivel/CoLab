@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -19,6 +19,13 @@ const ProjectModalPageFour = ({
   const [showTags, setShowTags] = useState(false);
   const [showPhrases, setShowPhrases] = useState(false);
   const [showLinkInBio, setShowLinkInBio] = useState(false);
+
+  useEffect(() => {
+    console.log(instagramExample);
+    console.log(youtubeExample);
+    console.log(tiktokExample);
+  }, []);
+
   return (
     <section className="project-modal-page">
       <h1 className="form__text form__text--subheader">Examples</h1>

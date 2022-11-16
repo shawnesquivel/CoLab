@@ -44,7 +44,7 @@ const ProjectModalPageOneBrandReview = ({
         <>
           <p>
             <FontAwesomeIcon icon={faInstagram} className="icon-left" />
-            {instagramTask} on Instagram.
+            Instagram: {instagramTask}
           </p>
           <img
             src={instagramSubmission}
@@ -56,20 +56,36 @@ const ProjectModalPageOneBrandReview = ({
         ""
       )}
       {tiktokTask ? (
-        <p>
-          <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-          {tiktokTask} on Tik Tok.
-        </p>
+        <>
+          <p>
+            <FontAwesomeIcon icon={faTiktok} className="icon-left" />
+            TikTok: {tiktokTask}
+          </p>
+
+          <img
+            src={tiktokSubmission}
+            alt="tiktok submission"
+            className="project-modal__submission"
+          />
+        </>
       ) : (
         ""
       )}
       {youtubeTask ? (
-        <p>
-          <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-          {youtubeTask} on YouTube.
-        </p>
+        <>
+          <p>
+            <FontAwesomeIcon icon={faYoutube} className="icon-left" />
+            TikTok: {youtubeTask}
+          </p>
+
+          <img
+            src={youtubeSubmission}
+            alt="youtube submission"
+            className="project-modal__submission"
+          />
+        </>
       ) : (
-        " "
+        ""
       )}
 
       {!showRejectProjectComment ? (
