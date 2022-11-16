@@ -1,8 +1,7 @@
 ## CoLab
 Register             |  Login
 :-------------------------:|:-------------------------:
-<img src="https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png" width="300"> |  
-<img src="https://user-images.githubusercontent.com/94336773/202241457-7889fe43-5c21-490c-b05d-17f4735bbbe4.png" width="300"> 
+<img src="https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png" width="300"> | <img src="https://user-images.githubusercontent.com/94336773/202241303-2985c9d6-1964-4531-b2b5-62dc12440411.png" width="300"> 
 
 
 
