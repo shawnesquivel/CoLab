@@ -5,13 +5,14 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 10rem;
-  margin-top: 1rem;
+  margin-top: 5rem;
 
   &__container-left {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: left;
+    width: 500px;
   }
 
   &__img-right {
@@ -66,24 +67,67 @@
 }
 
 .register {
-  &__two-col {
+  &-form {
     display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    padding-bottom: 0.5rem;
+    font-size: 0.8rem;
+
+    &__instructions {
+      font-size: 14px;
+      color: $text-dark-grey;
+      margin-bottom: 0.7rem;
+      &--offscreen {
+        position: absolute;
+        left: -9999px;
+      }
+    }
+
+    &__label {
+      font-size: 16px;
+      color: #1f1f1f;
+      margin-bottom: 0.1rem;
+    }
+    &__input {
+      font-size: 16px;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      &--invalid {
+        font-size: 16px;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        border: 1px solid red;
+      }
+      &--password {
+        margin-bottom: 0.2rem;
+      }
+    }
+  }
+
+  &__description {
+    font-size: 18px;
+    margin-bottom: 1.5rem;
   }
   &__title {
     font-weight: bold;
   }
-  // &__btn-login {
 
-  // }
+  &__subheader {
+    margin-bottom: 1rem;
+  }
 
   &__btn-back {
     border: none;
     padding: 0;
     margin: 0;
+    margin-bottom: 0.3rem;
     color: $text-dark-grey;
-    // display: block;
-    align-items: left;
-    max-width: 9rem;
     font-size: 0.85rem;
   }
 
@@ -92,7 +136,6 @@
     color: $text-light-color;
     width: 70%;
     border-radius: 91px;
-    // margin: 1rem 0;
     margin-bottom: 1rem;
     padding: 0.5rem 3rem;
     font-size: $desktop-btn-regular;
@@ -105,53 +148,6 @@
       &:visited {
         color: $text-dark-grey;
       }
-    }
-  }
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  flex-grow: 1;
-  padding-bottom: 0.5rem;
-  font-size: 0.8rem;
-  &__label-row-container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__instructions {
-    font-size: 14px;
-    color: $text-dark-grey;
-    margin-bottom: 1rem;
-    &--offscreen {
-      position: absolute;
-      left: -9999px;
-    }
-  }
-
-  &__label {
-    font-size: 16px;
-    color: #1f1f1f;
-    margin-bottom: 0.1rem;
-  }
-  &__input {
-    font-size: 16px;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 12px;
-    &--invalid {
-      font-size: 16px;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
-      border-radius: 12px;
-      border: 1px solid red;
-    }
-    &--password {
-      margin-bottom: 0.2rem;
     }
   }
 }

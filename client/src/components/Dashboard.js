@@ -282,11 +282,15 @@ const Dashboard = () => {
 
             <div className="dashboard-header-right">
               <FontAwesomeIcon icon={faBell} />
-              <img
-                className="dashboard-header-right__avatar"
-                src={backendData.avatar}
-                alt="profile"
-              />
+              {backendData.avatar ? (
+                <img
+                  className="dashboard-header-right__avatar"
+                  src={backendData.avatar}
+                  alt="profile"
+                />
+              ) : (
+                ""
+              )}
             </div>
           </header>
         ) : (

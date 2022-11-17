@@ -10,7 +10,7 @@ const RegisterSelect = ({ handleShowForms }) => {
         alt="colab folder icon"
         className="colab-folder-logo landing__folder-logo"
       />
-      <h1 className="landing__header">Let's Collaborate!</h1>
+      <h1 className="heading heading-largest">Let's Collaborate!</h1>
       <p className="landing__description">
         Sign up to get access to thousands of social media campaigns with the
         top brands.{" "}

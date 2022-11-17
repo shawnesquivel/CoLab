@@ -53,20 +53,7 @@ const RegisterForm = ({
   const [showBrandPageOne, setShowBrandPageOne] = useState(true);
   const [showBrandPageTwo, setShowBrandPageTwo] = useState(true);
 
-  //   default focus on username
-  // useEffect(() => {
-  //   // .current points to the mounted text input element
-  //   userRef.current.focus();
-  // }, []);
-  //   validate username
-  // useEffect(() => {
-  //   // return boolean
-  //   const result = USER_REGEX.test(user);
-  //   setValidName(result);
-  // }, [user]);
-  // validate password and password confirmation
   useEffect(() => {
-    // returns true/false
     const result = PWD_REGEX.test(pwd);
     setValidPwd(result);
     // password confirmation
@@ -137,7 +124,7 @@ const RegisterForm = ({
     <>
       {success ? (
         <section>
-          <h1 className="register__success-msg mb-1">Account Created!</h1>
+          <h1 className="register__title">Account Created!</h1>
           <p>
             <button
               onClick={() => {
@@ -161,25 +148,30 @@ const RegisterForm = ({
               >
                 {errMsg}
               </p>
-              <button
-                onClick={(e) => {
-                  handleShowForms(e, "reset");
-                }}
-                className="register__btn-back mb-1"
-              >
-                <FontAwesomeIcon icon={faArrowLeftLong} className="icon-left" />
-                Not an influencer?
-              </button>
-              <h1 className="register__title">Welcome to the club!</h1>
-              <p className="register__description mb-1p5">
+              <div className="div-align-left">
+                <button
+                  onClick={(e) => {
+                    handleShowForms(e, "reset");
+                  }}
+                  className="register__btn-back"
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    className="icon-left"
+                  />
+                  Not an influencer?
+                </button>
+              </div>
+              <h1 className="heading heading-medium">Welcome to the club!</h1>
+              <p className="register__description">
                 Just a few more steps to get access to thousands of social media
                 campaigns with the top brands.
               </p>
-              <h4 className="mb-1">Create an Account</h4>
+              <h4 className="register__subheader">Create an Account</h4>
               {showInfluencerPageOne ? (
                 <>
-                  <form onSubmit={handleSubmit} className="form">
-                    <label htmlFor="firstName" className="form__label">
+                  <form onSubmit={handleSubmit} className="register-form">
+                    <label htmlFor="firstName" className="register-form__label">
                       First Name
                     </label>
                     <input
@@ -191,9 +183,9 @@ const RegisterForm = ({
                       }}
                       required
                       placeholder="first name"
-                      className="form__input"
+                      className="register-form__input"
                     />
-                    <label htmlFor="lastName" className="form__label">
+                    <label htmlFor="lastName" className="register-form__label">
                       Last Name
                     </label>
                     <input
@@ -205,9 +197,9 @@ const RegisterForm = ({
                       }}
                       required
                       placeholder="last name"
-                      className="form__input"
+                      className="register-form__input"
                     />
-                    <label htmlFor="username" className="form__label">
+                    <label htmlFor="username" className="register-form__label">
                       Email:
                     </label>
                     <input
@@ -222,10 +214,13 @@ const RegisterForm = ({
                       onFocus={() => setUserFocus(true)}
                       onBlur={() => setUserFocus(false)}
                       placeholder="email"
-                      className="form__input"
+                      className="register-form__input"
                     />
-                    <div className="form__label-row-container">
-                      <label htmlFor="password" className="form__label">
+                    <div className="register-form__label-row-container">
+                      <label
+                        htmlFor="password"
+                        className="register-form__label"
+                      >
                         Password:
                         <span className={validPwd ? "valid" : "hide"}>
                           <FontAwesomeIcon icon={faCheck} />
@@ -248,13 +243,16 @@ const RegisterForm = ({
                       onFocus={() => setPwdFocus(true)}
                       onBlur={() => setPwdFocus(false)}
                       placeholder="password"
-                      className="form__input form__input--password"
+                      className="register-form__input register-form__input--password"
                     />
-                    <p id="uidnote" className="form__instructions">
+                    <p id="uidnote" className="register-form__instructions">
                       Use 8 or more characters with at least one upper case
                       letter, lower case letter, number, and special character.
                     </p>
-                    <label htmlFor="confirm_pwd" className="form__label">
+                    <label
+                      htmlFor="confirm_pwd"
+                      className="register-form__label"
+                    >
                       Confirm Password:
                       <span
                         className={validMatch && matchPwd ? "valid" : "hide"}
@@ -279,8 +277,8 @@ const RegisterForm = ({
                       placeholder="confirm password"
                       className={
                         validMatch || !matchPwd
-                          ? "form__input"
-                          : "form__input--invalid"
+                          ? "register-form__input"
+                          : "register-form__input--invalid"
                       }
                     />
 
@@ -319,53 +317,71 @@ const RegisterForm = ({
               >
                 {errMsg}
               </p>
-              <button
-                onClick={(e) => {
-                  handleShowForms(e, "reset");
-                }}
-                className="register__btn-back mb-1"
-              >
-                <FontAwesomeIcon icon={faArrowLeftLong} className="icon-left" />
-                Not a brand?
-              </button>
-              <h1 className="register__title">Welcome to the club!</h1>
-              <p className="register__description mb-1p5">
+              <div className="div-align-left">
+                <button
+                  onClick={(e) => {
+                    handleShowForms(e, "reset");
+                  }}
+                  className="register__btn-back"
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowLeftLong}
+                    className="icon-left"
+                  />
+                  Not a brand?
+                </button>
+              </div>
+              <h1 className="heading heading-medium">Welcome to the club!</h1>
+              <p className="register__description">
                 Just a few more steps to get access to thousands of
                 micro-influencers, perfect for your next campaign.
               </p>
-              <h4 className="mb-1">Create an Account</h4>
+              <h4 className="register__subheader">Create an Account</h4>
               {showInfluencerPageOne ? (
                 <>
-                  <form onSubmit={handleSubmit} className="form">
-                    <label htmlFor="firstName" className="form__label">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      autoComplete="off"
-                      onChange={(e) => {
-                        setFirstName(e.target.value);
-                      }}
-                      required
-                      placeholder="first name"
-                      className="form__input"
-                    />
-                    <label htmlFor="lastName" className="form__label">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      autoComplete="off"
-                      onChange={(e) => {
-                        setLastName(e.target.value);
-                      }}
-                      required
-                      placeholder="last name"
-                      className="form__input"
-                    />
-                    <label htmlFor="username" className="form__label">
+                  <form onSubmit={handleSubmit} className="register-form">
+                    <div className="label-row-container label-row-container--justify-left">
+                      <div className="label-row-container__col label-row-container__col--half">
+                        <label
+                          htmlFor="firstName"
+                          className="register-form__label"
+                        >
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          id="firstName"
+                          autoComplete="off"
+                          onChange={(e) => {
+                            setFirstName(e.target.value);
+                          }}
+                          required
+                          placeholder="first name"
+                          className="register-form__input"
+                        />
+                      </div>
+                      <div className="label-row-container__col label-row-container__col--half">
+                        <label
+                          htmlFor="lastName"
+                          className="register-form__label"
+                        >
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          id="lastName"
+                          autoComplete="off"
+                          onChange={(e) => {
+                            setLastName(e.target.value);
+                          }}
+                          required
+                          placeholder="last name"
+                          className="register-form__input"
+                        />
+                      </div>
+                    </div>
+
+                    <label htmlFor="username" className="register-form__label">
                       Email:
                     </label>
                     <input
@@ -380,10 +396,28 @@ const RegisterForm = ({
                       onFocus={() => setUserFocus(true)}
                       onBlur={() => setUserFocus(false)}
                       placeholder="email"
-                      className="form__input"
+                      className="register-form__input"
                     />
-                    <div className="form__label-row-container">
-                      <label htmlFor="password" className="form__label">
+                    <label htmlFor="company" className="register-form__label">
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      autoComplete="off"
+                      onChange={(e) => {
+                        setCompany(e.target.value);
+                      }}
+                      required
+                      placeholder="company"
+                      className="register-form__input"
+                    />
+
+                    <div className="register-form__label-row-container">
+                      <label
+                        htmlFor="password"
+                        className="register-form__label"
+                      >
                         Password:
                         <span className={validPwd ? "valid" : "hide"}>
                           <FontAwesomeIcon icon={faCheck} />
@@ -406,21 +440,24 @@ const RegisterForm = ({
                       onFocus={() => setPwdFocus(true)}
                       onBlur={() => setPwdFocus(false)}
                       placeholder="password"
-                      className="form__input form__input--password"
+                      className="register-form__input register-form__input--password"
                     />
                     <p
                       id="uidnote"
-                      className="form__instructions"
+                      className="register-form__instructions"
                       // className={
                       //   !validPwd
-                      //     ? "form__instructions"
-                      //     : "form__instructions--offscreen"
+                      //     ? "register-form__instructions"
+                      //     : "register-form__instructions--offscreen"
                       // }
                     >
                       Use 8 or more characters with at least one upper case
                       letter, lower case letter, number, and special character.
                     </p>
-                    <label htmlFor="confirm_pwd" className="form__label">
+                    <label
+                      htmlFor="confirm_pwd"
+                      className="register-form__label"
+                    >
                       Confirm Password:
                       <span
                         className={validMatch && matchPwd ? "valid" : "hide"}
@@ -445,8 +482,8 @@ const RegisterForm = ({
                       placeholder="confirm password"
                       className={
                         validMatch || !matchPwd
-                          ? "form__input"
-                          : "form__input--invalid"
+                          ? "register-form__input"
+                          : "register-form__input--invalid"
                       }
                     />
 

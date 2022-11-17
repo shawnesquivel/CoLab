@@ -58,55 +58,6 @@
   cursor: pointer;
 }
 
-.label-row-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-
-  &--left {
-    justify-content: left;
-    gap: 5rem;
-  }
-
-  &--half {
-    width: 50%;
-  }
-
-  &__col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    &--keywords {
-      width: 70%;
-    }
-
-    &--revisions {
-      width: 30%;
-    }
-
-    &--compensation {
-      width: 25%;
-    }
-  }
-}
-
-.label-col-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  &__row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  &--preview {
-    width: 50%;
-  }
-}
-
 .form {
   display: flex;
   flex-direction: column;

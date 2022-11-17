@@ -465,3 +465,90 @@ select {
   font-size: 15px;
   cursor: pointer;
 }
+
+.div-align-left {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+}
+.label-row-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  &--justify-left {
+    justify-content: left;
+  }
+  &--left {
+    justify-content: left;
+    gap: 5rem;
+  }
+
+  &--half {
+    width: 50%;
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    &--half {
+      width: 50%;
+    }
+
+    &--keywords {
+      width: 70%;
+    }
+
+    &--revisions {
+      width: 30%;
+    }
+
+    &--compensation {
+      width: 25%;
+    }
+  }
+}
+
+.label-col-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &--preview {
+    width: 50%;
+  }
+}
+
+.heading-large {
+  font-family: "SF Pro";
+  font-size: 48px;
+  margin-bottom: 0.5rem;
+}
+
+.heading {
+  font-family: "SF Pro";
+  margin-bottom: 0.5rem;
+
+  &-small {
+    font-size: 32px;
+  }
+
+  &-medium {
+    font-size: 40px;
+  }
+
+  &-large {
+    font-size: 48px;
+  }
+  &-largest {
+    font-size: 64px;
+  }
+}
