@@ -5,7 +5,7 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 10rem;
-  margin-top: 2.5rem;
+  margin-top: 5rem;
 
   &__container-left {
     display: flex;
@@ -14,10 +14,11 @@
   }
 
   &__profile-pic {
-    width: 200px;
-    height: 200px;
-    border-radius: 100px;
+    height: 150px;
+    width: 150px;
+    border-radius: 150px;
     margin-bottom: 1rem;
+    object-fit: cover;
   }
 
   &__img-right {
@@ -121,6 +122,12 @@
     padding: 0.5rem;
     margin-bottom: 0.5rem;
   }
+
+  &__success {
+    color: $success-color;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
 
 .update-profile-form {
@@ -167,7 +174,8 @@
       text-align: center;
       margin: 0.75rem 0;
       &::file-selector-button {
-        border-radius: 5px;
+        border: 1px solid $btn-grey-color;
+        border-radius: 15px;
         font-family: "DM Sans";
         background: $background-light-color;
         color: $text-dark-color;

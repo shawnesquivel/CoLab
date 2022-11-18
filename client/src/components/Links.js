@@ -69,7 +69,7 @@ const Links = () => {
                   console.log("Auth Cleared", auth);
                   navigate("/", { replace: true });
                 }}
-                className="links__btn-sign-out"
+                className="form__btn-dotted"
               >
                 Sign Out
               </button>

@@ -10,6 +10,7 @@ import pageThreeImg from "../assets/update-profile-mediakit.png";
 import greySquare from "../assets/mediakit-grey.png";
 import greyCircle from "../assets/greycircle.jpg";
 import "../styles/updateprofile.scss";
+import "../index.scss";
 const FormData = require("form-data");
 
 const GETUSER_URL = "/api/getuser";
@@ -24,6 +25,14 @@ const UpdateProfile = () => {
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
 
+  // If the user is a brand, show page 2 first
+  useEffect(() => {
+    console.log(auth);
+    if (auth.roles.includes(3000)) {
+      showPageOne(false);
+      showPageTwo(true);
+    }
+  }, []);
   // backend data holds user data
   const [backendData, setBackendData] = useState({
     status: "still fetching user data",
@@ -45,7 +54,7 @@ const UpdateProfile = () => {
   const [keywords, setKeywords] = useState(["lifestyle"]);
 
   // Page 2
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState("");
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   // Pages
@@ -54,7 +63,7 @@ const UpdateProfile = () => {
   const [pageThree, showPageThree] = useState(false);
 
   const [successMsg, setSuccessMsg] = useState("");
-
+  const [uploadAvatarSuccess, setUploadAvatarSuccess] = useState(false);
   // get image data from backend on pageload
   const [imgData, setImgData] = useState([]);
 
@@ -217,7 +226,7 @@ const UpdateProfile = () => {
         "Avatar was added to profile",
         response.data.userProfile.avatar
       );
-
+      setUploadAvatarSuccess(true);
       if (response.status === 200) {
       } else {
         alert(response.status);
@@ -264,12 +273,13 @@ const UpdateProfile = () => {
     <>
       <section className="update-profile">
         <div className="update-profile__container-left">
-          <h1 className="update-profile__header">
+          <h1 className="heading heading--large">
             Hey, <br /> {backendData?.firstName}
           </h1>
           <p className="update-profile__description mb-1p5">
-            Please complete your profile so we can match you with the right
-            brands.
+            {auth.roles.includes(2000)
+              ? "Please complete your profile so we can match you with the right brands."
+              : `Please upload a logo for ${backendData.company}.`}
           </p>
           {pageOne ? (
             <>
@@ -355,23 +365,27 @@ const UpdateProfile = () => {
                   ) : (
                     ""
                   )}
-                  <div className="flex-col-center">
+                  <div className="btn-container btn-container--col">
                     <button
                       type="button"
                       onClick={updateProfileLinks}
-                      className="update-profile__btn-cta"
+                      className={
+                        instagram && tiktok && youtube && keywords
+                          ? "btn-cta btn-cta--active"
+                          : "btn-cta btn-cta--inactive"
+                      }
                     >
                       Update Profile
                     </button>
                     <button
                       type="button"
-                      className="update-profile__btn-cta"
+                      className="btn-cta btn-cta--skip"
                       onClick={() => {
                         showPageOne(false);
                         showPageTwo(true);
                       }}
                     >
-                      Next Page
+                      Skip
                     </button>
                   </div>
                 </div>
@@ -403,7 +417,7 @@ const UpdateProfile = () => {
                 <p id="uidnote" className="login-form__instructions">
                   Max 2MB, .png only
                 </p>
-                {/* {isFilePicked && selectedFile.size > 2e6 ? (
+                {selectedFile?.size > 2e6 ? (
                   <div>
                     <p className="update-profile__error">
                       Error: The image size exceeds the 2MB limit!
@@ -420,49 +434,88 @@ const UpdateProfile = () => {
                   </div>
                 ) : (
                   ""
-                )} */}
+                )}
+                {!uploadAvatarSuccess ? (
+                  <div className="flex-col-center">
+                    <button
+                      type="submit"
+                      onClick={(e) => handleAwsUpload(e, "image")}
+                      disabled={!selectedFile ? "disabled" : ""}
+                      className={
+                        selectedFile
+                          ? "btn-cta btn-cta--active"
+                          : "btn-cta btn-cta--inactive"
+                      }
+                    >
+                      Upload Photo
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-cta btn-cta--skip"
+                      onClick={() => {
+                        showPageTwo(false);
+                        showPageThree(true);
+                      }}
+                    >
+                      Skip
+                    </button>
 
-                <div className="flex-col-center">
-                  {awsImage ? (
-                    <img
-                      className="update-profile__profile-pic"
-                      src={awsImage}
-                      alt="aws avatar"
-                    />
-                  ) : (
-                    <img
-                      className="update-profile__profile-pic"
-                      src={greyCircle}
-                      alt="blank avatar"
-                    />
-                  )}
+                    {errMsg ? (
+                      <p
+                        aria-live="assertive"
+                        className="update-profile__error"
+                      >
+                        {errMsg}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex-col-center">
+                      {awsImage ? (
+                        <img
+                          className="update-profile__profile-pic"
+                          src={awsImage}
+                          alt="aws avatar"
+                        />
+                      ) : (
+                        <img
+                          className="update-profile__profile-pic"
+                          src={greyCircle}
+                          alt="blank avatar"
+                        />
+                      )}
+                      <p className="update-profile__success">
+                        Your avatar was successfully updated!
+                      </p>
+                    </div>
 
-                  <button
-                    type="submit"
-                    onClick={(e) => handleAwsUpload(e, "image")}
-                    className="update-profile__btn-cta"
-                  >
-                    Upload Photo
-                  </button>
-                  <button
-                    type="button"
-                    className="update-profile__btn-cta"
-                    onClick={() => {
-                      showPageTwo(false);
-                      showPageThree(true);
-                    }}
-                  >
-                    Next Page
-                  </button>
+                    {auth.roles.includes(2000) ? (
+                      <button
+                        type="button"
+                        className="btn-cta"
+                        onClick={() => {
+                          showPageTwo(false);
+                          showPageThree(true);
+                        }}
+                      >
+                        Next Page
+                      </button>
+                    ) : (
+                      ""
+                    )}
 
-                  {errMsg ? (
-                    <p aria-live="assertive" className="update-profile__error">
-                      {errMsg}
-                    </p>
-                  ) : (
-                    ""
-                  )}
-                </div>
+                    {auth.roles.includes(3000) ? (
+                      <button type="button" className="btn-cta">
+                        <Link to="/dashboard">Go to Dashboard</Link>
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                )}
               </form>
             </>
           ) : (
@@ -530,22 +583,28 @@ const UpdateProfile = () => {
                   ) : (
                     ""
                   )}
-                  <p className="mb-1">{successMsg ? `${successMsg}` : ""}</p>
-                  <button
-                    type="submit"
-                    onClick={(e) => handleAwsUpload(e, "pdf")}
-                    className="update-profile__btn-cta"
-                  >
-                    Upload File
-                  </button>
-                  <button type="button" className="update-profile__btn-cta">
-                    <Link
-                      to="/dashboard"
-                      className="update-profile__link--dashboard"
+                  <p className="update-profile__success">
+                    {successMsg ? `${successMsg}` : ""}
+                  </p>
+                  {successMsg ? (
+                    <>
+                      <button type="button" className="btn-cta">
+                        <Link to="/dashboard">Go to Dashboard</Link>
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="submit"
+                      onClick={(e) => handleAwsUpload(e, "pdf")}
+                      className={
+                        mediaKit
+                          ? "btn-cta btn-cta--active"
+                          : "btn-cta btn-cta--inactive"
+                      }
                     >
-                      Go to Dashboard
-                    </Link>
-                  </button>
+                      Upload Media Kit
+                    </button>
+                  )}
 
                   {errMsg ? (
                     <p aria-live="assertive" className="update-profile__error">

@@ -143,11 +143,6 @@ select {
   justify-content: space-between;
 }
 
-.update-profile-btn {
-  width: 300px;
-  font-size: 0.9rem;
-}
-
 .update-profile-options {
   display: flex;
   flex-wrap: row;
@@ -537,18 +532,43 @@ select {
   font-family: "SF Pro";
   margin-bottom: 0.5rem;
 
-  &-small {
+  &--small {
     font-size: 32px;
   }
 
-  &-medium {
+  &--medium {
     font-size: 40px;
   }
 
-  &-large {
+  &--large {
     font-size: 48px;
   }
-  &-largest {
+  &--largest {
     font-size: 64px;
+  }
+}
+
+.btn-cta {
+  width: 100%;
+  border-radius: 91px;
+  margin-bottom: 1rem;
+  padding: 0.5rem 3rem;
+  font-size: $desktop-btn-regular;
+  &--active {
+    background-color: black;
+    color: $text-light-color;
+    border: none;
+  }
+  &--inactive {
+    background-color: $btn-grey-color;
+    border: none;
+    color: $text-light-color;
+  }
+
+  &--skip {
+    border: none;
+    margin: 0;
+    padding: 0;
+    color: $text-dark-grey;
   }
 }

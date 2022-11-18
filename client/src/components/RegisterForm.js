@@ -162,7 +162,7 @@ const RegisterForm = ({
                   Not an influencer?
                 </button>
               </div>
-              <h1 className="heading heading-medium">Welcome to the club!</h1>
+              <h1 className="heading heading--medium">Welcome to the club!</h1>
               <p className="register__description">
                 Just a few more steps to get access to thousands of social media
                 campaigns with the top brands.
@@ -331,7 +331,7 @@ const RegisterForm = ({
                   Not a brand?
                 </button>
               </div>
-              <h1 className="heading heading-medium">Welcome to the club!</h1>
+              <h1 className="heading heading--medium">Welcome to the club!</h1>
               <p className="register__description">
                 Just a few more steps to get access to thousands of
                 micro-influencers, perfect for your next campaign.
