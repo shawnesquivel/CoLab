@@ -548,27 +548,34 @@ select {
   }
 }
 
-.btn-cta {
-  width: 100%;
-  border-radius: 91px;
-  margin-bottom: 1rem;
-  padding: 0.5rem 3rem;
-  font-size: $desktop-btn-regular;
-  &--active {
-    background-color: black;
-    color: $text-light-color;
-    border: none;
-  }
-  &--inactive {
-    background-color: $btn-grey-color;
-    border: none;
-    color: $text-light-color;
+.btn {
+  &-cta {
+    width: 100%;
+    border-radius: 91px;
+    margin-bottom: 1rem;
+    padding: 0.5rem 3rem;
+    font-size: $desktop-btn-regular;
+    &--active {
+      background-color: black;
+      color: $text-light-color;
+      border: none;
+    }
+    &--inactive {
+      background-color: $btn-grey-color;
+      border: none;
+      color: $text-light-color;
+    }
+
+    &--skip {
+      border: none;
+      margin: 0;
+      padding: 0;
+      color: $text-dark-grey;
+    }
   }
 
-  &--skip {
+  &-blank {
     border: none;
-    margin: 0;
-    padding: 0;
     color: $text-dark-grey;
   }
 }

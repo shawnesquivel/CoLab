@@ -2,8 +2,10 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import "../styles/links.scss";
+import "../index.scss";
 import colab from "../assets/colab-text.png";
 import appStore from "../assets/download-app-store.png";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faTiktok } from "@fortawesome/free-brands-svg-icons";
 import { useState } from "react";
@@ -23,11 +25,12 @@ const Links = () => {
           />
         </Link>
         <button
+          className="btn-blank"
           onClick={() => {
             setShowLinks(!showLinks);
           }}
         >
-          Links
+          <FontAwesomeIcon icon={faBars} className="socials-container--icon" />
         </button>
         <div className="header-right">
           <div className="socials-container">
