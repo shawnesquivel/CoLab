@@ -1,4 +1,4 @@
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import ErrorPage from "./components/ErrorPage";
@@ -6,11 +6,9 @@ import ChangePassword from "./components/ChangePassword";
 import UpdateProfile from "./components/UpdateProfile";
 import Layout from "./components/Layout";
 import Unauthorized from "./components/Unauthorized";
-import UpcomingCollabs from "./components/UpcomingCollabs";
 import Links from "./components/Links";
 import Dashboard from "./components/Dashboard";
 import RequireAuth from "./components/RequireAuth";
-import CollabInvites from "./components/CollabInvites";
 
 const ROLES = {
   Admin: 1000,
@@ -56,17 +54,17 @@ const App = () => {
           <Route path="createproject" element={<CreateProject />} />
         </Route> */}
 
-        <Route
+        {/* <Route
           element={
             <RequireAuth allowedRoles={[ROLES.Influencer, ROLES.Brand]} />
           }
         >
           <Route path="upcoming" element={<UpcomingCollabs />} />
-        </Route>
+        </Route> */}
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Influencer]} />}>
+        {/* <Route element={<RequireAuth allowedRoles={[ROLES.Influencer]} />}>
           <Route path="invites" element={<CollabInvites />} />
-        </Route>
+        </Route> */}
 
         {/* Else  */}
         <Route path="*" element={<ErrorPage />} />

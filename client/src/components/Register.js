@@ -1,11 +1,12 @@
 import React from "react";
-import { useRef, useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/register.scss";
 import influencerHeadshot from "../assets/register/black-model-afro.png";
 import signUpImg from "../assets/signup.png";
 import RegisterForm from "./RegisterForm";
 import RegisterSelect from "./RegisterSelect";
+import Links from "./Links";
 
 const Register = () => {
   const navigate = useNavigate(); // to use the navigate hook
@@ -43,6 +44,8 @@ const Register = () => {
 
   return (
     <>
+      <Links />
+
       {/* Landing Page */}
       {showLanding ? (
         <section className="landing">

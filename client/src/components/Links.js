@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import colab from "../assets/colab-text.png";
 import useAuth from "../hooks/useAuth";
 import "../styles/links.scss";
 import "../index.scss";
-import colab from "../assets/colab-text.png";
 import appStore from "../assets/download-app-store.png";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,7 @@ const Links = () => {
   return (
     <>
       <header className="header">
-        <Link to="/" className="header-left links__link">
+        <Link to="/register" className="header-left links__link">
           <img
             src={colab}
             alt="colab text logo"
@@ -50,7 +50,7 @@ const Links = () => {
           </div>
           <img
             src={appStore}
-            alt="download from apple app store"
+            alt="apple app store download"
             className="header-right__img"
           />
         </div>
@@ -80,7 +80,6 @@ const Links = () => {
             <nav className="links-container">
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/upcoming">Upcoming Collabs</Link>
-              <Link to="/invites">Collab Invites </Link>
             </nav>
           </section>
         </>

@@ -1,11 +1,9 @@
-import { Outlet, Link } from "react-router-dom";
-import Links from "./Links";
-import { useState } from "react";
+import { Outlet } from "react-router-dom";
+
 const Layout = () => {
   return (
     <main className="App-outer">
       <div className="App-inner">
-        <Links />
         <Outlet />
       </div>
     </main>

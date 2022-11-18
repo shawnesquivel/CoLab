@@ -199,173 +199,174 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="dashboard">
-      <div className="dashboard-container-left">
-        <div className="logo-container">
-          <img
-            src={colabFolder}
-            alt="logo folder"
-            className="logo-container__logo logo-container__logo--co"
-          />
-          <img
-            src={colabTextTransparent}
-            alt="logo text"
-            className="logo-container__logo logo-container__logo--colab"
-          />
+    <>
+      <section className="dashboard">
+        <div className="dashboard-container-left">
+          <div className="logo-container">
+            <img
+              src={colabFolder}
+              alt="logo folder"
+              className="logo-container__logo logo-container__logo--co"
+            />
+            <img
+              src={colabTextTransparent}
+              alt="logo text"
+              className="logo-container__logo logo-container__logo--colab"
+            />
+          </div>
+          <nav className="dashboard-links">
+            <ul className="dashboard-links__ul">
+              <li className="dashboard-links__li">
+                <button
+                  className={
+                    showActiveProjects
+                      ? "dashboard-links__link dashboard-links__link--active"
+                      : "dashboard-links__link "
+                  }
+                  onClick={() => {
+                    setShowNewCollabs(false);
+                    setShowActiveProjects(true);
+                  }}
+                >
+                  Dashboard
+                </button>
+              </li>
+              <li className="dashboard-links__li">
+                <button
+                  className={
+                    showNewCollabs
+                      ? "dashboard-links__link dashboard-links__link--active"
+                      : "dashboard-links__link "
+                  }
+                  onClick={() => {
+                    setShowActiveProjects(false);
+                    setShowNewCollabs(true);
+                  }}
+                >
+                  New Collabs
+                </button>
+              </li>
+              <li className="dashboard-links__li">
+                <button className="dashboard-links__link">Invites</button>
+              </li>
+              <li className="dashboard-links__li dashboard-links__li--last">
+                <button className="dashboard-links__link">Settings</button>
+              </li>
+            </ul>
+          </nav>
         </div>
-        <nav className="dashboard-links">
-          <ul className="dashboard-links__ul">
-            <li className="dashboard-links__li">
-              <button
-                className={
-                  showActiveProjects
-                    ? "dashboard-links__link dashboard-links__link--active"
-                    : "dashboard-links__link "
-                }
-                onClick={() => {
-                  setShowNewCollabs(false);
-                  setShowActiveProjects(true);
-                }}
-              >
-                Dashboard
-              </button>
-            </li>
-            <li className="dashboard-links__li">
-              <button
-                className={
-                  showNewCollabs
-                    ? "dashboard-links__link dashboard-links__link--active"
-                    : "dashboard-links__link "
-                }
-                onClick={() => {
-                  setShowActiveProjects(false);
-                  setShowNewCollabs(true);
-                }}
-              >
-                New Collabs
-              </button>
-            </li>
-            <li className="dashboard-links__li">
-              <button className="dashboard-links__link">Invites</button>
-            </li>
-            <li className="dashboard-links__li dashboard-links__li--last">
-              <button className="dashboard-links__link">Settings</button>
-            </li>
-          </ul>
-        </nav>
-      </div>
 
-      <div className="dashboard-container-right">
-        {backendData ? (
-          <header className="dashboard-header">
-            <div className="dashboard-header-left">
-              {backendData.hasUpdatedProfile ? (
-                <h3 className="dashboard-header-left__greeting">
-                  Welcome back, {backendData.firstName}. 👋
-                </h3>
-              ) : (
+        <div className="dashboard-container-right">
+          {backendData ? (
+            <header className="dashboard-header">
+              <div className="dashboard-header-left">
+                {backendData.hasUpdatedProfile ? (
+                  <h3 className="dashboard-header-left__greeting">
+                    Welcome back, {backendData.firstName}. 👋
+                  </h3>
+                ) : (
+                  <>
+                    <h2 className="header-left__greeting">
+                      Welcome, {backendData.firstName}. 👋
+                    </h2>
+
+                    <p className="register__text register__text--subtle">
+                      <Link
+                        to="/updateprofile"
+                        className="register__text register__text--subtle text--underline"
+                      >
+                        Please update your profile!
+                      </Link>
+                    </p>
+                  </>
+                )}
+              </div>
+
+              <div className="dashboard-header-right">
+                <FontAwesomeIcon icon={faBell} />
+                {backendData.avatar ? (
+                  <img
+                    className="dashboard-header-right__avatar"
+                    src={backendData.avatar}
+                    alt="profile"
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            </header>
+          ) : (
+            ""
+          )}
+
+          {backendData ? (
+            <>
+              {/* Create Project (ONLY FOR BRAND REPS) */}
+              {auth.roles.includes(3000) &&
+              showActiveProjects &&
+              !showNewCollabs ? (
                 <>
-                  <h2 className="header-left__greeting">
-                    Welcome, {backendData.firstName}. 👋
-                  </h2>
-
-                  <p className="register__text register__text--subtle">
-                    <Link
-                      to="/updateprofile"
-                      className="register__text register__text--subtle text--underline"
+                  <div className="dashboard-header dashboard-header--justify-right">
+                    <button
+                      onClick={() => {
+                        setShowCreateProjectModal(true);
+                      }}
+                      className="form__btn-dotted form__btn-dotted--medium"
                     >
-                      Please update your profile!
-                    </Link>
-                  </p>
+                      <FontAwesomeIcon icon={faPlus} className="icon-left" />
+                      Create a New Project
+                    </button>
+                    {showCreateProjectModal ? (
+                      <CreateProjectModal
+                        isOpen={showCreateProjectModal}
+                        onClose={() => {
+                          setShowCreateProjectModal(false);
+                          setShowActiveProjects(false);
+                          setShowNewCollabs(true);
+                        }}
+                        project={projectModal}
+                        role={auth.roles}
+                        brand={backendData.firstName}
+                        OVERLAY_STYLES={OVERLAY_STYLES}
+                      >
+                        Create Project
+                      </CreateProjectModal>
+                    ) : (
+                      ""
+                      // <p>showModal is set to false.</p>
+                    )}
+                  </div>
                 </>
+              ) : (
+                ""
               )}
-            </div>
-
-            <div className="dashboard-header-right">
-              <FontAwesomeIcon icon={faBell} />
-              {backendData.avatar ? (
-                <img
-                  className="dashboard-header-right__avatar"
-                  src={backendData.avatar}
-                  alt="profile"
+              {/* Contains all the active project cards */}
+              {showActiveProjects ? (
+                <ActiveProjects
+                  currentProjects={currentProjects}
+                  expandProject={expandProject}
                 />
               ) : (
                 ""
               )}
-            </div>
-          </header>
-        ) : (
-          ""
-        )}
 
-        {backendData ? (
-          <>
-            {/* Create Project (ONLY FOR BRAND REPS) */}
-            {auth.roles.includes(3000) &&
-            showActiveProjects &&
-            !showNewCollabs ? (
-              <>
-                <div className="dashboard-header dashboard-header--justify-right">
-                  <button
-                    onClick={() => {
-                      setShowCreateProjectModal(true);
-                    }}
-                    className="form__btn-dotted form__btn-dotted--medium"
-                  >
-                    <FontAwesomeIcon icon={faPlus} className="icon-left" />
-                    Create a New Project
-                  </button>
-                  {showCreateProjectModal ? (
-                    <CreateProjectModal
-                      isOpen={showCreateProjectModal}
-                      onClose={() => {
-                        setShowCreateProjectModal(false);
-                        setShowActiveProjects(false);
-                        setShowNewCollabs(true);
-                      }}
-                      project={projectModal}
-                      role={auth.roles}
-                      brand={backendData.firstName}
-                      OVERLAY_STYLES={OVERLAY_STYLES}
-                    >
-                      Create Project
-                    </CreateProjectModal>
-                  ) : (
-                    ""
-                    // <p>showModal is set to false.</p>
-                  )}
-                </div>
-              </>
-            ) : (
-              ""
-            )}
-            {/* Contains all the active project cards */}
-            {showActiveProjects ? (
-              <ActiveProjects
-                currentProjects={currentProjects}
-                expandProject={expandProject}
-              />
-            ) : (
-              ""
-            )}
+              {/* Contains all the new projects */}
+              {showNewCollabs ? (
+                <NewCollabs
+                  currentProjects={currentProjects}
+                  expandProject={expandProject}
+                />
+              ) : (
+                ""
+              )}
+            </>
+          ) : (
+            <h3>Backend is loading...</h3>
+          )}
+        </div>
 
-            {/* Contains all the new projects */}
-            {showNewCollabs ? (
-              <NewCollabs
-                currentProjects={currentProjects}
-                expandProject={expandProject}
-              />
-            ) : (
-              ""
-            )}
-          </>
-        ) : (
-          <h3>Backend is loading</h3>
-        )}
-      </div>
-
-      {/* Notification Button */}
-      {/* {notifications ? (
+        {/* Notification Button */}
+        {/* {notifications ? (
         <>
           <Notifications className="notification-btn" />
           <button
@@ -388,32 +389,33 @@ const Dashboard = () => {
         </button>
       )} */}
 
-      <br />
-      {/* Expand Create Project Form */}
+        <br />
+        {/* Expand Create Project Form */}
 
-      {/* Expand Project */}
-      <div style={BUTTON_WRAPPER_STYLES}>
-        {showModal ? (
-          <ProjectModal
-            isOpen={showModal}
-            onClose={() => {
-              setShowModal(false);
-            }}
-            showModal={setShowModal}
-            project={projectModal}
-            role={auth.roles}
-            OVERLAY_STYLES={OVERLAY_STYLES}
-            user={backendData}
-            refreshDashboard={refreshDashboard}
-          >
-            Project Modal
-          </ProjectModal>
-        ) : (
-          ""
-          // <p>showModal is set to false.</p>
-        )}
-      </div>
-    </section>
+        {/* Expand Project */}
+        <div style={BUTTON_WRAPPER_STYLES}>
+          {showModal ? (
+            <ProjectModal
+              isOpen={showModal}
+              onClose={() => {
+                setShowModal(false);
+              }}
+              showModal={setShowModal}
+              project={projectModal}
+              role={auth.roles}
+              OVERLAY_STYLES={OVERLAY_STYLES}
+              user={backendData}
+              refreshDashboard={refreshDashboard}
+            >
+              Project Modal
+            </ProjectModal>
+          ) : (
+            ""
+            // <p>showModal is set to false.</p>
+          )}
+        </div>
+      </section>
+    </>
   );
 };
 

@@ -405,13 +405,16 @@ const UpdateProfile = () => {
                 className="update-profile-form"
                 encType="multipart/form-data"
               >
-                <label htmlFor="avatar"></label>
+                <label htmlFor="avatar" className="form__label">
+                  Upload File
+                </label>
                 <input
                   type="file"
                   id="avatar"
                   name="avatar"
                   onChange={uploadImgFileHandler}
                   required
+                  className="update-profile-form__input--file"
                 />
 
                 <p id="uidnote" className="login-form__instructions">

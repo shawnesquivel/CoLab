@@ -197,7 +197,14 @@ app.get("/", (req, res) => {
 // ENDPOINT #1 - USER SIGNUP
 app.post("/api/register", async (req, res) => {
   console.log("Registration Received: req.body:", req.body);
-  let { user, pwd: plainTextPwd, role, firstName, lastName } = req.body;
+  let {
+    user,
+    pwd: plainTextPwd,
+    role,
+    firstName,
+    lastName,
+    company,
+  } = req.body;
 
   // Username / Password Validation
   if (!user || typeof user !== "string") {
@@ -240,6 +247,7 @@ app.post("/api/register", async (req, res) => {
       roles: role,
       firstName,
       lastName,
+      company,
     });
     console.log("User was created successfully: ", res);
   } catch (err) {

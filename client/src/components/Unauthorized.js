@@ -5,7 +5,7 @@ const Unauthorized = () => {
   const goBack = () => navigate(-1);
   return (
     <section>
-      <h1>Unauthorized</h1>
+      <h1 className="heading heading--large">Unauthorized</h1>
       <br />
       <p>You do not have access to this page</p>
       <div className="flexGrow">

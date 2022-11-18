@@ -7,7 +7,7 @@ import axios from "../api/axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import loginImg from "../assets/login.png";
 import "../styles/login.scss";
-
+import Links from "./Links";
 const LOGIN_URL = "/api/login";
 
 const Login = () => {
@@ -161,6 +161,7 @@ const Login = () => {
 
   return (
     <>
+      <Links />
       <section className="login">
         <div className="login__container-left">
           <h1 className="login__header">Sign In</h1>
