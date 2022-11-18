@@ -175,9 +175,17 @@
   margin-bottom: 3rem;
   display: flex;
   background-color: #ececec;
-
+  gap: 1rem;
   &__logo {
     height: auto;
+    background: transparent;
+    &--co {
+      width: 30px;
+    }
+
+    &--colab {
+      width: 100px;
+    }
   }
 }
 .select {

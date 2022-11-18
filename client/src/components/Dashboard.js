@@ -15,6 +15,7 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
 import colabFolder from "../assets/colab-logo.png";
 import colabTextTransparent from "../assets/colab-text-transparent.png";
+import colabTextTransparent2 from "../assets/colab-text-transparent2.png";
 
 // Endpoints
 const GETUSER_URL = "/api/getuser";
@@ -204,12 +205,12 @@ const Dashboard = () => {
           <img
             src={colabFolder}
             alt="logo folder"
-            className="logo-container__logo"
+            className="logo-container__logo logo-container__logo--co"
           />
           <img
             src={colabTextTransparent}
             alt="logo text"
-            className="logo-container__logo"
+            className="logo-container__logo logo-container__logo--colab"
           />
         </div>
         <nav className="dashboard-links">
