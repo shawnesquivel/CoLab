@@ -24,14 +24,14 @@ const Links = () => {
             className="header-left colab-text-logo"
           />
         </Link>
-        <button
+        {/* <button
           className="btn-blank"
           onClick={() => {
             setShowLinks(!showLinks);
           }}
         >
           <FontAwesomeIcon icon={faBars} className="socials-container--icon" />
-        </button>
+        </button> */}
         <div className="header-right">
           <div className="socials-container">
             <a href="https://instagram.com/">

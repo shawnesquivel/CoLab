@@ -1,33 +1,5 @@
 @use "partials/index" as *;
 
-.btn-container {
-  display: flex;
-  flex-direction: row;
-
-  &--col {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  &--right {
-    justify-content: right;
-  }
-
-  &--center {
-    justify-content: center;
-    gap: 1rem;
-  }
-
-  &__hide-btn {
-    font-size: 16px;
-    border: none;
-    padding: 0.4rem;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-}
-
 .create-project {
   &__close-btn {
     width: 70%;
@@ -97,6 +69,7 @@
       box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
       width: 15%;
       font-size: 16px;
+      background-color: $background-light-color;
       &--medium {
         width: 25%;
       }
@@ -145,6 +118,10 @@
       width: 25%;
     }
 
+    &--full {
+      width: 100%;
+    }
+
     &--textarea {
       resize: none;
     }
@@ -177,6 +154,9 @@
 
   &__text {
     font-size: 16px;
+    &--left {
+      text-align: left;
+    }
     &--bold {
       font-weight: 600;
     }
@@ -254,7 +234,7 @@
 
 .new-collabs {
   &__header {
-    padding-left: 1rem;
+    padding: 2.5rem 2rem;
     background-color: #f5f5f5;
   }
 }

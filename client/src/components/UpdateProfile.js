@@ -1,29 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import pageOneImg from "../assets/updateprofile.png";
 import pageTwoImg from "../assets/update-profile-photo.png";
 import pageThreeImg from "../assets/update-profile-mediakit.png";
 import greySquare from "../assets/mediakit-grey.png";
 import greyCircle from "../assets/greycircle.jpg";
 import "../styles/updateprofile.scss";
-import "../index.scss";
-const FormData = require("form-data");
 
 const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
-const UPLOADPROFILEPIC_URL = "/api/uploadimage";
 const UPDATE_AVATAR_URL = "api/updateavatar";
 const UPDATE_MEDIAKIT_URL = "api/updatemediakit";
-const GETIMAGE_URL = "/api/getimage";
 
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
-  const navigate = useNavigate(); // to use the navigate hook
 
   // If the user is a brand, show page 2 first
   useEffect(() => {
@@ -40,17 +35,11 @@ const UpdateProfile = () => {
 
   const [awsImage, setAwsImage] = useState("");
 
-  const [showForm, setShowForm] = useState(false);
-  const [formButtonText, setFormButtonText] = useState("Change Profile");
   // Page One
   const [instagram, setInstagram] = useState("");
   const [tiktok, setTiktok] = useState("");
   const [youtube, setYoutube] = useState("");
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("Influencer");
-  const [dateOfBirth, setDateOfBirth] = useState("2000-01-31");
   const [keywords, setKeywords] = useState(["lifestyle"]);
 
   // Page 2
@@ -68,7 +57,6 @@ const UpdateProfile = () => {
   const [imgData, setImgData] = useState([]);
 
   const [errMsg, setErrMsg] = useState("");
-  const [err, setErr] = useState(false);
 
   // Fetch User Data on Page Load
   const fetchUser = async () => {
@@ -452,16 +440,32 @@ const UpdateProfile = () => {
                     >
                       Upload Photo
                     </button>
-                    <button
-                      type="button"
-                      className="btn-cta btn-cta--skip"
-                      onClick={() => {
-                        showPageTwo(false);
-                        showPageThree(true);
-                      }}
-                    >
-                      Skip
-                    </button>
+                    {auth.roles.includes(3000) ? (
+                      <button
+                        type="button"
+                        className="btn-cta btn-cta--inactive"
+                      >
+                        <Link to="/dashboard" className="text--light">
+                          Go to Dashboard
+                        </Link>
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                    {auth.roles.includes(2000) ? (
+                      <button
+                        type="button"
+                        className="btn-cta btn-cta--skip"
+                        onClick={() => {
+                          showPageTwo(false);
+                          showPageThree(true);
+                        }}
+                      >
+                        Skip
+                      </button>
+                    ) : (
+                      ""
+                    )}
 
                     {errMsg ? (
                       <p

@@ -160,89 +160,91 @@ const Login = () => {
   // };
 
   return (
-    <>
-      <Links />
-      <section className="login">
-        <div className="login__container-left">
-          <h1 className="login__header">Sign In</h1>
-          <p className="login__description mb-1p5 text--bold mb-">
-            Enter your account details
-          </p>
-          <form onSubmit={handleSubmit} className="login-form">
-            <label htmlFor="username" className="login-form__label">
-              Username
-            </label>
-            <input
-              ref={userRef}
-              onChange={(e) => {
-                setUser(e.target.value);
-              }}
-              type="text"
-              id="username"
-              autoComplete="off"
-              value={user}
-              required
-              placeholder="example@email.com"
-              className="login-form__input"
-            />
-            <label htmlFor="pwd" className="login-form__label">
-              Password
-            </label>
-            <input
-              type="password"
-              onChange={(e) => {
-                setPwd(e.target.value);
-              }}
-              value={pwd}
-              id="pwd"
-              required
-              placeholder="password"
-              className="login-form__input login-form__input--password"
-            />
-            <p id="uidnote" className="login-form__instructions">
-              Forgot Password?
+    <main className="app-outer">
+      <div className="app-inner--narrow">
+        <Links />
+        <section className="login">
+          <div className="login__container-left">
+            <h1 className="login__header">Sign In</h1>
+            <p className="login__description mb-1p5 text--bold mb-">
+              Enter your account details
             </p>
-
-            <div className="flex-col-center">
-              {errMsg ? (
-                <p aria-live="assertive" className="login__error">
-                  {errMsg}
-                </p>
-              ) : (
-                ""
-              )}
-
-              <button
-                disabled={user && pwd ? false : true}
-                onSubmit={handleSubmit}
-                className="login__btn-cta"
-              >
-                Sign In
-              </button>
-              <p className="register__text register__text--subtle">
-                New here?{" "}
-                <Link
-                  to="/login"
-                  className="register__text register__text--subtle text--underline"
-                >
-                  Sign Up instead
-                </Link>
+            <form onSubmit={handleSubmit} className="login-form">
+              <label htmlFor="username" className="login-form__label">
+                Username
+              </label>
+              <input
+                ref={userRef}
+                onChange={(e) => {
+                  setUser(e.target.value);
+                }}
+                type="text"
+                id="username"
+                autoComplete="off"
+                value={user}
+                required
+                placeholder="example@email.com"
+                className="login-form__input"
+              />
+              <label htmlFor="pwd" className="login-form__label">
+                Password
+              </label>
+              <input
+                type="password"
+                onChange={(e) => {
+                  setPwd(e.target.value);
+                }}
+                value={pwd}
+                id="pwd"
+                required
+                placeholder="password"
+                className="login-form__input login-form__input--password"
+              />
+              <p id="uidnote" className="login-form__instructions">
+                Forgot Password?
               </p>
-            </div>
-          </form>
 
-          {/* Demo Log-in */}
-          {/* <button onClick={handleSubmitInfluencer} >
+              <div className="flex-col-center">
+                {errMsg ? (
+                  <p aria-live="assertive" className="login__error">
+                    {errMsg}
+                  </p>
+                ) : (
+                  ""
+                )}
+
+                <button
+                  disabled={user && pwd ? false : true}
+                  onSubmit={handleSubmit}
+                  className="login__btn-cta"
+                >
+                  Sign In
+                </button>
+                <p className="register__text register__text--subtle">
+                  New here?{" "}
+                  <Link
+                    to="/login"
+                    className="register__text register__text--subtle text--underline"
+                  >
+                    Sign Up instead
+                  </Link>
+                </p>
+              </div>
+            </form>
+
+            {/* Demo Log-in */}
+            {/* <button onClick={handleSubmitInfluencer} >
             Login as an Influencer
           </button> */}
-        </div>
-        <img
-          src={loginImg}
-          alt="black model with curly hair with left arm raised with a blue dress short hanging over her shoulders wearing a white tanktop"
-          className="login__img-right"
-        />
-      </section>
-    </>
+          </div>
+          <img
+            src={loginImg}
+            alt="black model with curly hair with left arm raised with a blue dress short hanging over her shoulders wearing a white tanktop"
+            className="login__img-right"
+          />
+        </section>
+      </div>
+    </main>
   );
 };
 

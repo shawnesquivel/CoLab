@@ -2,6 +2,7 @@
 
 .App-inner {
   width: 100%;
+  max-width: 100%;
 }
 
 .notification-btn {
@@ -17,7 +18,7 @@
   // surrounds entire card
   &__btn {
     background-color: #fcfcfc;
-    width: 350px;
+    width: 31%;
     border-radius: 30px;
     padding: 0;
     overflow: hidden;
@@ -34,7 +35,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    // width: 30%;
+    min-width: 20%;
+    max-width: 20%;
     background-color: #ececec;
   }
 
@@ -54,14 +57,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 2rem;
+    padding: 2rem;
+    background-color: #f5f5f5;
+
+    &--grey {
+      background-color: #f5f5f5;
+    }
+    &--light {
+      background-color: $background-light-color;
+    }
+
     &--justify-right {
       justify-content: right;
-      padding: 1rem;
-      padding-right: 0;
+      padding: 1rem 2rem;
     }
     &-left {
-      padding-left: 1rem;
       &__greeting {
         font-family: "SF Pro";
       }
@@ -70,6 +80,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
+
       &__avatar {
         width: 50px;
         height: 50px;
@@ -105,10 +116,17 @@
 }
 
 .project-container {
-  display: grid;
+  // display: grid;
+  // gap: 2.5rem;
+  // height: auto;
+  // grid-template-columns: repeat(3, 1fr);
+
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
   gap: 2.5rem;
-  height: auto;
-  grid-template-columns: repeat(3, 1fr);
+  flex-wrap: wrap;
+
   background-color: #f5f5f5;
   padding: 2.5rem 2rem;
   // padding-bottom: 350px;
@@ -117,18 +135,6 @@
     display: flex;
     flex-direction: column;
     padding-left: 1rem;
-  }
-
-  &__card {
-    // border: 1px solid black;
-    background-color: $background-light-color;
-    border-radius: 10%;
-    width: 350px;
-    gap: 5px 15px;
-    height: 350px;
-    // &--highlight {
-    //   border: 4px solid $primary-color;
-    // }
   }
 
   &__text {

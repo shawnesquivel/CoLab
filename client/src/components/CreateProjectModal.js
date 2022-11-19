@@ -84,9 +84,7 @@ const CreateProjectModal = ({
   const [hashtags, setHashtags] = useState([]);
   const [tags, setTags] = useState([]);
   const [phrases, setPhrases] = useState([]);
-  const [linkInBio, setLinkInBio] = useState(
-    "https://glossier.com/products/cloud-paint"
-  );
+  const [linkInBio, setLinkInBio] = useState("");
 
   // Used to pass in props
   const data = {
@@ -385,13 +383,8 @@ const CreateProjectModal = ({
     // #to-do: switch from in-line style to className style
     <div style={OVERLAY_STYLES} className="">
       <div style={MODAL_STYLES} className="create-project-modal">
-        {/* <form action=""> */}
         <div className="btn-container btn-container--right">
-          <button
-            className="btn-container__hide-btn"
-            onClick={onClose}
-            type="button"
-          >
+          <button className="btn-hide" onClick={onClose} type="button">
             <FontAwesomeIcon icon={faX} className="icon-left" />
           </button>
         </div>
@@ -555,14 +548,33 @@ const CreateProjectModal = ({
                   />
                 </div>
               </div>
-              <div className="btn-container btn-container--center">
+              <div className="btn-container btn-container--center mt-1p5">
                 <button
                   onClick={() => {
                     setShowContractDetails(false);
                     setShowDeliverables(true);
                   }}
                   type="button"
-                  className="form__btn-next"
+                  disabled={
+                    title &&
+                    description &&
+                    reviewDeadline &&
+                    deadline &&
+                    deadlineTime &&
+                    keywords
+                      ? false
+                      : true
+                  }
+                  className={
+                    title &&
+                    description &&
+                    reviewDeadline &&
+                    deadline &&
+                    deadlineTime &&
+                    keywords
+                      ? "btn-cta btn-cta--medium btn-cta--active"
+                      : "btn-cta btn-cta--medium btn-cta--inactive"
+                  }
                 >
                   {/* <FontAwesomeIcon className="icon-left" icon={faArrowRight} /> */}
                   Next
@@ -793,7 +805,7 @@ const CreateProjectModal = ({
               )}
 
               <button
-                className="form__btn-dotted"
+                className="form__btn-dotted mb-1"
                 onClick={() => {
                   // if deliverableTwoSocial does not exist, show it
                   if (!showDeliverableTwo) {
@@ -808,14 +820,14 @@ const CreateProjectModal = ({
               </button>
               {/* <AddDeliverableBtn /> */}
 
-              <div className="btn-container btn-container--center">
+              <div className="btn-container btn-container--center mt-1p5">
                 <button
                   onClick={() => {
                     setShowDeliverables(false);
                     setShowContractDetails(true);
                   }}
                   type="button"
-                  className="form__btn-next"
+                  className="btn-cta btn-cta--medium btn-cta--inactive"
                 >
                   Previous Page
                 </button>
@@ -825,7 +837,16 @@ const CreateProjectModal = ({
                     setShowContractPayment(true);
                   }}
                   type="button"
-                  className="form__btn-next"
+                  disabled={
+                    deliverableOneSocial && deliverableOneDescription
+                      ? false
+                      : true
+                  }
+                  className={
+                    deliverableOneSocial && deliverableOneDescription
+                      ? "btn-cta btn-cta--medium btn-cta--active"
+                      : "btn-cta btn-cta--medium btn-cta--inactive"
+                  }
                 >
                   {/* <FontAwesomeIcon className="icon-left" icon={faArrowRight} /> */}
                   Next
@@ -866,36 +887,47 @@ const CreateProjectModal = ({
 
               {showPaymentDetails ? (
                 <>
-                  <div className="label-row-container__col">
-                    <label htmlFor="paymentprice" className="form__label">
-                      Payment Amount ($CAD)
-                    </label>
-                    <input
-                      type="text"
-                      value={paymentPrice}
-                      onChange={(e) => setPaymentPrice(e.target.value)}
-                      className="form__input"
-                      placeholder="$XXX"
-                    />
-                  </div>
-                  <div className="label-row-container__col">
-                    <label htmlFor="paymentproduct" className="form__label">
-                      Describe the product you are sending
-                    </label>
-                    <textarea
-                      type="text"
-                      autoComplete="off"
-                      placeholder="description"
-                      value={paymentProduct}
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                        setPaymentProduct(e.target.value);
-                      }}
-                      className="form__input form__input--textarea"
-                      rows="6"
-                      cols="50"
-                    />
-                  </div>
+                  {paymentMethod === "payment and product" ||
+                  paymentMethod === "payment only" ? (
+                    <div className="label-row-container__col">
+                      <label htmlFor="paymentprice" className="form__label">
+                        Payment Amount ($CAD)
+                      </label>
+                      <input
+                        type="text"
+                        value={paymentPrice}
+                        onChange={(e) => setPaymentPrice(e.target.value)}
+                        className="form__input"
+                        placeholder="$XXX"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {paymentMethod === "payment and product" ||
+                  paymentMethod === "product only" ? (
+                    <div className="label-row-container__col">
+                      <label htmlFor="paymentproduct" className="form__label">
+                        Describe the product you are sending
+                      </label>
+                      <textarea
+                        type="text"
+                        autoComplete="off"
+                        placeholder="description"
+                        value={paymentProduct}
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setPaymentProduct(e.target.value);
+                        }}
+                        className="form__input form__input--textarea"
+                        rows="6"
+                        cols="50"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </>
               ) : (
                 <>
@@ -903,14 +935,14 @@ const CreateProjectModal = ({
                 </>
               )}
 
-              <div className="btn-container btn-container--center">
+              <div className="btn-container btn-container--center mt-1p5">
                 <button
                   onClick={() => {
                     setShowContractPayment(false);
                     setShowDeliverables(true);
                   }}
                   type="button"
-                  className="form__btn-next"
+                  className="btn-cta btn-cta--medium btn-cta--inactive"
                 >
                   Previous Page
                 </button>
@@ -920,7 +952,12 @@ const CreateProjectModal = ({
                     setShowContractGuidelines(true);
                   }}
                   type="button"
-                  className="form__btn-next"
+                  disabled={paymentMethod !== "none" ? false : true}
+                  className={
+                    paymentMethod !== "none"
+                      ? "btn-cta btn-cta--medium btn-cta--active"
+                      : "btn-cta btn-cta--medium btn-cta--inactive"
+                  }
                 >
                   Next Page
                 </button>
@@ -932,11 +969,13 @@ const CreateProjectModal = ({
 
           {showContractGuidelines ? (
             <div className="form-page ">
-              <h2 className="form-header">Contract Guidelines</h2>
+              <h2 className="form__text form__text--subheader">
+                Contract Guidelines
+              </h2>
               {/* Phrases */}
               <div className="label-row-container__col">
                 <label htmlFor="phrases" className="form__label">
-                  Required Phrases
+                  Required Phrases (Press Enter ⏎)
                 </label>
                 <input
                   onKeyDown={handleKeyDown}
@@ -961,7 +1000,7 @@ const CreateProjectModal = ({
               {/* Hashtags */}
               <div className="label-row-container__col">
                 <label htmlFor="hashtags" className="form__label">
-                  Required Hashtags
+                  Required Hashtags (Press Enter ⏎)
                 </label>
                 <input
                   onKeyDown={handleKeyDown}
@@ -986,7 +1025,7 @@ const CreateProjectModal = ({
               {/* Tags */}
               <div className="label-row-container__col">
                 <label htmlFor="tags" className="form__label">
-                  Required Profile Tags
+                  Required Profile Tags (Press Enter ⏎)
                 </label>
                 <input
                   onKeyDown={handleKeyDown}
@@ -1009,7 +1048,7 @@ const CreateProjectModal = ({
                 </div>
               </div>
               {/* Link In Bio */}
-              <div className="label-row-container__col">
+              <div className="label-row-container__col mb-1p5">
                 <label htmlFor="linkinbio" className="form__label">
                   Link in Bio
                 </label>
@@ -1021,7 +1060,7 @@ const CreateProjectModal = ({
                   type="url"
                   id="linkinbio"
                   name="linkinbio"
-                  placeholder="https://glossier.com/products/cloud-paint"
+                  placeholder="link in bio"
                   className="form__input"
                 />
               </div>
@@ -1035,9 +1074,9 @@ const CreateProjectModal = ({
                         setShowContractPayment(true);
                       }}
                       type="button"
-                      className="form__btn-next"
+                      className="btn-cta btn-cta--medium btn-cta--inactive"
                     >
-                      Back to Guidelines
+                      Back
                     </button>
                     <button
                       onClick={() => {
@@ -1045,7 +1084,7 @@ const CreateProjectModal = ({
                         setShowSummary(true);
                       }}
                       type="button"
-                      className="form__btn-next"
+                      className="btn-cta btn-cta--medium btn-cta--active"
                     >
                       Preview
                     </button>
@@ -1069,15 +1108,15 @@ const CreateProjectModal = ({
                     setShowContractGuidelines(true);
                   }}
                   type="button"
-                  className="form__btn-next"
+                  className="btn-cta btn-cta--medium btn-cta--inactive"
                 >
-                  Back to Guidelines
+                  Back
                 </button>
 
                 <button
                   type="button"
                   onClick={submitProject}
-                  className="form__btn-next"
+                  className="btn-cta btn-cta--medium btn-cta--active"
                 >
                   Create Project
                 </button>
@@ -1102,54 +1141,70 @@ const CreateProjectModal = ({
             )} */}
 
             <form className="form " encType="multipart/form-data">
-              <h4>Upload Examples</h4>
-              <p className="form__instructions">
-                Please upload any examples for the influencer to reference. E.g.
-                samples, previous work by others, etc.
-              </p>
-              <label htmlFor="avatar" className="form__label">
-                File Upload
-              </label>
-              <input
-                type="file"
-                id="avatar"
-                name="avatar"
-                onChange={uploadImgFileHandler}
-                required
-                className="create-project-form__input create-project-form__input--file"
-              />
-              <p id="uidnote" className="form__instructions">
-                Max 2MB, .png only
-              </p>
-              <label htmlFor="social">
-                Which deliverable is this an example for?
-              </label>
-              <select
-                name="social"
-                id="social"
-                onChange={(e) => {
-                  console.log(e.target.value);
-                  setSocialExample(e.target.value);
-                }}
-                value={socialExample}
-                className="form__input form__input--select "
-              >
-                <option value="none" className="form__social">
-                  Select Platform
-                </option>
-                <option
-                  value="instagram"
-                  className="create-project-form__social"
-                >
-                  Instagram
-                </option>
-                <option value="tiktok" className="create-project-form__social">
-                  Tik Tok
-                </option>
-                <option value="youtube" className="create-project-form__social">
-                  Youtube
-                </option>
-              </select>
+              <div className="mt-1p5">
+                <h4 className="form__text form__text--subheader">
+                  Upload Examples
+                </h4>
+                <p className="form__instructions">
+                  Please upload any examples for the influencer to reference.
+                  E.g. samples, previous work by others, etc.
+                </p>
+              </div>
+              <div className="label-row-container label-row-container--left">
+                <div className="label-row-container__col">
+                  <label htmlFor="avatar" className="form__label">
+                    File Upload
+                  </label>
+                  <input
+                    type="file"
+                    id="avatar"
+                    name="avatar"
+                    onChange={uploadImgFileHandler}
+                    required
+                    className=""
+                  />
+                  <p id="uidnote" className="form__instructions">
+                    Max 2MB, .png or .jpeg files only
+                  </p>
+                </div>
+                <div className="label-row-container__col">
+                  <label htmlFor="social" className="form__label">
+                    Which deliverable is this an example for?
+                  </label>
+                  <select
+                    name="social"
+                    id="social"
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      setSocialExample(e.target.value);
+                    }}
+                    value={socialExample}
+                    className="form__input form__input--select "
+                  >
+                    <option value="none" className="form__social">
+                      Select Platform
+                    </option>
+                    <option
+                      value="instagram"
+                      className="create-project-form__social"
+                    >
+                      Instagram
+                    </option>
+                    <option
+                      value="tiktok"
+                      className="create-project-form__social"
+                    >
+                      Tik Tok
+                    </option>
+                    <option
+                      value="youtube"
+                      className="create-project-form__social"
+                    >
+                      Youtube
+                    </option>
+                  </select>
+                </div>
+              </div>
 
               <div className="flex-col-center">
                 {awsImage ? (
@@ -1172,30 +1227,31 @@ const CreateProjectModal = ({
                 ) : (
                   " "
                 )}
-                <button
-                  type="submit"
-                  onClick={(e) => handleAwsUpload(e, "image")}
-                  className="update-profile__btn-cta"
-                >
-                  Upload Photo
-                </button>
-                <button
-                  className="create-project__close-btn"
-                  onClick={onClose}
-                  type="button"
-                >
-                  <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
-                  Go to New Collabs
-                </button>
+              </div>
 
-                {/* {errMsg ? (
+              <button
+                type="submit"
+                onClick={(e) => handleAwsUpload(e, "image")}
+                className="btn-cta btn-cta--medium btn-cta--active"
+              >
+                Upload Photo
+              </button>
+              <button
+                onClick={onClose}
+                type="button"
+                className="btn-dotted btn-dotted--large"
+              >
+                <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
+                Go to New Collabs
+              </button>
+
+              {/* {errMsg ? (
                   <p aria-live="assertive" className="update-profile__error">
                     {errMsg}
                   </p>
                 ) : (
                   ""
                 )} */}
-              </div>
             </form>
           </>
         ) : (

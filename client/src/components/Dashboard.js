@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
 // import Notifications from "./Notifications";
 import { faBell, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
@@ -15,7 +15,7 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
 import colabFolder from "../assets/colab-logo.png";
 import colabTextTransparent from "../assets/colab-text-transparent.png";
-import colabTextTransparent2 from "../assets/colab-text-transparent2.png";
+import colab from "../assets/colab-text.png";
 
 // Endpoints
 const GETUSER_URL = "/api/getuser";
@@ -61,22 +61,6 @@ const Dashboard = () => {
   const [influencerAssigned, setInfluencerAssigned] = useState("");
   const [title, setTitle] = useState("");
   const [deadline, setDeadline] = useState("");
-  // const [reviewDeadline, setReviewDeadline] = useState("");
-  // const [deadlineTime, setDeadlineTime] = useState("");
-  // const [instagramDeliverable, setInstagramDeliverable] =
-  //   useState("Post a story");
-  // const [tiktokDeliverable, setTiktokDeliverable] =
-  //   useState("10-20sec Tik Tok");
-  // const [youtubeDeliverable, setYoutubeDeliverable] =
-  //   useState("15-30 sec ad read");
-  // const [numberOfRevisions, setNumberOfRevisions] =
-  //   useState("15-30 sec ad read");
-
-  // Project Guidelines
-  // const [keywords, setKeywords] = useState(["lifestyle"]);
-  // const [hashtags, setHashtags] = useState([]);
-  // const [tags, setTags] = useState([]);
-  // const [phrases, setPhrases] = useState([]);
 
   // Open Modals
   const [showModal, setShowModal] = useState(false);
@@ -123,36 +107,6 @@ const Dashboard = () => {
 
     setBackendData(response.data.userProfile);
     console.log("updating user");
-  };
-  // Create a Project
-  const submitProject = async (e) => {
-    e.preventDefault();
-    const user = auth?.username;
-    console.log("Creating a Project, Here is your Auth", auth);
-    try {
-      const payload = JSON.stringify({
-        token: localStorage.getItem("token"),
-        title,
-        influencerAssigned,
-        brandRepAssigned: auth.user,
-        deadline: new Date(),
-      });
-      console.log("logging the form submission", payload);
-      console.log("logging the date object", typeof deadline);
-
-      const response = await axios.post(CREATEPROJECT_URL, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-
-      console.log("Response Data", response);
-
-      fetchUser().catch(console.error);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const getProject = async (projectID) => {
@@ -202,18 +156,20 @@ const Dashboard = () => {
     <>
       <section className="dashboard">
         <div className="dashboard-container-left">
-          <div className="logo-container">
-            <img
-              src={colabFolder}
-              alt="logo folder"
-              className="logo-container__logo logo-container__logo--co"
-            />
-            <img
-              src={colabTextTransparent}
-              alt="logo text"
-              className="logo-container__logo logo-container__logo--colab"
-            />
-          </div>
+          <Link to="/register" className="header-left links__link">
+            <div className="logo-container">
+              <img
+                src={colabFolder}
+                alt="logo folder"
+                className="logo-container__logo logo-container__logo--co"
+              />
+              <img
+                src={colabTextTransparent}
+                alt="logo text"
+                className="logo-container__logo logo-container__logo--colab"
+              />
+            </div>
+          </Link>
           <nav className="dashboard-links">
             <ul className="dashboard-links__ul">
               <li className="dashboard-links__li">
@@ -258,7 +214,7 @@ const Dashboard = () => {
 
         <div className="dashboard-container-right">
           {backendData ? (
-            <header className="dashboard-header">
+            <header className="dashboard-header dashboard-header--light ">
               <div className="dashboard-header-left">
                 {backendData.hasUpdatedProfile ? (
                   <h3 className="dashboard-header-left__greeting">
@@ -285,11 +241,16 @@ const Dashboard = () => {
               <div className="dashboard-header-right">
                 <FontAwesomeIcon icon={faBell} />
                 {backendData.avatar ? (
-                  <img
-                    className="dashboard-header-right__avatar"
-                    src={backendData.avatar}
-                    alt="profile"
-                  />
+                  <Link
+                    to="/updateprofile"
+                    className="register__text register__text--subtle text--underline"
+                  >
+                    <img
+                      className="dashboard-header-right__avatar"
+                      src={backendData.avatar}
+                      alt="profile"
+                    />
+                  </Link>
                 ) : (
                   ""
                 )}
@@ -306,46 +267,57 @@ const Dashboard = () => {
               showActiveProjects &&
               !showNewCollabs ? (
                 <>
-                  <div className="dashboard-header dashboard-header--justify-right">
-                    <button
-                      onClick={() => {
-                        setShowCreateProjectModal(true);
+                  {showCreateProjectModal ? (
+                    <CreateProjectModal
+                      isOpen={showCreateProjectModal}
+                      onClose={() => {
+                        setShowCreateProjectModal(false);
+                        navigate("/dashboard");
                       }}
-                      className="form__btn-dotted form__btn-dotted--medium"
+                      project={projectModal}
+                      role={auth.roles}
+                      brand={backendData.firstName}
+                      OVERLAY_STYLES={OVERLAY_STYLES}
                     >
-                      <FontAwesomeIcon icon={faPlus} className="icon-left" />
-                      Create a New Project
-                    </button>
-                    {showCreateProjectModal ? (
-                      <CreateProjectModal
-                        isOpen={showCreateProjectModal}
-                        onClose={() => {
-                          setShowCreateProjectModal(false);
-                          setShowActiveProjects(false);
-                          setShowNewCollabs(true);
-                        }}
-                        project={projectModal}
-                        role={auth.roles}
-                        brand={backendData.firstName}
-                        OVERLAY_STYLES={OVERLAY_STYLES}
-                      >
-                        Create Project
-                      </CreateProjectModal>
-                    ) : (
-                      ""
-                      // <p>showModal is set to false.</p>
-                    )}
-                  </div>
+                      Create Project
+                    </CreateProjectModal>
+                  ) : (
+                    ""
+                  )}
                 </>
               ) : (
                 ""
               )}
               {/* Contains all the active project cards */}
               {showActiveProjects ? (
-                <ActiveProjects
-                  currentProjects={currentProjects}
-                  expandProject={expandProject}
-                />
+                <>
+                  {auth.roles.includes(3000) &&
+                  showActiveProjects &&
+                  !showNewCollabs ? (
+                    <>
+                      <div className="dashboard-header dashboard-header--justify-right">
+                        <button
+                          onClick={() => {
+                            setShowCreateProjectModal(true);
+                          }}
+                          className="form__btn-dotted form__btn-dotted--medium"
+                        >
+                          <FontAwesomeIcon
+                            icon={faPlus}
+                            className="icon-left"
+                          />
+                          Create a New Project
+                        </button>{" "}
+                      </div>{" "}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <ActiveProjects
+                    currentProjects={currentProjects}
+                    expandProject={expandProject}
+                  />
+                </>
               ) : (
                 ""
               )}

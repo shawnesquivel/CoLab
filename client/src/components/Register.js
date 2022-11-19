@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/register.scss";
+import "../styles/register.scss";
 import influencerHeadshot from "../assets/register/black-model-afro.png";
 import signUpImg from "../assets/signup.png";
 import RegisterForm from "./RegisterForm";
@@ -44,47 +45,51 @@ const Register = () => {
 
   return (
     <>
-      <Links />
+      <main className="app-outer">
+        <div className="app-inner--narrow">
+          <Links />
 
-      {/* Landing Page */}
-      {showLanding ? (
-        <section className="landing">
-          <div className="landing__container-left">
-            {/* Show the Landing Page */}
-            {showRegisterSelect ? (
-              <RegisterSelect handleShowForms={handleShowForms} />
-            ) : (
-              ""
-            )}
-            {/* Show the Influencer Page */}
-            {showForm ? (
-              <RegisterForm
-                showInfluencerForm={showInfluencerForm}
-                showBrandForm={showBrandForm}
-                handleShowForms={handleShowForms}
-                role={showInfluencerForm ? "influencer" : "brand"}
-              />
-            ) : (
-              ""
-            )}
-          </div>
-          {!showInfluencerForm && !showBrandForm ? (
-            <img
-              src={influencerHeadshot}
-              alt="headshot of a model in a black coat"
-              className="landing__img-right"
-            />
+          {/* Landing Page */}
+          {showLanding ? (
+            <section className="landing">
+              <div className="landing__container-left">
+                {/* Show the Landing Page */}
+                {showRegisterSelect ? (
+                  <RegisterSelect handleShowForms={handleShowForms} />
+                ) : (
+                  ""
+                )}
+                {/* Show the Influencer Page */}
+                {showForm ? (
+                  <RegisterForm
+                    showInfluencerForm={showInfluencerForm}
+                    showBrandForm={showBrandForm}
+                    handleShowForms={handleShowForms}
+                    role={showInfluencerForm ? "influencer" : "brand"}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+              {!showInfluencerForm && !showBrandForm ? (
+                <img
+                  src={influencerHeadshot}
+                  alt="headshot of a model in a black coat"
+                  className="landing__img-right"
+                />
+              ) : (
+                <img
+                  src={signUpImg}
+                  alt="headshot of a model in a black coat"
+                  className="landing__img-right"
+                />
+              )}
+            </section>
           ) : (
-            <img
-              src={signUpImg}
-              alt="headshot of a model in a black coat"
-              className="landing__img-right"
-            />
+            ""
           )}
-        </section>
-      ) : (
-        ""
-      )}
+        </div>
+      </main>
     </>
   );
 };

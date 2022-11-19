@@ -1,5 +1,28 @@
 @use "partials/index" as *;
 
+.app-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // min-height: 100vh;
+  // padding: 1rem 0.5rem;
+  // margin: $margin-top $margin-sides;
+}
+
+.app-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  &--narrow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 80%;
+  }
+}
+
 .landing {
   display: flex;
   flex-direction: row;
@@ -130,6 +153,7 @@
     margin-bottom: 0.3rem;
     color: $text-dark-grey;
     font-size: 0.85rem;
+    background-color: $background-light-color;
   }
 
   &__btn-cta {

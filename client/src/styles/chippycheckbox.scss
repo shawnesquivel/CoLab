@@ -1,0 +1,68 @@
+@use "partials/index" as *;
+
+.chippy {
+  list-style: none;
+
+  &__li {
+    display: inline;
+    margin-right: 1.5rem;
+  }
+
+  &__label {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(139, 139, 139, 0.3);
+    color: #adadad;
+    border-radius: 25px;
+    white-space: nowrap;
+    margin: 3px 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+    padding: 8px 12px;
+    cursor: pointer;
+
+    &::before {
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      font-size: 12px;
+      padding: 2px 6px 2px 2px;
+    }
+  }
+
+  &__input {
+    display: absolute;
+    position: absolute;
+    opacity: 0;
+  }
+}
+
+li input[type="checkbox"]:checked + label {
+  border: 1px solid #fcfcfc;
+  background: linear-gradient(
+    87.41deg,
+    #e2bd84 0.47%,
+    #d57f00 13.06%,
+    #d56600 27.93%,
+    #b52f4f 51.59%,
+    #b52f8f 74.65%,
+    #281698 99.38%
+  );
+  color: #fff;
+  transition: all 0.2s;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+li input[type="checkbox"]:focus + label {
+  border: 2px solid #e9a1ff;
+  border: 1px solid #fcfcfc;
+}

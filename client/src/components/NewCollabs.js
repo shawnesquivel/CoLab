@@ -7,6 +7,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../styles/chippycheckbox.scss";
 const moment = require("moment");
 
 // to do: make current projects the entire Projects database.
@@ -117,80 +118,69 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
     <section className="new-collabs">
       <div className="new-collabs__header">
         <form action="form">
-          <h4 className="form__text form__text--subheader">New Collabs</h4>
-          <p className="form__instructions">
-            Use the filters to refine your search.
-          </p>
-          <div className="label-row-container  label-row-container--left">
-            <div className="label-row-container__col">
-              <label htmlFor="search" className="form__label">
-                Search
-              </label>
-              <input
-                type="text"
-                className="form__input "
-                onChange={(e) => {
-                  filterProjectByQuery(e.target.value, "text");
-                }}
-              />
-            </div>
-            <div className="label-col-container">
-              <p className="form__label">Platform</p>
-              <div className="label-col-container__row">
-                <label
-                  htmlFor="instagramChecked"
-                  className="form__label--checkbox"
-                >
-                  <input
-                    className="form__checkbox"
-                    name="instagramChecked"
-                    type="checkbox"
-                    checked={instagramChecked}
-                    onChange={(e) => {
-                      setInstagramChecked(!instagramChecked);
-                    }}
-                  />
-                  {/* <FontAwesomeIcon className="icon-left" icon={faInstagram} /> */}
+          <label htmlFor="search" className="form__label"></label>
+          <input
+            type="text"
+            className="form__input form__input--full"
+            onChange={(e) => {
+              filterProjectByQuery(e.target.value, "text");
+            }}
+            placeholder="Search keywords, brands, etc"
+          />
+          <div className="label-col-container__row">
+            <ul className="chippy">
+              <li className="chippy__li">
+                <input
+                  type="checkbox"
+                  id="instagram"
+                  value="instagram"
+                  name="instagramChecked"
+                  checked={instagramChecked}
+                  onChange={(e) => {
+                    setInstagramChecked(!instagramChecked);
+                  }}
+                  className="chippy__input"
+                />
+                <label htmlFor="instagram" className="chippy__label">
+                  <FontAwesomeIcon className="icon-left" icon={faInstagram} />
                   Instagram
                 </label>
-              </div>
-              <div className="label-col-container__row">
-                <label
-                  htmlFor="tiktokChecked"
-                  className="form__label--checkbox"
-                >
-                  <input
-                    className="form__checkbox"
-                    name="tiktokChecked"
-                    type="checkbox"
-                    checked={tiktokChecked}
-                    onChange={(e) => {
-                      setTiktokChecked(!tiktokChecked);
-                    }}
-                  />
-                  {/* <FontAwesomeIcon className="icon-left" icon={faTiktok} /> */}
+              </li>
+              <li className="chippy__li">
+                <input
+                  type="checkbox"
+                  id="tiktok"
+                  value="tiktok"
+                  name="tiktokChecked"
+                  checked={tiktokChecked}
+                  onChange={(e) => {
+                    setTiktokChecked(!tiktokChecked);
+                  }}
+                  className="chippy__input"
+                />
+                <label htmlFor="tiktok" className="chippy__label">
+                  <FontAwesomeIcon className="icon-left" icon={faTiktok} />
                   Tik Tok
                 </label>
-              </div>
-              <div className="label-col-container__row">
-                <label
-                  htmlFor="youtubeChecked"
-                  className="form__label--checkbox"
-                >
-                  <input
-                    className="form__checkbox"
-                    name="youtubeChecked"
-                    type="checkbox"
-                    checked={youtubeChecked}
-                    onChange={(e) => {
-                      setYouTubeChecked(!youtubeChecked);
-                    }}
-                  />
-                  {/* <FontAwesomeIcon className="icon-left" icon={faYoutube} /> */}
+              </li>
+              <li className="chippy__li">
+                <input
+                  type="checkbox"
+                  id="youtube"
+                  value="youtube"
+                  name="youtubeChecked"
+                  checked={youtubeChecked}
+                  onChange={(e) => {
+                    setYouTubeChecked(!youtubeChecked);
+                  }}
+                  className="chippy__input"
+                />
+                <label htmlFor="youtube" className="chippy__label">
+                  <FontAwesomeIcon className="icon-left" icon={faYoutube} />
                   YouTube
                 </label>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </form>
       </div>
