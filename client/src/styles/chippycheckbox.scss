@@ -12,7 +12,7 @@
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.9);
     border: 2px solid rgba(139, 139, 139, 0.3);
-    color: #adadad;
+    color: $text-dark-color;
     border-radius: 25px;
     white-space: nowrap;
     margin: 3px 0px;
@@ -23,7 +23,7 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition: all 0.2s;
-    padding: 8px 12px;
+    padding: 8px 22px;
     cursor: pointer;
 
     &::before {
@@ -48,6 +48,17 @@
 
 li input[type="checkbox"]:checked + label {
   border: 1px solid #fcfcfc;
+
+  color: #fff;
+  transition: all 0.2s;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+li input[type="checkbox"]:focus + label {
+  border: 1px solid #fcfcfc;
+}
+
+#instagram:checked + label {
   background: linear-gradient(
     87.41deg,
     #e2bd84 0.47%,
@@ -57,12 +68,26 @@ li input[type="checkbox"]:checked + label {
     #b52f8f 74.65%,
     #281698 99.38%
   );
-  color: #fff;
-  transition: all 0.2s;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+#tiktok:checked + label {
+  background: radial-gradient(
+    100% 976.56% at 0.33% 81.25%,
+    #69c9d0 7.29%,
+    #6e36a6 51.56%,
+    #ee1d52 100%
+  );
+}
+#youtube:checked + label {
+  background: radial-gradient(
+    100% 1336.82% at 0.28% 71.88%,
+    #fd0000 1.77%,
+    #edc6c6 100%
+  );
 }
 
-li input[type="checkbox"]:focus + label {
-  border: 2px solid #e9a1ff;
-  border: 1px solid #fcfcfc;
+.new-collabs {
+  &__header {
+    padding: 1.5rem 2rem 0;
+    background-color: #f5f5f5;
+  }
 }
