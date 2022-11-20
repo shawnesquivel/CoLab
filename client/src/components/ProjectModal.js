@@ -270,12 +270,12 @@ const ProjectModal = ({
           <h4 className="project-modal__subheading">{project.company}</h4>
 
           <div className="project-modal-contract">
-            <nav className="project-modal__navbar">
+            <nav className="project-modal-navbar">
               <h3
                 className={
                   showPageOne
-                    ? "project-modal-page-highlight"
-                    : "project-modal-page-greyed"
+                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
+                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
                 }
               >
                 Overview
@@ -283,8 +283,8 @@ const ProjectModal = ({
               <h3
                 className={
                   showPageTwo
-                    ? "project-modal-page-highlight"
-                    : "project-modal-page-greyed"
+                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
+                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
                 }
               >
                 Payment/Products
@@ -292,8 +292,8 @@ const ProjectModal = ({
               <h3
                 className={
                   showPageThree
-                    ? "project-modal-page-highlight"
-                    : "project-modal-page-greyed"
+                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
+                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
                 }
               >
                 Contract
@@ -301,8 +301,8 @@ const ProjectModal = ({
               <h3
                 className={
                   showPageFour
-                    ? "project-modal-page-highlight"
-                    : "project-modal-page-greyed"
+                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
+                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
                 }
               >
                 Guidelines

@@ -44,8 +44,8 @@
     // width: 300px;
     max-width: 100%;
     height: auto;
-    // height: 816px;
-    max-height: 816px;
+    // height: 81rem;
+    max-height: 81rem;
     // border-radius: 30px;
   }
 
@@ -109,18 +109,18 @@
     }
 
     &__label {
-      font-size: 16px;
+      font-size: 1rem;
       color: #1f1f1f;
       margin-bottom: 0.1rem;
     }
     &__input {
-      font-size: 16px;
+      font-size: 1rem;
       padding: 0.25rem 0.5rem;
       border-radius: 0.5rem;
       margin-bottom: 1rem;
       border-radius: 12px;
       &--invalid {
-        font-size: 16px;
+        font-size: 1rem;
         padding: 0.25rem 0.5rem;
         border-radius: 0.5rem;
         margin-bottom: 1rem;

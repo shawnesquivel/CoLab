@@ -623,7 +623,7 @@ label {
 
 .stripe-btn {
   display: block;
-  font-size: 16px;
+  font-size: 1rem;
   width: calc(100% - 30px);
   height: 40px;
   margin: 40px 15px 0;

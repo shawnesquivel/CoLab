@@ -25,7 +25,7 @@
     object-fit: cover;
     max-width: 100%;
     height: auto;
-    max-height: 816px;
+    max-height: 81rem;
   }
 
   &__folder-logo {
@@ -159,12 +159,12 @@
   }
 
   &__label {
-    font-size: 16px;
+    font-size: 1rem;
     color: #1f1f1f;
     margin-bottom: 0.1rem;
   }
   &__input {
-    font-size: 16px;
+    font-size: 1rem;
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
@@ -185,7 +185,7 @@
     }
 
     &--invalid {
-      font-size: 16px;
+      font-size: 1rem;
       padding: 0.25rem 0.5rem;
       border-radius: 0.5rem;
       margin-bottom: 1rem;

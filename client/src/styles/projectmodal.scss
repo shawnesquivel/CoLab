@@ -43,6 +43,7 @@
   position: relative;
   top: 0;
   left: 0;
+  background-color: $background-light-grey;
   //image
   &__under {
     position: relative;
@@ -69,11 +70,17 @@
   top: 50%;
   left: 25.5%;
   transform: "translate(-50%, -50%)";
-  background-color: (--background-light-color);
   z-index: 1000;
 
+  &-contract {
+    background: $background-light-color;
+    border: 1px solid #d6d6d6;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
+    border-radius: 12px;
+  }
+
   &__text {
-    font-size: 16px;
+    font-size: 1rem;
     color: $text-dark-color;
   }
 
@@ -99,6 +106,7 @@
     flex-direction: column;
     padding: 2rem 4rem;
     gap: 15px;
+    background-color: $background-light-grey;
   }
 
   &__submission {
@@ -129,12 +137,26 @@
     font-size: 36px;
   }
 
-  &__navbar {
+  &-navbar {
     display: flex;
     flex-wrap: row;
-    margin: 15px;
     justify-content: left;
+    border-bottom: 1px solid $background-dark-grey;
     gap: 50px;
+    &__text {
+      color: $text-dark-color;
+      font-weight: 400;
+      font-size: 1rem;
+
+      &--highlight {
+        border-bottom: 1px solid $background-dark-color;
+        padding-bottom: 10px;
+      }
+
+      &--greyed {
+        color: #6060604c;
+      }
+    }
   }
   //
   /* Project Modal - Page One - Overview */
@@ -174,16 +196,6 @@
   font-size: 1.25rem;
 }
 
-.project-modal-page-highlight {
-  border-bottom: 6px solid var(--background-dark-color);
-  padding-bottom: 10px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-
-.project-modal-page-greyed {
-  color: #6060604c;
-}
 .project-modal-title {
   color: var(--text-dark-color);
 }
