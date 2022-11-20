@@ -1,13 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import {
   faInstagram,
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-
 import "../styles/createprojectmodal.scss";
 import "../styles/dashboard.scss";
 
@@ -16,9 +14,6 @@ const ProjectModalPageOneReview = ({
   instagramTask,
   youtubeTask,
   tiktokTask,
-  instagramSubmission,
-  youtubeSubmission,
-  tiktokSubmission,
 }) => {
   return (
     <>

@@ -72,6 +72,35 @@
   background-color: (--background-light-color);
   z-index: 1000;
 
+  &__text {
+    font-size: 16px;
+    color: $text-dark-color;
+  }
+
+  &__heading {
+    font-size: 30px;
+    color: $text-dark-color;
+    font-family: "SF Pro";
+  }
+
+  &__subheading {
+    font-size: 22px;
+    color: $text-dark-color;
+    font-weight: 400;
+  }
+
+  &-page {
+    display: flex;
+    flex-wrap: column;
+  }
+
+  &-container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 4rem;
+    gap: 15px;
+  }
+
   &__submission {
     border-radius: 10px;
     &--small {
@@ -104,7 +133,7 @@
     display: flex;
     flex-wrap: row;
     margin: 15px;
-    justify-content: center;
+    justify-content: left;
     gap: 50px;
   }
   //
@@ -159,13 +188,6 @@
   color: var(--text-dark-color);
 }
 
-.project-modal-page {
-  display: flex;
-  flex-wrap: column;
-  gap: 20px;
-  padding: 0 2rem;
-}
-
 /* Page 2: Products */
 
 .project-modal-add-product {
@@ -196,13 +218,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.project-modal-container {
-  padding-top: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
 .deadline-text {
