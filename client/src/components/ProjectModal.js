@@ -29,6 +29,7 @@ import ProjectModalPageTwo from "./ProjectModalPageTwo";
 import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
+import ProjectModalNegotiateBtn from "./ProjectModalNegotiateBtn";
 import holidayBackground from "../assets/holiday-background.png";
 
 const UPDATEPROJECT_URL = "/api/updateproject";
@@ -100,9 +101,8 @@ const ProjectModal = ({
   };
 
   useEffect(() => {
-    console.log("project", project);
-    console.log("user", user);
-    console.log(OVERLAY_STYLES);
+    console.log("project:", project);
+    console.log("user:", user);
   }, []);
   //  Attached to each button - will change the project status
   const handleSubmit = async (action, e) => {
@@ -431,21 +431,24 @@ const ProjectModal = ({
                   )}
                 </section>
 
-                <div className="comments-container">
-                  <button
-                    onClick={() => {
-                      setShowProjectComments(!showProjectComments);
-                    }}
-                    className="form__btn-dotted form__btn-dotted--medium"
-                  >
-                    {!showProjectComments ? "Show Comments" : "Hide Comments"}
-                  </button>
+                {/* <div className="comments-container">
+                  {project.status !== "Reviewing Contract" &&
+                  project.status !== "no influencer assigned" ? (
+                    <button
+                      onClick={() => {
+                        setShowProjectComments(!showProjectComments);
+                      }}
+                      className="form__btn-dotted form__btn-dotted--medium"
+                    >
+                      {!showProjectComments ? "Show Comments" : "Hide Comments"}
+                    </button>
+                  ) : (
+                    ""
+                  )}
 
-                  {/* User wants to view project comments */}
                   {project.commentList && showProjectComments ? (
                     <div className="comment-list">
                       <h3 className="comment-list__header">Recent Activity</h3>
-                      {/* Reverse the comment array (to get newest first) and display  */}
                       {[...project.commentList].reverse().map((comment) => {
                         const commentArr = comment.split("m: ");
                         const date = commentArr[0] + "m";
@@ -464,21 +467,7 @@ const ProjectModal = ({
                   ) : (
                     ""
                   )}
-                </div>
-                <div className="btn-container btn-container--center btn-container--col">
-                  {/* Show Comments - Always Active */}
-
-                  <button
-                    className="form__btn form__btn-next"
-                    type="button"
-                    onClick={() => {
-                      setShowPageOne(false);
-                      setShowPageTwo(true);
-                    }}
-                  >
-                    Continue
-                  </button>
-                </div>
+                </div> */}
               </>
             ) : (
               ""
@@ -723,6 +712,28 @@ const ProjectModal = ({
               ""
             )}
           </div>
+          {/* Renders Buttons */}
+          {showPageOne ? (
+            <div className="btn-container btn-container--center mt-1p5">
+              {/* Show Comments - Always Active */}
+              <ProjectModalNegotiateBtn
+                disabled={!showPageFive ? true : false}
+                onClick={() => setShowAddComment(true)}
+              />
+              <button
+                className="form__btn form__btn-next"
+                type="button"
+                onClick={() => {
+                  setShowPageOne(false);
+                  setShowPageTwo(true);
+                }}
+              >
+                Continue
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>,

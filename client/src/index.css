@@ -637,7 +637,4 @@ label {
   transition: all 100ms ease-in-out;
   will-change: transform, background-color, box-shadow;
   border: none;
-} */
-
-
-
+}

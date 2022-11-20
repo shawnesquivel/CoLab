@@ -77,6 +77,7 @@
     border: 1px solid #d6d6d6;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
     border-radius: 12px;
+    height: 31.25rem;
   }
 
   &__text {
@@ -85,7 +86,7 @@
   }
 
   &__heading {
-    font-size: 30px;
+    font-size: 2rem;
     color: $text-dark-color;
     font-family: "SF Pro";
   }
@@ -94,18 +95,39 @@
     font-size: 22px;
     color: $text-dark-color;
     font-weight: 400;
+    margin: 1.125rem 0 1rem;
   }
 
   &-page {
     display: flex;
     flex-wrap: column;
+    gap: 1.75rem;
+    padding: 1.75rem 1.5rem;
+
+    &__group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    &__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      color: $text-dark-grey;
+      text-transform: uppercase;
+    }
+
+    &__value {
+      font-size: 1rem;
+      color: $text-dark-color;
+    }
   }
 
   &-container {
     display: flex;
     flex-direction: column;
     padding: 2rem 4rem;
-    gap: 15px;
+    height: 100vh;
     background-color: $background-light-grey;
   }
 
@@ -142,12 +164,15 @@
     flex-wrap: row;
     justify-content: left;
     border-bottom: 1px solid $background-dark-grey;
+    padding: 1rem 0 0;
     gap: 50px;
     &__text {
       color: $text-dark-color;
       font-weight: 400;
       font-size: 1rem;
-
+      padding: 0 1rem;
+      width: 15%;
+      text-align: center;
       &--highlight {
         border-bottom: 1px solid $background-dark-color;
         padding-bottom: 10px;
@@ -206,10 +231,10 @@
   display: flex;
   flex-wrap: row;
   border: 1px dashed #000;
-  border-radius: 25px;
-  padding: 30px;
-  gap: 30px;
-  margin-bottom: 15px;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  gap: 2rem;
+  margin-bottom: 1rem;
 }
 
 .project-modal-product-photo {
@@ -222,7 +247,7 @@
 .project-modal-examples-container {
   display: flex;
   flex-wrap: row;
-  gap: 30px;
+  gap: 2rem;
   justify-content: center;
 }
 
@@ -238,7 +263,7 @@
 
 .deadline-text-large {
   font-size: 1rem;
-  margin-top: 10px;
+  margin-top: 0.625rem;
 }
 
 .project-modal-tasks-card-header {
