@@ -4,6 +4,7 @@ import {
   faTimes,
   faPencil,
   faSquareMinus,
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactDOM from "react-dom";
@@ -14,6 +15,7 @@ import {
   faStripe,
   faPaypal,
 } from "@fortawesome/free-brands-svg-icons";
+
 import campaignPhoto from "../assets/cloudpaint.png";
 import axios from "../api/axios";
 import StripeContainer from "./StripeContainer";
@@ -27,6 +29,8 @@ import ProjectModalPageTwo from "./ProjectModalPageTwo";
 import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
+import holidayBackground from "../assets/holiday-background.png";
+
 const UPDATEPROJECT_URL = "/api/updateproject";
 
 const MODAL_STYLES = {
@@ -35,7 +39,6 @@ const MODAL_STYLES = {
   right: "0%",
   transform: "translate(0%, -50%)",
   backgroundColor: "#fefcfb",
-  padding: "30px",
   zIndex: 1000,
 };
 
@@ -58,8 +61,6 @@ const ProjectModal = ({
   const [showPageThree, setShowPageThree] = useState(false); // contract
   const [showPageFour, setShowPageFour] = useState(false); // calendar
   const [showPageFive, setShowPageFive] = useState(false); // success page
-
-  // 2 -  Influencer Upload
 
   // Page Five - Accept Project
   const [showSuccess, setShowSuccess] = useState(false);
@@ -101,6 +102,7 @@ const ProjectModal = ({
   useEffect(() => {
     console.log("project", project);
     console.log("user", user);
+    console.log(OVERLAY_STYLES);
   }, []);
   //  Attached to each button - will change the project status
   const handleSubmit = async (action, e) => {
@@ -236,19 +238,23 @@ const ProjectModal = ({
     // #to-do: switch from in-line style to className style
     <div style={OVERLAY_STYLES} className="">
       <div style={MODAL_STYLES} className="project-modal">
+        <div className="stack">
+          <img src={holidayBackground} alt="" className="stack__under" />
+          <button onClick={onClose} className="btn-hide stack__over">
+            <FontAwesomeIcon icon={faX} className="icon-medium" />
+          </button>
+        </div>
+
         <div className="flex-row">
           <h1 className="form__text form__text--header">
             {project.company}: {project.title}
           </h1>
-          <button onClick={onClose} className="btn-light btn-close-project">
-            Close Project <FontAwesomeIcon icon={faTimes} />
-          </button>
         </div>
         <div className="project-modal-container">
           {showPageFive ? (
             ""
           ) : (
-            <div className="project-modal-navbar">
+            <div className="project-modal__navbar">
               <h3
                 className={
                   showPageOne
