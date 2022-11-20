@@ -14,10 +14,6 @@ const ProjectModalPageOneReview = ({
   description,
   reviewDeadline,
   deadline,
-  deadlineTime,
-  instagramTask,
-  youtubeTask,
-  tiktokTask,
 }) => {
   return (
     <>

@@ -474,35 +474,9 @@ const ProjectModal = ({
             )}
 
             {showPageTwo ? (
-              <>
+              <section className="project-modal-page">
                 <ProjectModalPageTwo {...data} />
-                {!showSuccess ? (
-                  <div className="btn-holder">
-                    <button
-                      className="form__btn-next"
-                      type="button"
-                      onClick={() => {
-                        setShowPageTwo(false);
-                        setShowPageOne(true);
-                      }}
-                    >
-                      Go Back
-                    </button>
-                    <button
-                      className="form__btn form__btn-next"
-                      type="button"
-                      onClick={() => {
-                        setShowPageTwo(false);
-                        setShowPageThree(true);
-                      }}
-                    >
-                      Continue
-                    </button>
-                  </div>
-                ) : (
-                  <p>Success!</p>
-                )}
-              </>
+              </section>
             ) : (
               ""
             )}
@@ -713,27 +687,50 @@ const ProjectModal = ({
             )}
           </div>
           {/* Renders Buttons */}
-          {showPageOne ? (
-            <div className="btn-container btn-container--center mt-1p5">
-              {/* Show Comments - Always Active */}
-              <ProjectModalNegotiateBtn
-                disabled={!showPageFive ? true : false}
-                onClick={() => setShowAddComment(true)}
-              />
-              <button
-                className="form__btn form__btn-next"
-                type="button"
-                onClick={() => {
-                  setShowPageOne(false);
-                  setShowPageTwo(true);
-                }}
-              >
-                Continue
-              </button>
-            </div>
-          ) : (
-            ""
-          )}
+          <>
+            {showPageOne ? (
+              <div className="btn-container btn-container--center mt-1p5">
+                {/* Show Comments - Always Active */}
+                <ProjectModalNegotiateBtn
+                  disabled={!showPageFive ? true : false}
+                  onClick={() => setShowAddComment(true)}
+                />
+                <button
+                  className="form__btn form__btn-next"
+                  type="button"
+                  onClick={() => {
+                    setShowPageOne(false);
+                    setShowPageTwo(true);
+                  }}
+                >
+                  Continue
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {showPageTwo ? (
+              <div className="btn-container btn-container--center mt-1p5">
+                <ProjectModalNegotiateBtn
+                  disabled={!showPageFive ? true : false}
+                  onClick={() => setShowAddComment(true)}
+                />
+                <button
+                  className="form__btn form__btn-next"
+                  type="button"
+                  onClick={() => {
+                    setShowPageTwo(false);
+                    setShowPageThree(true);
+                  }}
+                >
+                  Continue
+                </button>
+              </div>
+            ) : (
+              <p>Success!</p>
+            )}
+          </>
         </div>
       </div>
     </div>,
