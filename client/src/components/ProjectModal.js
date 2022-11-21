@@ -373,7 +373,12 @@ const ProjectModal = ({
             </nav>
             {showProgress ? (
               <section className="project-modal-page project-modal-page--center">
-                <ProjectModalAccept acceptProject={acceptProject} />
+                <ProjectModalAccept
+                  acceptProject={acceptProject}
+                  showSuccess={showSuccess}
+                  cancel={() => showPage(1)}
+                  onClose={onClose}
+                />
               </section>
             ) : (
               ""
@@ -575,50 +580,55 @@ const ProjectModal = ({
           </div>
           <>
             {/*  Buttons */}
-            <div className="btn-container btn-container--center mt-1p5">
-              {role.includes(2000) &&
-              (project.status.toLowerCase() === "no influencer assigned" ||
-                project.status.toLowerCase() === "reviewing contract") &&
-              !showAddComment ? (
-                <button
-                  className={
-                    !showPageFour
-                      ? "btn-negotiate btn-negotiate--disabled"
-                      : "btn-negotiate"
-                  }
-                  onClick={() => setShowAddComment(!showAddComment)}
-                  disabled={!showPageFour ? true : false}
-                >
-                  <FontAwesomeIcon icon={faPencil} className="icon-left" />
-                  Negotiate
-                </button>
-              ) : (
-                ""
-              )}
 
-              {role.includes(2000) &&
-              (project.status === "Reviewing Contract" ||
-                project.status === "no influencer assigned") &&
-              !showAddComment ? (
-                <button
-                  type="button"
-                  className={
-                    showPageFour
-                      ? "btn-accept"
-                      : "btn-accept btn-accept--disabled"
-                  }
-                  disabled={!showPageFour ? true : false}
-                  onClick={() => {
-                    showPage(0);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faCheck} className="icon-left" />
-                  Accept
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
+            {!showProgress ? (
+              <div className="btn-container btn-container--center mt-1p5">
+                {role.includes(2000) &&
+                (project.status.toLowerCase() === "no influencer assigned" ||
+                  project.status.toLowerCase() === "reviewing contract") &&
+                !showAddComment ? (
+                  <button
+                    className={
+                      !showPageFour
+                        ? "btn-negotiate btn-negotiate--disabled"
+                        : "btn-negotiate"
+                    }
+                    onClick={() => setShowAddComment(!showAddComment)}
+                    disabled={!showPageFour ? true : false}
+                  >
+                    <FontAwesomeIcon icon={faPencil} className="icon-left" />
+                    Negotiate
+                  </button>
+                ) : (
+                  ""
+                )}
+
+                {role.includes(2000) &&
+                (project.status === "Reviewing Contract" ||
+                  project.status === "no influencer assigned") &&
+                !showAddComment ? (
+                  <button
+                    type="button"
+                    className={
+                      showPageFour
+                        ? "btn-accept"
+                        : "btn-accept btn-accept--disabled"
+                    }
+                    disabled={!showPageFour ? true : false}
+                    onClick={() => {
+                      showPage(0);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCheck} className="icon-left" />
+                    Accept
+                  </button>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
 
             {showAddComment ? (
               <form action="">
@@ -657,33 +667,6 @@ const ProjectModal = ({
           showPageFive &&
           role.includes(2000) ? (
             <div className="project-modal-title">
-              {!showSuccess ? (
-                <>
-                  <CreateProjectSummary {...data} />
-                </>
-              ) : (
-                <>
-                  <div className="btn-container btn-container--col">
-                    <p className="form__text form__text--subheader">
-                      {successMsg}
-                    </p>
-                    <button
-                      className="create-project__close-btn"
-                      onClick={() => {
-                        onClose();
-                        refreshDashboard();
-                      }}
-                      type="button"
-                    >
-                      <FontAwesomeIcon
-                        icon={faSquareMinus}
-                        className="icon-left"
-                      />
-                      Close
-                    </button>
-                  </div>
-                </>
-              )}
               <form action="">
                 {!showSuccess ? (
                   <>
