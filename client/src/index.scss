@@ -151,6 +151,9 @@ select {
 }
 
 .icon {
+  &-highlight {
+    color: $warning-color;
+  }
   &-copy {
     color: #323232;
   }
@@ -162,6 +165,9 @@ select {
   }
   &-medium {
     font-size: 1.5rem;
+  }
+  &-small {
+    font-size: 1rem;
   }
 }
 
@@ -248,10 +254,6 @@ select {
 
 .btn-page-five {
   width: 200px;
-}
-
-.icon-highlight {
-  color: var(--warning-color);
 }
 
 .bold-text {
@@ -537,6 +539,11 @@ select {
   flex-direction: column;
   justify-content: center;
 
+  &--accept {
+    align-items: center;
+    gap: 1rem;
+  }
+
   &__row {
     display: flex;
     flex-direction: row;
@@ -587,7 +594,10 @@ select {
     border-radius: 91px;
     padding: 8px 48px;
     width: 35%;
-
+    font-size: 1.25rem;
+    &--small {
+      width: 15%;
+    }
     &--disabled {
       background-color: $btn-grey-color;
       border: none;

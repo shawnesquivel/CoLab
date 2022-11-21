@@ -31,6 +31,7 @@ import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
 import holidayBackground from "../assets/holiday-background.png";
+import ProjectModalAccept from "./ProjectModalAccept";
 
 const UPDATEPROJECT_URL = "/api/updateproject";
 
@@ -62,7 +63,7 @@ const ProjectModal = ({
   const [showPageThree, setShowPageThree] = useState(false); // contract
   const [showPageFour, setShowPageFour] = useState(false); // calendar
   const [showPageFive, setShowPageFive] = useState(false); // success page
-
+  const [showProgress, setShowProgress] = useState(false);
   // Page Five - Accept Project
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -247,17 +248,21 @@ const ProjectModal = ({
   };
 
   const showPage = (page) => {
-    if (![1, 2, 3, 4, 5].includes(page)) {
+    if (![0, 1, 2, 3, 4, 5].includes(page)) {
       console.log("what!");
       return;
     }
 
+    setShowProgress(false);
     setShowPageOne(false);
     setShowPageTwo(false);
     setShowPageThree(false);
     setShowPageFour(false);
     setShowPageFive(false);
 
+    if (page === 0) {
+      setShowProgress(true);
+    }
     if (page === 1) {
       setShowPageOne(true);
     }
@@ -273,6 +278,12 @@ const ProjectModal = ({
     if (page === 5) {
       setShowPageFive(true);
     }
+  };
+
+  const acceptProject = (e) => {
+    handleSubmitReviewContract("accept", e);
+    setShowSuccess(true);
+    setSuccessMsg("You accepted the project!");
   };
 
   // To Do: Include the functionality for the user to upload deliverables
@@ -300,6 +311,21 @@ const ProjectModal = ({
 
           <div className="project-modal-contract">
             <nav className="project-modal-navbar">
+              {showProgress ? (
+                <button
+                  className={
+                    showProgress
+                      ? "btn-modal-navbar btn-modal-navbar--highlight"
+                      : "btn-modal-navbar btn-modal-navbar--greyed"
+                  }
+                  type="button"
+                  onClick={() => showPage(1)}
+                >
+                  Progress
+                </button>
+              ) : (
+                ""
+              )}
               <button
                 className={
                   showPageOne
@@ -345,7 +371,13 @@ const ProjectModal = ({
                 Guidelines{" "}
               </button>
             </nav>
-
+            {showProgress ? (
+              <section className="project-modal-page project-modal-page--center">
+                <ProjectModalAccept acceptProject={acceptProject} />
+              </section>
+            ) : (
+              ""
+            )}
             {showPageOne ? (
               <>
                 <section className="project-modal-page">
@@ -358,6 +390,14 @@ const ProjectModal = ({
                   ) : (
                     ""
                   )}
+
+                  {role.includes(3000) &&
+                  project.status === "in progress/waiting for submission" ? (
+                    <ProjectModalPageOneReview {...data} />
+                  ) : (
+                    ""
+                  )}
+
                   {/* Influencer Has Accepted Prjoject => Can Upload Submissions */}
                   {project.status === "in progress/waiting for submission" &&
                   role.includes(2000) ? (
@@ -538,16 +578,18 @@ const ProjectModal = ({
             <div className="btn-container btn-container--center mt-1p5">
               {role.includes(2000) &&
               (project.status.toLowerCase() === "no influencer assigned" ||
-                project.status.toLowerCase() === "reviewing contract") ? (
+                project.status.toLowerCase() === "reviewing contract") &&
+              !showAddComment ? (
                 <button
                   className={
                     !showPageFour
                       ? "btn-negotiate btn-negotiate--disabled"
                       : "btn-negotiate"
                   }
-                  onClick={() => setShowAddComment(true)}
-                  disabled={showPageFour ? true : false}
+                  onClick={() => setShowAddComment(!showAddComment)}
+                  disabled={!showPageFour ? true : false}
                 >
+                  <FontAwesomeIcon icon={faPencil} className="icon-left" />
                   Negotiate
                 </button>
               ) : (
@@ -556,25 +598,58 @@ const ProjectModal = ({
 
               {role.includes(2000) &&
               (project.status === "Reviewing Contract" ||
-                project.status === "no influencer assigned") ? (
+                project.status === "no influencer assigned") &&
+              !showAddComment ? (
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowPageFour(false);
-                    setShowPageFive(true);
-                  }}
                   className={
                     showPageFour
                       ? "btn-accept"
                       : "btn-accept btn-accept--disabled"
                   }
+                  disabled={!showPageFour ? true : false}
+                  onClick={() => {
+                    showPage(0);
+                  }}
                 >
+                  <FontAwesomeIcon icon={faCheck} className="icon-left" />
                   Accept
                 </button>
               ) : (
                 ""
               )}
             </div>
+
+            {showAddComment ? (
+              <form action="">
+                <div className="label-col-container">
+                  <label htmlFor="comments" className="form__label">
+                    Request Changes
+                  </label>
+                  <input
+                    type="text"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="form__input"
+                  />
+                </div>
+                <div className="btn-container btn-container--center">
+                  <button
+                    type="submit"
+                    className="btn-accept"
+                    onClick={(e) => handleSubmit("modify", e)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faPencil}
+                      className="icon-left icon-small"
+                    />
+                    Submit
+                  </button>
+                </div>
+              </form>
+            ) : (
+              ""
+            )}
           </>
 
           {(project.status === "no influencer assigned" ||
@@ -613,18 +688,6 @@ const ProjectModal = ({
                 {!showSuccess ? (
                   <>
                     <div className="btn-container btn-container--center">
-                      <button
-                        type="button"
-                        className="form__btn-dotted form__btn-dotted--medium"
-                        onClick={(e) => {
-                          handleSubmitReviewContract("accept", e);
-                          setShowSuccess(true);
-                          setSuccessMsg("You accepted the project!");
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCheck} className="icon-left" />
-                        Accept Project
-                      </button>
                       <button
                         type="button"
                         className="form__btn-dotted form__btn-dotted--medium"
@@ -670,28 +733,6 @@ const ProjectModal = ({
                   ""
                 )}
               </form>
-              {showAddComment ? (
-                <form action="">
-                  <label htmlFor="comments">Add a new comment</label>
-                  <p>E.g., request new deadline date, increase payment price</p>
-                  <input
-                    type="text"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                  ></input>
-
-                  <button
-                    type="submit"
-                    className="btn-light"
-                    onClick={(e) => handleSubmit("modify", e)}
-                  >
-                    Submit modifications to proposal{" "}
-                    <FontAwesomeIcon icon={faPencil} />
-                  </button>
-                </form>
-              ) : (
-                ""
-              )}
             </div>
           ) : (
             ""
