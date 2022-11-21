@@ -580,10 +580,24 @@ select {
 }
 
 .btn {
+  &-accept {
+    background-color: $text-dark-color;
+    color: $text-light-color;
+    border: 1px solid $text-dark-color;
+    border-radius: 91px;
+    padding: 8px 48px;
+    width: 35%;
+
+    &--disabled {
+      background-color: $btn-grey-color;
+      border: none;
+    }
+  }
+  // project modal - contract accept button
   &-negotiate {
-    background-color: $btn-grey-color;
-    color: $btn-light-text-color;
-    border: none;
+    background-color: $text-light-color;
+    color: $text-dark-color;
+    border: 1px solid $text-dark-color;
     border-radius: 91px;
     padding: 8px 48px;
     width: 35%;
@@ -594,7 +608,6 @@ select {
 
     &--disabled {
       color: $text-dark-grey;
-      background-color: $text-light-color;
       border: 1px solid $btn-grey-color;
     }
   }

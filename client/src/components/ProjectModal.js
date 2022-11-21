@@ -563,9 +563,13 @@ const ProjectModal = ({
                     setShowPageFour(false);
                     setShowPageFive(true);
                   }}
-                  className="form__btn-dotted form__btn-dotted--large"
+                  className={
+                    showPageFour
+                      ? "btn-accept"
+                      : "btn-accept btn-accept--disabled"
+                  }
                 >
-                  Finish Reviewing
+                  Accept
                 </button>
               ) : (
                 ""
@@ -580,12 +584,6 @@ const ProjectModal = ({
             <div className="project-modal-title">
               {!showSuccess ? (
                 <>
-                  {/* <h2 className="project-modal-title">Finished Reviewing</h2>
-
-                  <p className="form__instructions">
-                    How would you like to proceed?
-                  </p> */}
-
                   <CreateProjectSummary {...data} />
                 </>
               ) : (
