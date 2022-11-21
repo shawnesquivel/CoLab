@@ -1,11 +1,6 @@
 import React from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import campaignPhoto from "../assets/cloudpaint.png";
 
 const ProjectModalPageTwo = ({
-  status,
   paymentMethod,
   paymentPrice,
   paymentProduct,

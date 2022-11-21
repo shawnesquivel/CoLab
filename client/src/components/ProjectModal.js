@@ -26,6 +26,7 @@ import ProjectModalPageOneReview from "./ProjectModalPageOneReview";
 import ProjectModalPageOneInProgress from "./ProjectModalPageOneInProgress";
 import ProjectModalPageOneSubmitted from "./ProjectModalPageOneSubmitted";
 import ProjectModalPageTwo from "./ProjectModalPageTwo";
+import ProjectModalPageThree from "./ProjectModalPageThree";
 import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
@@ -482,8 +483,8 @@ const ProjectModal = ({
             )}
             {showPageThree ? (
               <section className="project-modal-page">
-                <h1 className="form__text form__text--subheader">Contract</h1>
-                <Contract {...data} />
+                {/* <Contract {...data} /> */}
+                <ProjectModalPageThree {...data} />
 
                 <div className="btn-holder">
                   <button
@@ -728,7 +729,7 @@ const ProjectModal = ({
                 </button>
               </div>
             ) : (
-              <p>Success!</p>
+              ""
             )}
           </>
         </div>
