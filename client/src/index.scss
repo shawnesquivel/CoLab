@@ -580,6 +580,13 @@ select {
 }
 
 .btn {
+  // project modal page 4 (guidelines)
+  &-copy {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+  }
+
   &-dotted {
     border: 1px dashed $form-border-color;
     color: $text-dark-color;

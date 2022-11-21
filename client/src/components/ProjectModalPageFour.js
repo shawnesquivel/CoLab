@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BtnCopy from "./BtnCopy";
 
 const ProjectModalPageFour = ({
   instagramExample,
@@ -78,7 +79,7 @@ const ProjectModalPageFour = ({
           <div className="project-modal-page__group project-modal-page__group--guidelines">
             <div className="label-row-container label-row-container--justify-left">
               <h4 className="project-modal-page__label">Hashtags</h4>
-              <FontAwesomeIcon icon={faCopy} className="icon-copy" />
+              <BtnCopy strArrToCopy={hashtags} specialChar={"#"} />
             </div>
             <div className="keywords-container keywords-container--guidelines">
               {hashtags.map((word, index) => (
@@ -91,7 +92,7 @@ const ProjectModalPageFour = ({
           <div className="project-modal-page__group project-modal-page__group--guidelines">
             <div className="label-row-container label-row-container--justify-left">
               <h4 className="project-modal-page__label">Required Phrases</h4>
-              <FontAwesomeIcon icon={faCopy} className="icon-copy" />
+              <BtnCopy strArrToCopy={phrases} />
             </div>
             <div className="keywords-container keywords-container--guidelines">
               {phrases.map((word, index) => (
@@ -107,7 +108,7 @@ const ProjectModalPageFour = ({
           <div className="project-modal-page__group project-modal-page__group--guidelines">
             <div className="label-row-container label-row-container--justify-left">
               <h4 className="project-modal-page__label">Tags</h4>
-              <FontAwesomeIcon icon={faCopy} className="icon-copy" />
+              <BtnCopy strArrToCopy={tags} specialChar={"@"} />
             </div>
             <div className="keywords-container keywords-container--guidelines">
               {tags.map((word, index) => (
@@ -120,12 +121,12 @@ const ProjectModalPageFour = ({
 
           <div className="project-modal-page__group project-modal-page__group--guidelines">
             <div className="label-row-container label-row-container--justify-left">
-              <h4 className="project-modal-page__label">Tags</h4>
-              <FontAwesomeIcon icon={faCopy} className="icon-copy" />
+              <h4 className="project-modal-page__label">Link In Bio</h4>
+              <BtnCopy strArrToCopy={linkInBio} />
             </div>
             <div className="keywords-container keywords-container--guidelines">
               <div className="keywords-item">
-                <span className="keywords-text"> {linkInBio}</span>
+                <span className="keywords-text">{linkInBio}</span>
               </div>
             </div>
           </div>
