@@ -30,7 +30,6 @@ import ProjectModalPageThree from "./ProjectModalPageThree";
 import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
-import ProjectModalNegotiateBtn from "./ProjectModalNegotiateBtn";
 import holidayBackground from "../assets/holiday-background.png";
 
 const UPDATEPROJECT_URL = "/api/updateproject";
@@ -533,255 +532,172 @@ const ProjectModal = ({
             ) : (
               ""
             )}
+          </div>
+          <>
+            {/*  Buttons */}
+            <div className="btn-container btn-container--center mt-1p5">
+              {role.includes(2000) &&
+              (project.status.toLowerCase() === "no influencer assigned" ||
+                project.status.toLowerCase() === "reviewing contract") ? (
+                <button
+                  className={
+                    !showPageFour
+                      ? "btn-negotiate btn-negotiate--disabled"
+                      : "btn-negotiate"
+                  }
+                  onClick={() => setShowAddComment(true)}
+                  disabled={showPageFour ? true : false}
+                >
+                  Negotiate
+                </button>
+              ) : (
+                ""
+              )}
 
-            {(project.status === "no influencer assigned" ||
-              project.status === "Reviewing Contract") &&
-            showPageFive &&
-            role.includes(2000) ? (
-              <div className="project-modal-title">
-                {" "}
-                {!showSuccess ? (
-                  <>
-                    {/* <h2 className="project-modal-title">Finished Reviewing</h2>
+              {role.includes(2000) &&
+              (project.status === "Reviewing Contract" ||
+                project.status === "no influencer assigned") ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPageFour(false);
+                    setShowPageFive(true);
+                  }}
+                  className="form__btn-dotted form__btn-dotted--large"
+                >
+                  Finish Reviewing
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
+          </>
+
+          {(project.status === "no influencer assigned" ||
+            project.status === "Reviewing Contract") &&
+          showPageFive &&
+          role.includes(2000) ? (
+            <div className="project-modal-title">
+              {!showSuccess ? (
+                <>
+                  {/* <h2 className="project-modal-title">Finished Reviewing</h2>
 
                   <p className="form__instructions">
                     How would you like to proceed?
                   </p> */}
 
-                    <CreateProjectSummary {...data} />
-                  </>
-                ) : (
+                  <CreateProjectSummary {...data} />
+                </>
+              ) : (
+                <>
+                  <div className="btn-container btn-container--col">
+                    <p className="form__text form__text--subheader">
+                      {successMsg}
+                    </p>
+                    <button
+                      className="create-project__close-btn"
+                      onClick={() => {
+                        onClose();
+                        refreshDashboard();
+                      }}
+                      type="button"
+                    >
+                      <FontAwesomeIcon
+                        icon={faSquareMinus}
+                        className="icon-left"
+                      />
+                      Close
+                    </button>
+                  </div>
+                </>
+              )}
+              <form action="">
+                {!showSuccess ? (
                   <>
-                    <div className="btn-container btn-container--col">
-                      <p className="form__text form__text--subheader">
-                        {successMsg}
-                      </p>
+                    <div className="btn-container btn-container--center">
                       <button
-                        className="create-project__close-btn"
-                        onClick={() => {
-                          onClose();
-                          refreshDashboard();
-                        }}
                         type="button"
+                        className="form__btn-dotted form__btn-dotted--medium"
+                        onClick={(e) => {
+                          handleSubmitReviewContract("accept", e);
+                          setShowSuccess(true);
+                          setSuccessMsg("You accepted the project!");
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCheck} className="icon-left" />
+                        Accept Project
+                      </button>
+                      <button
+                        type="button"
+                        className="form__btn-dotted form__btn-dotted--medium"
+                        onClick={(e) => {
+                          handleSubmitReviewContract("reject", e);
+                          setShowSuccess(true);
+                          setSuccessMsg(
+                            'You rejected the project. Go to the "Upcoming Collabs" to look for other projects!'
+                          );
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTimes} className="icon-left" />
+                        Reject Project
+                      </button>
+                      <button
+                        type="button"
+                        className="form__btn-dotted form__btn-dotted--medium"
+                        onClick={() => {
+                          setShowAddComment(true);
+                        }}
                       >
                         <FontAwesomeIcon
-                          icon={faSquareMinus}
+                          icon={faPencil}
                           className="icon-left"
                         />
-                        Close
+                        Request Changes
+                      </button>
+                    </div>
+                    <div className="btn-container btn-container--center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowPageFive(false);
+                          setShowPageFour(true);
+                        }}
+                        className="form__btn-next form__btn-next--white"
+                      >
+                        Go Back
                       </button>
                     </div>
                   </>
+                ) : (
+                  ""
                 )}
+              </form>
+              {showAddComment ? (
                 <form action="">
-                  {!showSuccess ? (
-                    <>
-                      <div className="btn-container btn-container--center">
-                        <button
-                          type="button"
-                          className="form__btn-dotted form__btn-dotted--medium"
-                          onClick={(e) => {
-                            handleSubmitReviewContract("accept", e);
-                            setShowSuccess(true);
-                            setSuccessMsg("You accepted the project!");
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faCheck}
-                            className="icon-left"
-                          />
-                          Accept Project
-                        </button>
-                        <button
-                          type="button"
-                          className="form__btn-dotted form__btn-dotted--medium"
-                          onClick={(e) => {
-                            handleSubmitReviewContract("reject", e);
-                            setShowSuccess(true);
-                            setSuccessMsg(
-                              'You rejected the project. Go to the "Upcoming Collabs" to look for other projects!'
-                            );
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTimes}
-                            className="icon-left"
-                          />
-                          Reject Project
-                        </button>
-                        <button
-                          type="button"
-                          className="form__btn-dotted form__btn-dotted--medium"
-                          onClick={() => {
-                            setShowAddComment(true);
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faPencil}
-                            className="icon-left"
-                          />
-                          Request Changes
-                        </button>
-                      </div>
-                      <div className="btn-container btn-container--center">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowPageFive(false);
-                            setShowPageFour(true);
-                          }}
-                          className="form__btn-next form__btn-next--white"
-                        >
-                          Go Back
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </form>
-                {showAddComment ? (
-                  <form action="">
-                    <label htmlFor="comments">Add a new comment</label>
-                    <p>
-                      E.g., request new deadline date, increase payment price
-                    </p>
-                    <input
-                      type="text"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                    ></input>
+                  <label htmlFor="comments">Add a new comment</label>
+                  <p>E.g., request new deadline date, increase payment price</p>
+                  <input
+                    type="text"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  ></input>
 
-                    <button
-                      type="submit"
-                      className="btn-light"
-                      onClick={(e) => handleSubmit("modify", e)}
-                    >
-                      Submit modifications to proposal{" "}
-                      <FontAwesomeIcon icon={faPencil} />
-                    </button>
-                  </form>
-                ) : (
-                  ""
-                )}
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-          {/* Renders Buttons */}
-          <>
-            {showPageOne ? (
-              <div className="btn-container btn-container--center mt-1p5">
-                {/* Show Comments - Always Active */}
-                <ProjectModalNegotiateBtn
-                  disabled={!showPageFive ? true : false}
-                  onClick={() => setShowAddComment(true)}
-                />
-                <button
-                  className="form__btn form__btn-next"
-                  type="button"
-                  onClick={() => {
-                    setShowPageOne(false);
-                    setShowPageTwo(true);
-                  }}
-                >
-                  Continue
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
-
-            {showPageTwo ? (
-              <div className="btn-container btn-container--center mt-1p5">
-                <ProjectModalNegotiateBtn
-                  disabled={!showPageFive ? true : false}
-                  onClick={() => setShowAddComment(true)}
-                />
-                <button
-                  className="form__btn form__btn-next"
-                  type="button"
-                  onClick={() => {
-                    setShowPageTwo(false);
-                    setShowPageThree(true);
-                  }}
-                >
-                  Continue
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
-
-            {showPageThree ? (
-              <div className="btn-container btn-container--center mt-1p5">
-                <button
-                  type="button"
-                  className="form__btn form__btn-next"
-                  onClick={() => {
-                    setShowPageThree(false);
-                    setShowPageTwo(true);
-                  }}
-                >
-                  Go Back
-                </button>
-                <ProjectModalNegotiateBtn
-                  disabled={!showPageFive ? true : false}
-                  onClick={() => setShowAddComment(true)}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowPageThree(false);
-                    setShowPageFour(true);
-                  }}
-                  className="form__btn form__btn-next"
-                >
-                  {role.includes(2000) &&
-                  project.status === "Reviewing Contract"
-                    ? "I agree to the terms."
-                    : "Next"}
-                </button>
-              </div>
-            ) : (
-              ""
-            )}
-
-            {showPageFour ? (
-              <div className="btn-container btn-container--center mt-1p5">
-                <button
-                  type="button"
-                  className="form__btn form__btn-next"
-                  onClick={() => {
-                    setShowPageThree(true);
-                    setShowPageFour(false);
-                  }}
-                >
-                  Go Back
-                </button>
-
-                {role.includes(2000) &&
-                (project.status === "Reviewing Contract" ||
-                  project.status === "no influencer assigned") ? (
                   <button
-                    type="button"
-                    onClick={() => {
-                      setShowPageFour(false);
-                      setShowPageFive(true);
-                    }}
-                    className="form__btn-dotted form__btn-dotted--large"
+                    type="submit"
+                    className="btn-light"
+                    onClick={(e) => handleSubmit("modify", e)}
                   >
-                    Finish Reviewing
+                    Submit modifications to proposal{" "}
+                    <FontAwesomeIcon icon={faPencil} />
                   </button>
-                ) : (
-                  ""
-                )}
-              </div>
-            ) : (
-              ""
-            )}
-          </>
+                </form>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>,

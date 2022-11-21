@@ -580,6 +580,25 @@ select {
 }
 
 .btn {
+  &-negotiate {
+    background-color: $btn-grey-color;
+    color: $btn-light-text-color;
+    border: none;
+    border-radius: 91px;
+    padding: 8px 48px;
+    width: 35%;
+    &--white {
+      background-color: $background-light-color;
+      color: $text-dark-color;
+    }
+
+    &--disabled {
+      color: $text-dark-grey;
+      background-color: $text-light-color;
+      border: 1px solid $btn-grey-color;
+    }
+  }
+
   // project-modal-navbar
   &-modal-navbar {
     background: transparent;

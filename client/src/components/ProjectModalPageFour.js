@@ -74,7 +74,7 @@ const ProjectModalPageFour = ({
           )}
         </div>
       </div>
-      <div className="label-row-container">
+      <div className="label-row-container label-row-container--justify-left label-row-container--guidelines">
         <div className="label-col-container label-col-container--guidelines">
           <div className="project-modal-page__group project-modal-page__group--guidelines">
             <div className="label-row-container label-row-container--justify-left">
