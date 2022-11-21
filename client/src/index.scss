@@ -151,6 +151,9 @@ select {
 }
 
 .icon {
+  &-copy {
+    color: #323232;
+  }
   &-left {
     padding-right: 0.625rem;
   }
@@ -245,12 +248,6 @@ select {
 
 .btn-page-five {
   width: 200px;
-}
-
-.img-rounded {
-  border-radius: 50%;
-  width: 200px;
-  height: auto;
 }
 
 .icon-highlight {
@@ -375,11 +372,11 @@ select {
 }
 
 .keywords-item {
-  border: 1px solid black;
+  border: 1px solid $form-border-color;
   background-color: var(--background-accessibility-color);
   color: var(--text-dark-color);
   display: inline-block;
-  padding: 0.3rem 0.75rem;
+  padding: 0.25rem 1rem;
   border-radius: 20px;
 }
 
@@ -491,6 +488,7 @@ select {
   flex-direction: row;
   align-items: left;
 }
+
 .label-row-container {
   display: flex;
   justify-content: space-between;
@@ -507,6 +505,9 @@ select {
 
   &--half {
     width: 50%;
+  }
+  &--guidelines {
+    gap: 16rem;
   }
 
   &__col {
@@ -545,6 +546,10 @@ select {
 
   &--preview {
     width: 50%;
+  }
+
+  &--guidelines {
+    gap: 2rem;
   }
 }
 

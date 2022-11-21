@@ -107,7 +107,10 @@
     &__group {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.75rem;
+      &--guidelines {
+        gap: 1.1875rem;
+      }
     }
 
     &__label {
@@ -244,17 +247,27 @@
 
 /* Page 4: Guidelines */
 
-.project-modal-examples-container {
+.examples-container {
   display: flex;
   flex-wrap: row;
   gap: 2rem;
-  justify-content: center;
-}
+  justify-content: left;
+  &__example {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__image {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    margin-bottom: 0.6875rem;
+  }
 
-.project-modal-example {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  &__text {
+    color: $text-dark-color;
+    font-size: 1rem;
+  }
 }
 
 .deadline-text {

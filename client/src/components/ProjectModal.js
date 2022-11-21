@@ -485,69 +485,14 @@ const ProjectModal = ({
               <section className="project-modal-page">
                 {/* <Contract {...data} /> */}
                 <ProjectModalPageThree {...data} />
-
-                <div className="btn-holder">
-                  <button
-                    type="button"
-                    className="form__btn form__btn-next"
-                    onClick={() => {
-                      setShowPageThree(false);
-                      setShowPageTwo(true);
-                    }}
-                  >
-                    Go Back
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowPageThree(false);
-                      setShowPageFour(true);
-                    }}
-                    className="form__btn form__btn-next"
-                  >
-                    {role.includes(2000) &&
-                    project.status === "Reviewing Contract"
-                      ? "I agree to the terms."
-                      : "View Guidelines"}
-                  </button>
-                </div>
               </section>
             ) : (
               ""
             )}
             {showPageFour ? (
-              <>
+              <section className="project-modal-page">
                 <ProjectModalPageFour {...data} />
-                <div className="btn-holder">
-                  <button
-                    type="button"
-                    className="form__btn form__btn-next"
-                    onClick={() => {
-                      setShowPageThree(true);
-                      setShowPageFour(false);
-                    }}
-                  >
-                    Go Back
-                  </button>
-
-                  {(role.includes(2000) &&
-                    project.status === "Reviewing Contract") ||
-                  project.status === "no influencer assigned" ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPageFour(false);
-                        setShowPageFive(true);
-                      }}
-                      className="form__btn-dotted form__btn-dotted--large"
-                    >
-                      Finish Reviewing
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </>
+              </section>
             ) : (
               ""
             )}
@@ -727,6 +672,74 @@ const ProjectModal = ({
                 >
                   Continue
                 </button>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {showPageThree ? (
+              <div className="btn-container btn-container--center mt-1p5">
+                <button
+                  type="button"
+                  className="form__btn form__btn-next"
+                  onClick={() => {
+                    setShowPageThree(false);
+                    setShowPageTwo(true);
+                  }}
+                >
+                  Go Back
+                </button>
+                <ProjectModalNegotiateBtn
+                  disabled={!showPageFive ? true : false}
+                  onClick={() => setShowAddComment(true)}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPageThree(false);
+                    setShowPageFour(true);
+                  }}
+                  className="form__btn form__btn-next"
+                >
+                  {role.includes(2000) &&
+                  project.status === "Reviewing Contract"
+                    ? "I agree to the terms."
+                    : "Next"}
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {showPageFour ? (
+              <div className="btn-container btn-container--center mt-1p5">
+                <button
+                  type="button"
+                  className="form__btn form__btn-next"
+                  onClick={() => {
+                    setShowPageThree(true);
+                    setShowPageFour(false);
+                  }}
+                >
+                  Go Back
+                </button>
+
+                {(role.includes(2000) &&
+                  project.status === "Reviewing Contract") ||
+                project.status === "no influencer assigned" ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPageFour(false);
+                      setShowPageFive(true);
+                    }}
+                    className="form__btn-dotted form__btn-dotted--large"
+                  >
+                    Finish Reviewing
+                  </button>
+                ) : (
+                  ""
+                )}
               </div>
             ) : (
               ""
