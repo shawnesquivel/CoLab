@@ -724,9 +724,9 @@ const ProjectModal = ({
                   Go Back
                 </button>
 
-                {(role.includes(2000) &&
-                  project.status === "Reviewing Contract") ||
-                project.status === "no influencer assigned" ? (
+                {role.includes(2000) &&
+                (project.status === "Reviewing Contract" ||
+                  project.status === "no influencer assigned") ? (
                   <button
                     type="button"
                     onClick={() => {
