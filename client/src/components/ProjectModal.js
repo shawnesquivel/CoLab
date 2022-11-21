@@ -247,6 +247,35 @@ const ProjectModal = ({
     return paymentMethod;
   };
 
+  const showPage = (page) => {
+    if (![1, 2, 3, 4, 5].includes(page)) {
+      console.log("what!");
+      return;
+    }
+
+    setShowPageOne(false);
+    setShowPageTwo(false);
+    setShowPageThree(false);
+    setShowPageFour(false);
+    setShowPageFive(false);
+
+    if (page === 1) {
+      setShowPageOne(true);
+    }
+    if (page === 2) {
+      setShowPageTwo(true);
+    }
+    if (page === 3) {
+      setShowPageThree(true);
+    }
+    if (page === 4) {
+      setShowPageFour(true);
+    }
+    if (page === 5) {
+      setShowPageFive(true);
+    }
+  };
+
   // To Do: Include the functionality for the user to upload deliverables
 
   if (!isOpen) return null;
@@ -272,42 +301,50 @@ const ProjectModal = ({
 
           <div className="project-modal-contract">
             <nav className="project-modal-navbar">
-              <h3
+              <button
                 className={
                   showPageOne
-                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
-                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
+                    ? "btn-modal-navbar btn-modal-navbar--highlight"
+                    : "btn-modal-navbar btn-modal-navbar--greyed"
                 }
+                type="button"
+                onClick={() => showPage(1)}
               >
                 Overview
-              </h3>
-              <h3
+              </button>
+              <button
                 className={
                   showPageTwo
-                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
-                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
+                    ? "btn-modal-navbar btn-modal-navbar--highlight"
+                    : "btn-modal-navbar btn-modal-navbar--greyed"
                 }
+                type="button"
+                onClick={() => showPage(2)}
               >
-                Payment/Products
-              </h3>
-              <h3
+                Compensation
+              </button>
+              <button
                 className={
                   showPageThree
-                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
-                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
+                    ? "btn-modal-navbar btn-modal-navbar--highlight"
+                    : "btn-modal-navbar btn-modal-navbar--greyed"
                 }
+                type="button"
+                onClick={() => showPage(3)}
               >
-                Contract
-              </h3>
-              <h3
+                Deliverables
+              </button>
+              <button
                 className={
                   showPageFour
-                    ? "project-modal-navbar__text project-modal-navbar__text--highlight"
-                    : "project-modal-navbar__text project-modal-navbar__text--greyed"
+                    ? "btn-modal-navbar btn-modal-navbar--highlight"
+                    : "btn-modal-navbar btn-modal-navbar--greyed"
                 }
+                type="button"
+                onClick={() => showPage(4)}
               >
-                Guidelines
-              </h3>
+                Guidelines{" "}
+              </button>
             </nav>
 
             {showPageOne ? (

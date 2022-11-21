@@ -580,6 +580,25 @@ select {
 }
 
 .btn {
+  // project-modal-navbar
+  &-modal-navbar {
+    background: transparent;
+    border: none;
+    color: $text-dark-color;
+    font-weight: 400;
+    font-size: 1rem;
+    padding: 0 1rem 1rem;
+    width: 15%;
+    text-align: center;
+    &--highlight {
+      border-bottom: 1px solid $background-dark-color;
+      padding-bottom: 1rem;
+    }
+    &--greyed {
+      color: #6060604c;
+    }
+  }
+
   // project modal page 4 (guidelines)
   &-copy {
     background-color: transparent;
