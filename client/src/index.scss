@@ -122,14 +122,6 @@ section {
   background-color: var(--background-light-color);
 }
 
-a,
-a:visited {
-  text-decoration: none;
-}
-a:hover {
-  color: var(--primary-color);
-}
-
 button {
   padding: 0.5rem;
   color: black;
@@ -763,6 +755,12 @@ select {
     color: $text-light-color;
     :visited {
       color: $text-light-color;
+    }
+  }
+  &--dark {
+    color: $text-dark-color;
+    &:visited {
+      color: $text-dark-color;
     }
   }
 }

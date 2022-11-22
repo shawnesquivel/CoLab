@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
 // import Notifications from "./Notifications";
-import { faBell, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRightFromBracket,
+  faBell,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
@@ -240,6 +244,12 @@ const Dashboard = () => {
 
               <div className="dashboard-header-right">
                 <FontAwesomeIcon icon={faBell} className="icon-medium" />
+                <Link to="/login" className="link link--dark">
+                  <FontAwesomeIcon
+                    icon={faArrowRightFromBracket}
+                    className="icon-medium"
+                  />
+                </Link>
                 {backendData.avatar ? (
                   <Link
                     to="/updateprofile"

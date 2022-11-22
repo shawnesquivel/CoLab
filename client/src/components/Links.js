@@ -5,7 +5,6 @@ import useAuth from "../hooks/useAuth";
 import "../styles/links.scss";
 import "../index.scss";
 import appStore from "../assets/download-app-store.png";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faTiktok } from "@fortawesome/free-brands-svg-icons";
 import { useState } from "react";
