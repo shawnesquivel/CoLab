@@ -15,7 +15,7 @@ const RegisterSelect = ({ handleShowForms }) => {
         Sign up to get access to thousands of social media campaigns with the
         top brands.{" "}
       </p>
-      <p className="landing__description mb-1p5 text--bold mb-">I am a(n):</p>
+      <p className="landing__description mb-1p5 text--bold">I am a(n):</p>
       <button
         className="landing__btn"
         onClick={(e) => {

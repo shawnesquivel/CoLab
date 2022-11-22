@@ -186,7 +186,7 @@ const Login = () => {
                 placeholder="example@email.com"
                 className="login-form__input"
               />
-              <label htmlFor="pwd" className="login-form__label">
+              <label htmlFor="pwd" className="login-form__label mb-1">
                 Password
               </label>
               <input
@@ -223,7 +223,7 @@ const Login = () => {
                 <p className="register__text register__text--subtle">
                   New here?{" "}
                   <Link
-                    to="/login"
+                    to="/register"
                     className="register__text register__text--subtle text--underline"
                   >
                     Sign Up instead

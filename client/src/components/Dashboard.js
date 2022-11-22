@@ -239,7 +239,7 @@ const Dashboard = () => {
               </div>
 
               <div className="dashboard-header-right">
-                <FontAwesomeIcon icon={faBell} />
+                <FontAwesomeIcon icon={faBell} className="icon-medium" />
                 {backendData.avatar ? (
                   <Link
                     to="/updateprofile"

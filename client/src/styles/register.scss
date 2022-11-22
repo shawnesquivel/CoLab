@@ -86,6 +86,10 @@
 
   &__link {
     text-decoration: underline;
+    color: $text-dark-color;
+    &:visited {
+      color: $text-dark-color;
+    }
   }
 }
 
@@ -157,7 +161,8 @@
   }
 
   &__btn-cta {
-    background-color: black;
+    background-color: $text-dark-color;
+    border: none;
     color: $text-light-color;
     width: 70%;
     border-radius: 91px;

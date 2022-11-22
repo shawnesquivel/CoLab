@@ -9,6 +9,8 @@ import pageTwoImg from "../assets/update-profile-photo.png";
 import pageThreeImg from "../assets/update-profile-mediakit.png";
 import greySquare from "../assets/mediakit-grey.png";
 import greyCircle from "../assets/greycircle.jpg";
+import Links from "./Links";
+
 import "../styles/updateprofile.scss";
 
 const GETUSER_URL = "/api/getuser";
@@ -259,287 +261,306 @@ const UpdateProfile = () => {
 
   return (
     <>
-      <section className="update-profile">
-        <div className="update-profile__container-left">
-          <h1 className="heading heading--large">
-            Hey, <br /> {backendData?.firstName}
-          </h1>
-          <p className="update-profile__description mb-1p5">
-            {auth.roles.includes(2000)
-              ? "Please complete your profile so we can match you with the right brands."
-              : `Please upload a logo for ${backendData.company}.`}
-          </p>
-          {pageOne ? (
-            <>
-              {" "}
-              <p className="update-profile__description mb-1p5 text--bold">
-                Build Your Profile
-              </p>
-              <form className="update-profile-form" noValidate>
-                <label
-                  htmlFor="instagram"
-                  className="update-profile-form__label"
-                >
-                  Instagram URL
-                </label>
-                <input
-                  onChange={(e) => {
-                    setInstagram(e.target.value);
-                  }}
-                  type="text"
-                  id="instagram"
-                  autoComplete="off"
-                  value={instagram}
-                  required
-                  placeholder="instagram url"
-                  className="update-profile-form__input"
-                />
-                <label htmlFor="tiktok" className="update-profile-form__label">
-                  tiktok URL
-                </label>
-                <input
-                  onChange={(e) => {
-                    setTiktok(e.target.value);
-                  }}
-                  type="text"
-                  id="tiktok"
-                  autoComplete="off"
-                  value={tiktok}
-                  required
-                  placeholder="tiktok url"
-                  className="update-profile-form__input"
-                />
-                <label htmlFor="youtube" className="update-profile-form__label">
-                  YouTube URL
-                </label>
-                <input
-                  onChange={(e) => {
-                    setYoutube(e.target.value);
-                  }}
-                  type="text"
-                  id="youtube"
-                  autoComplete="off"
-                  value={youtube}
-                  required
-                  placeholder="youtube url"
-                  className="update-profile-form__input"
-                />
+      <main className="app-outer">
+        <div className="app-inner--narrow">
+          <Links />
 
-                <label htmlFor="keywords">Your niche</label>
-                <input
-                  onKeyDown={handleKeyDown}
-                  type="text"
-                  className="update-profile-form__input"
-                  placeholder="type keyword then hit enter"
-                />
-                <div className="keywords-container">
-                  {keywords.map((keyword, index) => (
-                    <div className="keywords-item" key={index}>
-                      <span className="keywords-text">{keyword}</span>
-                      <span
-                        onClick={() => removeKeyword(index)}
-                        className="keywords-delete"
-                      >
-                        &times;
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex-col-center">
-                  {errMsg ? (
-                    <p aria-live="assertive" className="update-profile__error">
-                      {errMsg}
-                    </p>
-                  ) : (
-                    ""
-                  )}
-                  <div className="btn-container btn-container--col">
-                    <button
-                      type="button"
-                      onClick={updateProfileLinks}
-                      className={
-                        instagram && tiktok && youtube && keywords
-                          ? "btn-cta btn-cta--active"
-                          : "btn-cta btn-cta--inactive"
-                      }
+          <section className="update-profile">
+            <div className="update-profile__container-left">
+              <h1 className="heading heading--large">
+                Hey, <br /> {backendData?.firstName}
+              </h1>
+              <p className="update-profile__description mb-1p5">
+                {auth.roles.includes(2000)
+                  ? "Please complete your profile so we can match you with the right brands."
+                  : `Please upload a logo for ${backendData.company}.`}
+              </p>
+              {pageOne ? (
+                <>
+                  {" "}
+                  <p className="update-profile__description mb-1p5 text--bold">
+                    Build Your Profile
+                  </p>
+                  <form className="update-profile-form" noValidate>
+                    <label
+                      htmlFor="instagram"
+                      className="update-profile-form__label"
                     >
-                      Update Profile
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-cta btn-cta--skip"
-                      onClick={() => {
-                        showPageOne(false);
-                        showPageTwo(true);
+                      Instagram URL
+                    </label>
+                    <input
+                      onChange={(e) => {
+                        setInstagram(e.target.value);
                       }}
+                      type="text"
+                      id="instagram"
+                      autoComplete="off"
+                      value={instagram}
+                      required
+                      placeholder="instagram url"
+                      className="update-profile-form__input"
+                    />
+                    <label
+                      htmlFor="tiktok"
+                      className="update-profile-form__label"
                     >
-                      Skip
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </>
-          ) : (
-            ""
-          )}
-          {/* Upload Profile Picture  */}
-          {pageTwo ? (
-            <>
-              {" "}
-              <p className="update-profile__description mb-1p5 text--bold">
-                Upload Profile Picture
-              </p>
-              <form
-                className="update-profile-form"
-                encType="multipart/form-data"
-              >
-                <label htmlFor="avatar" className="form__label">
-                  Upload File
-                </label>
-                <input
-                  type="file"
-                  id="avatar"
-                  name="avatar"
-                  onChange={uploadImgFileHandler}
-                  required
-                  className="update-profile-form__input--file"
-                />
-
-                <p id="uidnote" className="login-form__instructions">
-                  Max 2MB, .png only
-                </p>
-                {selectedFile?.size > 2e6 ? (
-                  <div>
-                    <p className="update-profile__error">
-                      Error: The image size exceeds the 2MB limit!
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {isFilePicked && selectedFile.type !== "image/png" ? (
-                  <div>
-                    <p className="update-profile__error">
-                      Error: The file uploaded is not a .png image!
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {!uploadAvatarSuccess ? (
-                  <div className="flex-col-center">
-                    <button
-                      type="submit"
-                      onClick={(e) => handleAwsUpload(e, "image")}
-                      disabled={!selectedFile ? "disabled" : ""}
-                      className={
-                        selectedFile
-                          ? "btn-cta btn-cta--active"
-                          : "btn-cta btn-cta--inactive"
-                      }
+                      tiktok URL
+                    </label>
+                    <input
+                      onChange={(e) => {
+                        setTiktok(e.target.value);
+                      }}
+                      type="text"
+                      id="tiktok"
+                      autoComplete="off"
+                      value={tiktok}
+                      required
+                      placeholder="tiktok url"
+                      className="update-profile-form__input"
+                    />
+                    <label
+                      htmlFor="youtube"
+                      className="update-profile-form__label"
                     >
-                      Upload Photo
-                    </button>
-                    {auth.roles.includes(3000) ? (
-                      <button
-                        type="button"
-                        className="btn-cta btn-cta--inactive"
-                      >
-                        <Link to="/dashboard" className="text--light">
-                          Go to Dashboard
-                        </Link>
-                      </button>
-                    ) : (
-                      ""
-                    )}
-                    {auth.roles.includes(2000) ? (
-                      <button
-                        type="button"
-                        className="btn-cta btn-cta--skip"
-                        onClick={() => {
-                          showPageTwo(false);
-                          showPageThree(true);
-                        }}
-                      >
-                        Skip
-                      </button>
-                    ) : (
-                      ""
-                    )}
+                      YouTube URL
+                    </label>
+                    <input
+                      onChange={(e) => {
+                        setYoutube(e.target.value);
+                      }}
+                      type="text"
+                      id="youtube"
+                      autoComplete="off"
+                      value={youtube}
+                      required
+                      placeholder="youtube url"
+                      className="update-profile-form__input"
+                    />
 
-                    {errMsg ? (
-                      <p
-                        aria-live="assertive"
-                        className="update-profile__error"
-                      >
-                        {errMsg}
-                      </p>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex-col-center">
-                      {awsImage ? (
-                        <img
-                          className="update-profile__profile-pic"
-                          src={awsImage}
-                          alt="aws avatar"
-                        />
-                      ) : (
-                        <img
-                          className="update-profile__profile-pic"
-                          src={greyCircle}
-                          alt="blank avatar"
-                        />
-                      )}
-                      <p className="update-profile__success">
-                        Your avatar was successfully updated!
-                      </p>
+                    <label htmlFor="keywords">Your niche</label>
+                    <input
+                      onKeyDown={handleKeyDown}
+                      type="text"
+                      className="update-profile-form__input"
+                      placeholder="type keyword then hit enter"
+                    />
+                    <div className="keywords-container">
+                      {keywords.map((keyword, index) => (
+                        <div className="keywords-item" key={index}>
+                          <span className="keywords-text">{keyword}</span>
+                          <span
+                            onClick={() => removeKeyword(index)}
+                            className="keywords-delete"
+                          >
+                            &times;
+                          </span>
+                        </div>
+                      ))}
                     </div>
+                    <div className="flex-col-center">
+                      {errMsg ? (
+                        <p
+                          aria-live="assertive"
+                          className="update-profile__error"
+                        >
+                          {errMsg}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                      <div className="btn-container btn-container--col">
+                        <button
+                          type="button"
+                          onClick={updateProfileLinks}
+                          className={
+                            instagram && tiktok && youtube && keywords
+                              ? "btn-cta btn-cta--active"
+                              : "btn-cta btn-cta--inactive"
+                          }
+                        >
+                          Next
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-skip"
+                          onClick={() => {
+                            showPageOne(false);
+                            showPageTwo(true);
+                          }}
+                        >
+                          Skip
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                ""
+              )}
+              {/* Upload Profile Picture  */}
+              {pageTwo ? (
+                <>
+                  {" "}
+                  <p className="update-profile__description mb-1p5 text--bold">
+                    Upload Profile Picture
+                  </p>
+                  <form
+                    className="update-profile-form"
+                    encType="multipart/form-data"
+                  >
+                    <label htmlFor="avatar" className="form__label">
+                      Upload File
+                    </label>
+                    <input
+                      type="file"
+                      id="avatar"
+                      name="avatar"
+                      onChange={uploadImgFileHandler}
+                      required
+                      className="update-profile-form__input--file"
+                    />
 
-                    {auth.roles.includes(2000) ? (
-                      <button
-                        type="button"
-                        className="btn-cta"
-                        onClick={() => {
-                          showPageTwo(false);
-                          showPageThree(true);
-                        }}
-                      >
-                        Next Page
-                      </button>
+                    <p id="uidnote" className="login-form__instructions">
+                      Max 2MB, .png only
+                    </p>
+                    {selectedFile?.size > 2e6 ? (
+                      <div>
+                        <p className="update-profile__error">
+                          Error: The image size exceeds the 2MB limit!
+                        </p>
+                      </div>
                     ) : (
                       ""
                     )}
-
-                    {auth.roles.includes(3000) ? (
-                      <button type="button" className="btn-cta">
-                        <Link to="/dashboard">Go to Dashboard</Link>
-                      </button>
+                    {isFilePicked && selectedFile.type !== "image/png" ? (
+                      <div>
+                        <p className="update-profile__error">
+                          Error: The file uploaded is not a .png image!
+                        </p>
+                      </div>
                     ) : (
                       ""
                     )}
-                  </>
-                )}
-              </form>
-            </>
-          ) : (
-            ""
-          )}
+                    {!uploadAvatarSuccess ? (
+                      <div className="flex-col-center">
+                        <button
+                          type="submit"
+                          onClick={(e) => handleAwsUpload(e, "image")}
+                          disabled={!selectedFile ? "disabled" : ""}
+                          className={
+                            selectedFile
+                              ? "btn-cta btn-cta--active"
+                              : "btn-cta btn-cta--inactive"
+                          }
+                        >
+                          Upload Photo
+                        </button>
+                        {auth.roles.includes(3000) ? (
+                          <button
+                            type="button"
+                            className="btn-cta btn-cta--inactive"
+                          >
+                            <Link to="/dashboard" className="text--light">
+                              Go to Dashboard
+                            </Link>
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                        {auth.roles.includes(2000) ? (
+                          <button
+                            type="button"
+                            className="btn-cta btn-cta--skip"
+                            onClick={() => {
+                              showPageTwo(false);
+                              showPageThree(true);
+                            }}
+                          >
+                            Skip
+                          </button>
+                        ) : (
+                          ""
+                        )}
 
-          {pageThree ? (
-            <>
-              {" "}
-              <p className="update-profile__description mb-p5 text--bold">
-                Upload Files
-              </p>
-              <form
-                className="update-profile-form"
-                encType="multipart/form-data"
-              >
-                {/* {isFilePicked && selectedFile.size > 2e6 ? (
+                        {errMsg ? (
+                          <p
+                            aria-live="assertive"
+                            className="update-profile__error"
+                          >
+                            {errMsg}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex-col-center">
+                          {awsImage ? (
+                            <img
+                              className="update-profile__profile-pic"
+                              src={awsImage}
+                              alt="aws avatar"
+                            />
+                          ) : (
+                            <img
+                              className="update-profile__profile-pic"
+                              src={greyCircle}
+                              alt="blank avatar"
+                            />
+                          )}
+                          <p className="update-profile__success">
+                            Your avatar was successfully updated!
+                          </p>
+                        </div>
+                        <div className="btn-container btn-container--center">
+                          {auth.roles.includes(2000) ? (
+                            <button
+                              type="button"
+                              className="btn-cta"
+                              onClick={() => {
+                                showPageTwo(false);
+                                showPageThree(true);
+                              }}
+                            >
+                              Next
+                            </button>
+                          ) : (
+                            ""
+                          )}
+
+                          {auth.roles.includes(3000) ? (
+                            <button type="button" className="btn-cta">
+                              <Link
+                                to="/dashboard"
+                                className="link link--white"
+                              >
+                                Go to Dashboard
+                              </Link>
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </form>
+                </>
+              ) : (
+                ""
+              )}
+
+              {pageThree ? (
+                <>
+                  {" "}
+                  <p className="update-profile__description mb-p5 text--bold">
+                    Upload Files
+                  </p>
+                  <form
+                    className="update-profile-form"
+                    encType="multipart/form-data"
+                  >
+                    {/* {isFilePicked && selectedFile.size > 2e6 ? (
                   <div>
                     <p className="update-profile__error">
                       Error: The image size exceeds the 2MB limit!
@@ -557,104 +578,111 @@ const UpdateProfile = () => {
                 ) : (
                   ""
                 )} */}
-                <label
-                  htmlFor="mediakit"
-                  className="update-profile__description mb-1"
-                >
-                  Media Kit
-                </label>
-                <div className="flex-col-center">
-                  <img
-                    src={greySquare}
-                    alt="grey black square"
-                    className="update-profile-form__media-kit"
-                  />
-                  <input
-                    type="file"
-                    id="mediakit"
-                    name="mediakit"
-                    onChange={uploadMediaKitHandler}
-                    className="update-profile-form__input--file"
-                  />
-
-                  <p id="uidnote" className="login-form__instructions">
-                    PDF, Max 2MB
-                  </p>
-                  {backendData.mediaKit ? (
-                    <a
-                      href={backendData.mediaKit}
-                      className="update-profile-form__media-kit update-profile-form__media-kit--link mb-1"
+                    <label
+                      htmlFor="mediakit"
+                      className="update-profile__description mb-1"
                     >
-                      Download Media Kit
-                    </a>
-                  ) : (
-                    ""
-                  )}
-                  <p className="update-profile__success">
-                    {successMsg ? `${successMsg}` : ""}
-                  </p>
-                  {successMsg ? (
-                    <>
-                      <button type="button" className="btn-cta">
-                        <Link to="/dashboard">Go to Dashboard</Link>
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="submit"
-                      onClick={(e) => handleAwsUpload(e, "pdf")}
-                      className={
-                        mediaKit
-                          ? "btn-cta btn-cta--active"
-                          : "btn-cta btn-cta--inactive"
-                      }
-                    >
-                      Upload Media Kit
-                    </button>
-                  )}
+                      Media Kit
+                    </label>
+                    <div className="flex-col-center">
+                      <img
+                        src={greySquare}
+                        alt="grey black square"
+                        className="update-profile-form__media-kit"
+                      />
+                      <input
+                        type="file"
+                        id="mediakit"
+                        name="mediakit"
+                        onChange={uploadMediaKitHandler}
+                        className="update-profile-form__input--file"
+                      />
 
-                  {errMsg ? (
-                    <p aria-live="assertive" className="update-profile__error">
-                      {errMsg}
-                    </p>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </form>
-            </>
-          ) : (
-            ""
-          )}
+                      <p id="uidnote" className="login-form__instructions">
+                        PDF, Max 2MB
+                      </p>
+                      {backendData.mediaKit ? (
+                        <a
+                          href={backendData.mediaKit}
+                          className="update-profile-form__media-kit update-profile-form__media-kit--link mb-1"
+                        >
+                          Download Media Kit
+                        </a>
+                      ) : (
+                        ""
+                      )}
+                      <p className="update-profile__success">
+                        {successMsg ? `${successMsg}` : ""}
+                      </p>
+                      {successMsg ? (
+                        <>
+                          <button type="button" className="btn-cta">
+                            <Link to="/dashboard" className="link link--white">
+                              Go to Dashboard
+                            </Link>
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          type="submit"
+                          onClick={(e) => handleAwsUpload(e, "pdf")}
+                          className={
+                            mediaKit
+                              ? "btn-cta btn-cta--active"
+                              : "btn-cta btn-cta--inactive"
+                          }
+                        >
+                          Upload Media Kit
+                        </button>
+                      )}
+
+                      {errMsg ? (
+                        <p
+                          aria-live="assertive"
+                          className="update-profile__error"
+                        >
+                          {errMsg}
+                        </p>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </form>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+            {pageOne ? (
+              <img
+                src={pageOneImg}
+                alt="black model with curly hair with left arm raised with a blue dress short hanging over her shoulders wearing a white tanktop"
+                className="update-profile__img-right"
+              />
+            ) : (
+              ""
+            )}
+            {pageTwo ? (
+              <img
+                src={pageTwoImg}
+                alt="blonde woman in a blue dress and heels turning torso backwards"
+                className="update-profile__img-right"
+              />
+            ) : (
+              ""
+            )}
+            {pageThree ? (
+              <img
+                src={pageThreeImg}
+                alt="tanned man in a bucket hat, mint crewneck, and silver chain grabbing his hat and looking at camera with sun on face"
+                className="update-profile__img-right"
+              />
+            ) : (
+              ""
+            )}
+          </section>
         </div>
-        {pageOne ? (
-          <img
-            src={pageOneImg}
-            alt="black model with curly hair with left arm raised with a blue dress short hanging over her shoulders wearing a white tanktop"
-            className="update-profile__img-right"
-          />
-        ) : (
-          ""
-        )}
-        {pageTwo ? (
-          <img
-            src={pageTwoImg}
-            alt="blonde woman in a blue dress and heels turning torso backwards"
-            className="update-profile__img-right"
-          />
-        ) : (
-          ""
-        )}
-        {pageThree ? (
-          <img
-            src={pageThreeImg}
-            alt="tanned man in a bucket hat, mint crewneck, and silver chain grabbing his hat and looking at camera with sun on face"
-            className="update-profile__img-right"
-          />
-        ) : (
-          ""
-        )}
-      </section>
+      </main>
     </>
   );
 };

@@ -163,6 +163,9 @@ select {
   &-right {
     padding-left: 0.625rem;
   }
+  &-large {
+    font-size: 2rem;
+  }
   &-medium {
     font-size: 1.5rem;
   }
@@ -391,7 +394,7 @@ select {
   color: $text-dark-grey;
   background: $background-light-color;
   font-weight: bolder;
-  border: 1px solid black;
+  border: 1px solid $form-border-color;
   border-radius: 60%;
   display: inline-flex;
   justify-content: center;
@@ -587,6 +590,14 @@ select {
 }
 
 .btn {
+  &-skip {
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+    color: $text-dark-grey;
+    min-width: 17rem;
+  }
+
   &-accept {
     background-color: $text-dark-color;
     color: $text-light-color;
@@ -676,13 +687,16 @@ select {
     margin-bottom: 1rem;
     padding: 0.5rem 3rem;
     font-size: $desktop-btn-regular;
-
+    background-color: $text-dark-color;
+    color: $text-light-color;
+    min-width: 17rem;
+    max-width: 18rem;
     &--medium {
       width: 35%;
     }
 
     &--active {
-      background-color: black;
+      background-color: $text-dark-color;
       color: $text-light-color;
       border: none;
     }
@@ -741,5 +755,14 @@ select {
 
   &--full {
     width: 100%;
+  }
+}
+
+.link {
+  &--white {
+    color: $text-light-color;
+    :visited {
+      color: $text-light-color;
+    }
   }
 }

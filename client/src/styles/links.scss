@@ -43,6 +43,10 @@
   &--icon {
     height: 24.75px;
     width: 24.75px;
+    color: $text-dark-color;
+    &:visited {
+      color: $text-dark-color;
+    }
   }
 }
 
