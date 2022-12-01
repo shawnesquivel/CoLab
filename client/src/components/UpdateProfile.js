@@ -12,6 +12,7 @@ import greyCircle from "../assets/greycircle.jpg";
 import Links from "./Links";
 
 import "../styles/updateprofile.scss";
+import useFetchUser from "../hooks/useFetchUser";
 
 const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
@@ -21,7 +22,7 @@ const UPDATE_MEDIAKIT_URL = "api/updatemediakit";
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
-
+  const user = useFetchUser();
   // If the user is a brand, show page 2 first
   useEffect(() => {
     console.log(auth);
@@ -31,9 +32,9 @@ const UpdateProfile = () => {
     }
   }, []);
   // backend data holds user data
-  const [backendData, setBackendData] = useState({
-    status: "still fetching user data",
-  });
+  // const [backendData, setBackendData] = useState({
+  //   status: "still fetching user data",
+  // });
 
   const [awsImage, setAwsImage] = useState("");
 
@@ -62,28 +63,25 @@ const UpdateProfile = () => {
 
   // Fetch User Data on Page Load
   const fetchUser = async () => {
-    const user = auth?.user;
+    // const user = auth?.user;
     // test axios
     // const response = await axios.get("https://yesno.wtf/api");
-
-    const payload = JSON.stringify({
-      token: localStorage.getItem("token"),
-    });
-
-    const response = await axios.post(GETUSER_URL, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    });
-
-    setBackendData(response.data.userProfile);
-    setAwsImage(response.data.avatar);
+    // const payload = JSON.stringify({
+    //   token: localStorage.getItem("token"),
+    // });
+    // const response = await axios.post(GETUSER_URL, payload, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   withCredentials: true,
+    // });
+    // setBackendData(response.data.userProfile);
+    // setAwsImage(response.data.avatar);
   };
 
-  useEffect(() => {
-    fetchUser().catch(console.error);
-  }, []);
+  // useEffect(() => {
+  //   fetchUser().catch(console.error);
+  // }, []);
 
   // Add social media links and niche to profile
   const updateProfileLinks = async (e) => {
@@ -268,12 +266,12 @@ const UpdateProfile = () => {
           <section className="update-profile">
             <div className="update-profile__container-left">
               <h1 className="heading heading--large">
-                Hey, <br /> {backendData?.firstName}
+                Hey, <br /> {user?.firstName}
               </h1>
               <p className="update-profile__description mb-1p5">
                 {auth.roles.includes(2000)
                   ? "Please complete your profile so we can match you with the right brands."
-                  : `Please upload a logo for ${backendData.company}.`}
+                  : `Please upload a logo for ${user.company}.`}
               </p>
               {pageOne ? (
                 <>
@@ -496,7 +494,7 @@ const UpdateProfile = () => {
                     ) : (
                       <>
                         <div className="flex-col-center">
-                          {awsImage ? (
+                          {user.avatar ? (
                             <img
                               className="update-profile__profile-pic"
                               src={awsImage}
@@ -601,9 +599,9 @@ const UpdateProfile = () => {
                       <p id="uidnote" className="login-form__instructions">
                         PDF, Max 2MB
                       </p>
-                      {backendData.mediaKit ? (
+                      {user.mediaKit ? (
                         <a
-                          href={backendData.mediaKit}
+                          href={user.mediaKit}
                           className="update-profile-form__media-kit update-profile-form__media-kit--link mb-1"
                         >
                           Download Media Kit

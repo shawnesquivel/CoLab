@@ -84,7 +84,6 @@ const Dashboard = () => {
       setProjectBtnText(" Create Project");
     }
   }, [projectForm]);
-  // Get User from Backend
 
   const getProject = async (projectID) => {
     try {
