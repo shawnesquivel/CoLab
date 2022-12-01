@@ -5,13 +5,13 @@ const moment = require("moment");
 const NewCollabs = ({ currentProjects, expandProject }) => {
   const [inProgressProjects, setInProgressProjects] = useState([]);
 
-  useEffect(() => {
-    const filteredProjects = currentProjects.filter(
-      (project) => project.status !== "project complete"
-    );
+  // useEffect(() => {
+  //   const filteredProjects = currentProjects.filter(
+  //     (project) => project.status !== "project complete"
+  //   );
 
-    setInProgressProjects(filteredProjects);
-  }, [currentProjects]);
+  //   setInProgressProjects(filteredProjects);
+  // }, [currentProjects]);
 
   return (
     <section className="project-container">

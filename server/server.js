@@ -388,16 +388,6 @@ app.post("/api/getproject", async (req, res) => {
   try {
     const [user, _id] = verifyJWT(token);
     console.log("verified JWT");
-    // const projectRecord = await findProjectByID(projectID);
-    // const projectRecord = await Project.findById(
-    //   "631b5d77d0a12a420eb182ad"
-    // ).then((err, data) => {
-    //   if (!err) {
-    //     console.log(data);
-    //   } else {
-    //     throw err;
-    //   }
-    // });
     const projectRecord = await Project.findOne({
       _id: mongoose.Types.ObjectId(projectID),
     });

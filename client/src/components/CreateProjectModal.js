@@ -509,9 +509,6 @@ const CreateProjectModal = ({
                 <div className="label-row-container__col label-row-container__col--keywords">
                   <label htmlFor="keywords" className="form__label">
                     Campaign Keywords (Press Enter)
-                    {/* <span className="note__italic">
-                  E.g., sustainability, fashion, fitness, lifestyle
-                </span> */}
                   </label>
                   <input
                     onKeyDown={handleKeyDown}
@@ -1126,20 +1123,9 @@ const CreateProjectModal = ({
             ""
           )}
         </form>
-        {/* Update the example images */}
 
         {showUpload ? (
           <>
-            {/* {showSuccess ? (
-              <div className="create-project__success-div">
-                <h3 className="form__text form__text--header">
-                  The project was created!
-                </h3>
-              </div>
-            ) : (
-              ""
-            )} */}
-
             <form className="form " encType="multipart/form-data">
               <div className="mt-1p5">
                 <h4 className="form__text form__text--subheader">

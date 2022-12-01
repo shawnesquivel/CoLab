@@ -19,11 +19,9 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
 import colabFolder from "../assets/colab-logo.png";
 import colabTextTransparent from "../assets/colab-text-transparent.png";
-import colab from "../assets/colab-text.png";
-
+import useWindowSize from "../hooks/useWindowSize";
+import useFetchUser from "../hooks/useFetchUser";
 // Endpoints
-const GETUSER_URL = "/api/getuser";
-const CREATEPROJECT_URL = "/api/createproject";
 const GETPROJECT_URL = "api/getproject";
 
 const BUTTON_WRAPPER_STYLES = {
@@ -41,19 +39,14 @@ const OVERLAY_STYLES = {
   zIndex: 100,
 };
 
-// const OTHER_CONTENT_STYLES = {
-//   position: "relative",
-//   zIndex: 2,
-//   backgroundColor: "red",
-//   padding: "10px",
-// };
-
 const Dashboard = () => {
+  // New Way: One Line of Code 😁
+  const backendData = useFetchUser();
+
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
 
-  // STATE
-  const [backendData, setBackendData] = useState(""); //stores the user
+  const { width } = useWindowSize();
   const [currentProjects, setCurrentProjects] = useState([]);
   // Form
   const [notifications, toggleNotifications] = useState(false);
@@ -92,26 +85,6 @@ const Dashboard = () => {
     }
   }, [projectForm]);
   // Get User from Backend
-
-  useEffect(() => {
-    fetchUser().catch(console.error);
-  }, []);
-
-  const fetchUser = async () => {
-    const user = auth?.user;
-    const payload = JSON.stringify({
-      token: localStorage.getItem("token"),
-    });
-    const response = await axios.post(GETUSER_URL, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    });
-
-    setBackendData(response.data.userProfile);
-    console.log("updating user");
-  };
 
   const getProject = async (projectID) => {
     try {
@@ -188,7 +161,7 @@ const Dashboard = () => {
                     setShowActiveProjects(true);
                   }}
                 >
-                  Dashboard
+                  Dashboard {width}
                 </button>
               </li>
               <li className="dashboard-links__li">
