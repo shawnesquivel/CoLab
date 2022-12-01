@@ -1,17 +1,9 @@
 import projectCard from "../assets/project-card.png";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 const moment = require("moment");
 
 const NewCollabs = ({ currentProjects, expandProject }) => {
   const [inProgressProjects, setInProgressProjects] = useState([]);
-
-  // useEffect(() => {
-  //   const filteredProjects = currentProjects.filter(
-  //     (project) => project.status !== "project complete"
-  //   );
-
-  //   setInProgressProjects(filteredProjects);
-  // }, [currentProjects]);
 
   return (
     <section className="project-container">

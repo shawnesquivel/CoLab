@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const BtnCopy = ({ strArrToCopy, specialChar }) => {
-  useEffect(() => {
-    console.log(specialChar);
-  }, []);
   const generateCopyText = (strArr, char) => {
     console.log(strArr);
     if (typeof strArr !== "string") {
