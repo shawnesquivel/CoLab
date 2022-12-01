@@ -3,31 +3,22 @@ import {
   faCheck,
   faTimes,
   faPencil,
-  faSquareMinus,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactDOM from "react-dom";
-import {
-  faInstagram,
-  faTiktok,
-  faYoutube,
-  faStripe,
-  faPaypal,
-} from "@fortawesome/free-brands-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
-import campaignPhoto from "../assets/cloudpaint.png";
 import axios from "../api/axios";
 import StripeContainer from "./StripeContainer";
 import "../styles/projectmodal.scss";
 import "../styles/createprojectmodal.scss";
-import CreateProjectSummary from "./CreateProjectSummary";
+
 import ProjectModalPageOneReview from "./ProjectModalPageOneReview";
 import ProjectModalPageOneInProgress from "./ProjectModalPageOneInProgress";
 import ProjectModalPageOneSubmitted from "./ProjectModalPageOneSubmitted";
 import ProjectModalPageTwo from "./ProjectModalPageTwo";
 import ProjectModalPageThree from "./ProjectModalPageThree";
-import Contract from "./Contract"; //page Three
 import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
 import holidayBackground from "../assets/holiday-background.png";

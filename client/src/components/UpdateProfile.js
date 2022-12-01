@@ -61,28 +61,6 @@ const UpdateProfile = () => {
 
   const [errMsg, setErrMsg] = useState("");
 
-  // Fetch User Data on Page Load
-  const fetchUser = async () => {
-    // const user = auth?.user;
-    // test axios
-    // const response = await axios.get("https://yesno.wtf/api");
-    // const payload = JSON.stringify({
-    //   token: localStorage.getItem("token"),
-    // });
-    // const response = await axios.post(GETUSER_URL, payload, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   withCredentials: true,
-    // });
-    // setBackendData(response.data.userProfile);
-    // setAwsImage(response.data.avatar);
-  };
-
-  // useEffect(() => {
-  //   fetchUser().catch(console.error);
-  // }, []);
-
   // Add social media links and niche to profile
   const updateProfileLinks = async (e) => {
     e.preventDefault();

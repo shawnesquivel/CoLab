@@ -16,12 +16,6 @@ const ProjectModalPageFour = ({
   phrases,
   linkInBio,
 }) => {
-  // Page Four - Review Contract - Guideline Dropdowns
-  const [showHashtags, setShowHashtags] = useState(false);
-  const [showTags, setShowTags] = useState(false);
-  const [showPhrases, setShowPhrases] = useState(false);
-  const [showLinkInBio, setShowLinkInBio] = useState(false);
-
   useEffect(() => {
     console.log(instagramExample);
     console.log(youtubeExample);
