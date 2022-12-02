@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   faArrowRightFromBracket,
@@ -35,7 +35,6 @@ const OVERLAY_STYLES = {
 };
 
 const Dashboard = () => {
-  // New Way: One Line of Code 😁
   const { user, currentProjects } = useFetchUserAndProjects();
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
@@ -57,7 +56,7 @@ const Dashboard = () => {
   return (
     <>
       <section className="dashboard">
-        <div className="dashboard-container-left">
+        <div className="dashboard-container-left" data-testid="left">
           <Link to="/register" className="header-left links__link">
             <div className="logo-container">
               <img
