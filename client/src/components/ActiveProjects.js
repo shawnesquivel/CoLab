@@ -1,9 +1,29 @@
 import projectCard from "../assets/project-card.png";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 const moment = require("moment");
 
 const NewCollabs = ({ currentProjects, expandProject }) => {
   const [inProgressProjects, setInProgressProjects] = useState([]);
+
+  useEffect(() => {
+    console.log(currentProjects);
+  }, [currentProjects]);
+
+  useEffect(() => {
+    const lastIndex = currentProjects.length - 1;
+    console.log(currentProjects[lastIndex]);
+    if (
+      currentProjects[lastIndex]?.status !== "project complete" &&
+      currentProjects[lastIndex]
+    ) {
+      setInProgressProjects((inProgressProjects) => [
+        ...inProgressProjects,
+        currentProjects[lastIndex],
+      ]);
+    }
+
+    console.log(inProgressProjects);
+  }, [currentProjects]);
 
   return (
     <section className="project-container">
@@ -13,6 +33,7 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
             expandProject(project);
           }}
           className="dashboard__btn"
+          key={project._id}
         >
           <div className="img-container">
             <img

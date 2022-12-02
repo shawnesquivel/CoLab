@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
 // import Notifications from "./Notifications";
@@ -21,6 +21,7 @@ import colabFolder from "../assets/colab-logo.png";
 import colabTextTransparent from "../assets/colab-text-transparent.png";
 import useWindowSize from "../hooks/useWindowSize";
 import useFetchUser from "../hooks/useFetchUser";
+import useFetchActiveProjects from "../hooks/useFetchActiveProjects";
 // Endpoints
 const GETPROJECT_URL = "api/getproject";
 
@@ -41,23 +42,23 @@ const OVERLAY_STYLES = {
 
 const Dashboard = () => {
   // New Way: One Line of Code 😁
-  const backendData = useFetchUser();
+  const user = useFetchUser();
+  // const currentProjects = useFetchActiveProjects();
+  useEffect(() => {
+    console.log("user:", user);
+  }, [user]);
+
+  const testProjects = useRef([]);
 
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
 
-  const { width } = useWindowSize();
   const [currentProjects, setCurrentProjects] = useState([]);
   // Form
   const [notifications, toggleNotifications] = useState(false);
   const [notificationBtnText, setNotificationBtnText] = useState("");
   const [projectForm, toggleProjectForm] = useState(false);
   const [projectBtnText, setProjectBtnText] = useState("Create Project");
-
-  // Project Details
-  const [influencerAssigned, setInfluencerAssigned] = useState("");
-  const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState("");
 
   // Open Modals
   const [showModal, setShowModal] = useState(false);
@@ -98,11 +99,17 @@ const Dashboard = () => {
         withCredentials: true,
       });
 
-      // console.log("Response:", response);
-      setCurrentProjects((currentProjects) => [
-        ...currentProjects,
-        response.data.project,
-      ]);
+      // if a project was found
+      if (response.data.project) {
+        console.log("Response:", response.data.project);
+        setCurrentProjects((currentProjects) => [
+          ...currentProjects,
+          response.data.project,
+        ]);
+      }
+
+      // testProjects.current.push(response.data.project);
+      // console.log("Test Projects", testProjects);
     } catch (err) {
       console.log(err);
     }
@@ -111,22 +118,24 @@ const Dashboard = () => {
   useEffect(() => {
     refreshDashboard();
     // Dependency => if the backend data has any projects in it
-  }, [backendData?.currentProjects?.[0]]);
+  }, [user]);
 
-  const expandProject = (project) => {
-    setProjectModal(project);
-    setShowModal(true);
-  };
+  // const expandProject = (project) => {
+  //   setProjectModal(project);
+  //   setShowModal(true);
+  // };
 
   const refreshDashboard = () => {
     console.log("refreshing the dashboard");
     // If the backend data is loaded, fetch each project into currentProjects array
-    if (backendData?.currentProjects?.[0]) {
-      backendData.currentProjects.forEach((project) => {
+    if (user?.currentProjects?.[0]) {
+      user.currentProjects.forEach((project) => {
         getProject(project).catch(console.error);
       });
     }
   };
+
+  const testProjectTwo = useFetchActiveProjects(user);
 
   return (
     <>
@@ -160,7 +169,7 @@ const Dashboard = () => {
                     setShowActiveProjects(true);
                   }}
                 >
-                  Dashboard {width}
+                  Dashboard
                 </button>
               </li>
               <li className="dashboard-links__li">
@@ -189,17 +198,17 @@ const Dashboard = () => {
         </div>
 
         <div className="dashboard-container-right">
-          {backendData ? (
+          {user ? (
             <header className="dashboard-header dashboard-header--light ">
               <div className="dashboard-header-left">
-                {backendData.hasUpdatedProfile ? (
+                {user.hasUpdatedProfile ? (
                   <h3 className="dashboard-header-left__greeting">
-                    Welcome back, {backendData.firstName}. 👋
+                    Welcome back, {user.firstName}. 👋
                   </h3>
                 ) : (
                   <>
                     <h2 className="header-left__greeting">
-                      Welcome, {backendData.firstName}. 👋
+                      Welcome, {user.firstName}. 👋
                     </h2>
 
                     <p className="register__text register__text--subtle">
@@ -222,14 +231,14 @@ const Dashboard = () => {
                     className="icon-medium"
                   />
                 </Link>
-                {backendData.avatar ? (
+                {user.avatar ? (
                   <Link
                     to="/updateprofile"
                     className="register__text register__text--subtle text--underline"
                   >
                     <img
                       className="dashboard-header-right__avatar"
-                      src={backendData.avatar}
+                      src={user.avatar}
                       alt="profile"
                     />
                   </Link>
@@ -242,7 +251,7 @@ const Dashboard = () => {
             ""
           )}
 
-          {backendData ? (
+          {user ? (
             <>
               {/* Create Project (ONLY FOR BRAND REPS) */}
               {auth.roles.includes(3000) &&
@@ -258,7 +267,7 @@ const Dashboard = () => {
                       }}
                       project={projectModal}
                       role={auth.roles}
-                      brand={backendData.firstName}
+                      brand={user.firstName}
                       OVERLAY_STYLES={OVERLAY_STYLES}
                     >
                       Create Project
@@ -297,7 +306,8 @@ const Dashboard = () => {
                   )}
                   <ActiveProjects
                     currentProjects={currentProjects}
-                    expandProject={expandProject}
+                    // currentProjects={testProjects.current}
+                    // expandProject={expandProject}
                   />
                 </>
               ) : (
@@ -305,14 +315,13 @@ const Dashboard = () => {
               )}
 
               {/* Contains all the new projects */}
-              {showNewCollabs ? (
-                <NewCollabs
-                  currentProjects={currentProjects}
-                  expandProject={expandProject}
-                />
-              ) : (
-                ""
-              )}
+              {showNewCollabs
+                ? // <NewCollabs
+                  //   currentProjects={currentProjects}
+                  //   expandProject={expandProject}
+                  // />
+                  ""
+                : ""}
             </>
           ) : (
             <h3>Backend is loading...</h3>
@@ -358,8 +367,8 @@ const Dashboard = () => {
               project={projectModal}
               role={auth.roles}
               OVERLAY_STYLES={OVERLAY_STYLES}
-              user={backendData}
-              refreshDashboard={refreshDashboard}
+              user={user}
+              // refreshDashboard={refreshDashboard}
             >
               Project Modal
             </ProjectModal>

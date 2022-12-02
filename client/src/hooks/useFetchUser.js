@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const GETUSER_URL = "/api/getuser";
 
 const useFetchUser = () => {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState();
 
   const fetchUser = async () => {
     try {
@@ -21,7 +21,7 @@ const useFetchUser = () => {
         withCredentials: true,
       });
 
-      console.log("fetchUser: updating user", response);
+      console.log("Running Async Fetch User", response);
 
       setUser(response.data.userProfile);
     } catch (err) {
@@ -33,7 +33,6 @@ const useFetchUser = () => {
     fetchUser().catch(console.error);
   }, []);
 
-  console.log(user);
   return user;
 };
 
