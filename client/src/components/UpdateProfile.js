@@ -249,7 +249,7 @@ const UpdateProfile = () => {
               <p className="update-profile__description mb-1p5">
                 {auth.roles.includes(2000)
                   ? "Please complete your profile so we can match you with the right brands."
-                  : `Please upload a logo for ${user.company}.`}
+                  : `Please upload a logo for ${user?.company}.`}
               </p>
               {pageOne ? (
                 <>
@@ -436,7 +436,10 @@ const UpdateProfile = () => {
                             type="button"
                             className="btn-cta btn-cta--inactive"
                           >
-                            <Link to="/dashboard" className="text--light">
+                            <Link
+                              to="/dashboard"
+                              className="text--light dashboard-link"
+                            >
                               Go to Dashboard
                             </Link>
                           </button>

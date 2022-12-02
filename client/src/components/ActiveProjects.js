@@ -6,17 +6,11 @@ const ActiveProjects = ({ currentProjects, expandProject }) => {
   const [inProgressProjects, setInProgressProjects] = useState([]);
 
   useEffect(() => {
-    console.log("currentProjects:", currentProjects);
-  });
-
-  useEffect(() => {
     const filteredProjects = currentProjects.filter((project, index) => {
-      console.log(project?.status);
       return project?.status !== "project complete" && project !== null;
     });
 
     setInProgressProjects(filteredProjects);
-    console.log("filteredProjects:", filteredProjects);
   }, [currentProjects]);
 
   return (

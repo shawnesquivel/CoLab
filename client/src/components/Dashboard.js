@@ -82,15 +82,12 @@ const Dashboard = () => {
         },
         withCredentials: true,
       });
-      console.log("Axios Response", response.data.project);
+      // console.log("Axios Response", response.data.project);
       // if a project was found
       setCurrentProjects((currentProjects) => [
         ...currentProjects,
         response.data.project,
       ]);
-      // Tried useRef, but doesn't re-render thus ActiveProjects doesn't update.
-      // testProjects.current.push(response.data.project);
-      // console.log("Test Projects", testProjects);
     } catch (err) {
       console.log(err);
     }
@@ -108,25 +105,6 @@ const Dashboard = () => {
       getProject(projectID).catch(console.error);
     });
   };
-
-  // useEffect(() => {
-  //   // Filter
-  //   const lastIndex = currentProjects.length - 1;
-  //   if (
-  //     currentProjects[lastIndex]?.status !== "project complete" &&
-  //     currentProjects[lastIndex]
-  //   ) {
-  //     console.log("In Progress, Adding to Array:", currentProjects[lastIndex]);
-  //     setInProgressProjects((inProgressProjects) => [
-  //       ...inProgressProjects,
-  //       currentProjects[lastIndex],
-  //     ]);
-  //   } else {
-  //     console.log("Not in Progress:", currentProjects[lastIndex]);
-  //   }
-  //   console.log("All Projects:", currentProjects);
-  //   console.log("In Progress:", inProgressProjects);
-  // }, [currentProjects]);
 
   // const testProjectTwo = useFetchActiveProjects(user);
   const expandProject = (project) => {
