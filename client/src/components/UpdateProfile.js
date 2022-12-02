@@ -12,9 +12,8 @@ import greyCircle from "../assets/greycircle.jpg";
 import Links from "./Links";
 
 import "../styles/updateprofile.scss";
-import useFetchUser from "../hooks/useFetchUser";
+import useFetchUserAndProjects from "../hooks/useFetchUserAndProjects";
 
-const GETUSER_URL = "/api/getuser";
 const UPDATEPROFILE_URL = "/api/updateprofile";
 const UPDATE_AVATAR_URL = "api/updateavatar";
 const UPDATE_MEDIAKIT_URL = "api/updatemediakit";
@@ -22,15 +21,14 @@ const UPDATE_MEDIAKIT_URL = "api/updatemediakit";
 const UpdateProfile = () => {
   // Use authContext to get the current logged in user ? ?
   const { auth } = useAuth(AuthContext);
-  const user = useFetchUser();
+  const { user } = useFetchUserAndProjects();
   // If the user is a brand, show page 2 first
   useEffect(() => {
-    console.log(auth);
     if (auth.roles.includes(3000)) {
       showPageOne(false);
       showPageTwo(true);
     }
-  }, []);
+  }, [auth.roles]);
   // backend data holds user data
   // const [backendData, setBackendData] = useState({
   //   status: "still fetching user data",
@@ -48,7 +46,7 @@ const UpdateProfile = () => {
   // Page 2
   const [selectedFile, setSelectedFile] = useState("");
   const [isFilePicked, setIsFilePicked] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
+
   // Pages
   const [pageOne, showPageOne] = useState(true);
   const [pageTwo, showPageTwo] = useState(false);
@@ -57,7 +55,6 @@ const UpdateProfile = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [uploadAvatarSuccess, setUploadAvatarSuccess] = useState(false);
   // get image data from backend on pageload
-  const [imgData, setImgData] = useState([]);
 
   const [errMsg, setErrMsg] = useState("");
 
@@ -113,15 +110,12 @@ const UpdateProfile = () => {
     e.preventDefault();
     let amazonURL;
     let file;
-    let contentType;
     // get secure url from server
     if (type === "image") {
       file = selectedFile;
-      contentType = "multipart/form-data";
     }
     if (type === "pdf") {
       file = mediaKit;
-      contentType = "application/pdf";
     }
 
     try {
@@ -449,7 +443,7 @@ const UpdateProfile = () => {
                         {auth.roles.includes(2000) ? (
                           <button
                             type="button"
-                            className="btn-cta btn-cta--skip"
+                            className="btn-skip"
                             onClick={() => {
                               showPageTwo(false);
                               showPageThree(true);

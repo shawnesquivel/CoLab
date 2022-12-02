@@ -1,5 +1,5 @@
 import projectCard from "../assets/project-card.png";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 const moment = require("moment");
 
 const ActiveProjects = ({ currentProjects, expandProject }) => {

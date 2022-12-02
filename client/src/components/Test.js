@@ -1,10 +1,10 @@
 import React from "react";
 
-import useFetchUser from "../hooks/useFetchUser";
+import useFetchUserAndProjects from "../hooks/useFetchUserAndProjects";
 
 const Test = () => {
-  // Encapsulate all the logic into a custom hook, useFetchUser!
-  const user = useFetchUser();
+  // Encapsulate all the logic into a custom hook, useFetchUserAndProjects!
+  const user = useFetchUserAndProjects();
 
   return (
     <div>

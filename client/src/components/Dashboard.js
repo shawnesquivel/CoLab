@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "../api/axios";
-// import Notifications from "./Notifications";
 import {
   faArrowRightFromBracket,
   faBell,
@@ -19,11 +17,7 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import "../styles/dashboard.scss";
 import colabFolder from "../assets/colab-logo.png";
 import colabTextTransparent from "../assets/colab-text-transparent.png";
-import useWindowSize from "../hooks/useWindowSize";
-import useFetchUser from "../hooks/useFetchUser";
-import useFetchActiveProjects from "../hooks/useFetchActiveProjects";
-// Endpoints
-const GETPROJECT_URL = "api/getproject";
+import useFetchUserAndProjects from "../hooks/useFetchUserAndProjects";
 
 const BUTTON_WRAPPER_STYLES = {
   position: "relative",
@@ -42,23 +36,9 @@ const OVERLAY_STYLES = {
 
 const Dashboard = () => {
   // New Way: One Line of Code 😁
-  const user = useFetchUser();
-  // const currentProjects = useFetchActiveProjects();
-  useEffect(() => {
-    console.log("user:", user);
-  }, [user]);
-
-  const testProjects = useRef([]);
-
+  const { user, currentProjects } = useFetchUserAndProjects();
   const { auth } = useAuth(AuthContext);
   const navigate = useNavigate(); // to use the navigate hook
-
-  const [currentProjects, setCurrentProjects] = useState([]);
-  // Form
-  const [notifications, toggleNotifications] = useState(false);
-  const [notificationBtnText, setNotificationBtnText] = useState("");
-  const [projectForm, toggleProjectForm] = useState(false);
-  const [projectBtnText, setProjectBtnText] = useState("Create Project");
 
   // Open Modals
   const [showModal, setShowModal] = useState(false);
@@ -70,43 +50,6 @@ const Dashboard = () => {
   // Disable Body Scroll when Modal is open
   showModal ? disableBodyScroll(document) : enableBodyScroll(document);
 
-  const getProject = async (projectID) => {
-    try {
-      const payload = JSON.stringify({
-        token: localStorage.getItem("token"),
-        projectID: projectID,
-      });
-      const response = await axios.post(GETPROJECT_URL, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-      // console.log("Axios Response", response.data.project);
-      // if a project was found
-      setCurrentProjects((currentProjects) => [
-        ...currentProjects,
-        response.data.project,
-      ]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getAllProjects();
-    // Dependency => if the backend data has any projects in it
-  }, [user]);
-
-  const getAllProjects = () => {
-    console.log("refreshing the dashboard");
-    // If the backend data is loaded, fetch each project into currentProjects array
-    user?.currentProjects.forEach((projectID) => {
-      getProject(projectID).catch(console.error);
-    });
-  };
-
-  // const testProjectTwo = useFetchActiveProjects(user);
   const expandProject = (project) => {
     setProjectModal(project);
     setShowModal(true);
