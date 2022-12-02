@@ -193,6 +193,7 @@ const NewCollabs = ({ currentProjects, expandProject }) => {
                   expandProject(project);
                 }}
                 className="dashboard__btn"
+                key={project._id}
               >
                 <div className="img-container">
                   <img

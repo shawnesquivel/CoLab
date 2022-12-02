@@ -11,7 +11,7 @@ const useFetchActiveProjects = (user) => {
       status: false,
     };
 
-  console.log("usefetchActiveProejcts triggered");
+  //   console.log("usefetchActiveProejcts triggered");
 };
 
 export default useFetchActiveProjects;

@@ -70,22 +70,6 @@ const Dashboard = () => {
   // Disable Body Scroll when Modal is open
   showModal ? disableBodyScroll(document) : enableBodyScroll(document);
 
-  // Toggle Button Text
-  useEffect(() => {
-    if (notifications) {
-      setNotificationBtnText(" Hide");
-    } else {
-      setNotificationBtnText("");
-    }
-  }, [notifications]);
-  useEffect(() => {
-    if (projectForm) {
-      setProjectBtnText(" Hide");
-    } else {
-      setProjectBtnText(" Create Project");
-    }
-  }, [projectForm]);
-
   const getProject = async (projectID) => {
     try {
       const payload = JSON.stringify({
@@ -98,16 +82,13 @@ const Dashboard = () => {
         },
         withCredentials: true,
       });
-
+      console.log("Axios Response", response.data.project);
       // if a project was found
-      if (response.data.project) {
-        console.log("Response:", response.data.project);
-        setCurrentProjects((currentProjects) => [
-          ...currentProjects,
-          response.data.project,
-        ]);
-      }
-
+      setCurrentProjects((currentProjects) => [
+        ...currentProjects,
+        response.data.project,
+      ]);
+      // Tried useRef, but doesn't re-render thus ActiveProjects doesn't update.
       // testProjects.current.push(response.data.project);
       // console.log("Test Projects", testProjects);
     } catch (err) {
@@ -116,27 +97,42 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    refreshDashboard();
+    getAllProjects();
     // Dependency => if the backend data has any projects in it
   }, [user]);
 
-  // const expandProject = (project) => {
-  //   setProjectModal(project);
-  //   setShowModal(true);
-  // };
-
-  const refreshDashboard = () => {
+  const getAllProjects = () => {
     console.log("refreshing the dashboard");
     // If the backend data is loaded, fetch each project into currentProjects array
-    if (user?.currentProjects?.[0]) {
-      user.currentProjects.forEach((project) => {
-        getProject(project).catch(console.error);
-      });
-    }
+    user?.currentProjects.forEach((projectID) => {
+      getProject(projectID).catch(console.error);
+    });
   };
 
-  const testProjectTwo = useFetchActiveProjects(user);
+  // useEffect(() => {
+  //   // Filter
+  //   const lastIndex = currentProjects.length - 1;
+  //   if (
+  //     currentProjects[lastIndex]?.status !== "project complete" &&
+  //     currentProjects[lastIndex]
+  //   ) {
+  //     console.log("In Progress, Adding to Array:", currentProjects[lastIndex]);
+  //     setInProgressProjects((inProgressProjects) => [
+  //       ...inProgressProjects,
+  //       currentProjects[lastIndex],
+  //     ]);
+  //   } else {
+  //     console.log("Not in Progress:", currentProjects[lastIndex]);
+  //   }
+  //   console.log("All Projects:", currentProjects);
+  //   console.log("In Progress:", inProgressProjects);
+  // }, [currentProjects]);
 
+  // const testProjectTwo = useFetchActiveProjects(user);
+  const expandProject = (project) => {
+    setProjectModal(project);
+    setShowModal(true);
+  };
   return (
     <>
       <section className="dashboard">
@@ -306,8 +302,7 @@ const Dashboard = () => {
                   )}
                   <ActiveProjects
                     currentProjects={currentProjects}
-                    // currentProjects={testProjects.current}
-                    // expandProject={expandProject}
+                    expandProject={expandProject}
                   />
                 </>
               ) : (
@@ -315,13 +310,14 @@ const Dashboard = () => {
               )}
 
               {/* Contains all the new projects */}
-              {showNewCollabs
-                ? // <NewCollabs
-                  //   currentProjects={currentProjects}
-                  //   expandProject={expandProject}
-                  // />
-                  ""
-                : ""}
+              {showNewCollabs ? (
+                <NewCollabs
+                  currentProjects={currentProjects}
+                  expandProject={expandProject}
+                />
+              ) : (
+                ""
+              )}
             </>
           ) : (
             <h3>Backend is loading...</h3>
