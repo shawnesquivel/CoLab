@@ -5,7 +5,6 @@ import {
   faBell,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
@@ -243,33 +242,6 @@ const Dashboard = () => {
             <h3>Backend is loading...</h3>
           )}
         </div>
-
-        {/* Notification Button */}
-        {/* {notifications ? (
-        <>
-          <Notifications className="notification-btn" />
-          <button
-            onClick={() => {
-              toggleNotifications(!notifications);
-            }}
-            className="notification-btn"
-          >
-            <FontAwesomeIcon icon={faBell} /> {notificationBtnText}
-          </button>
-        </>
-      ) : (
-        <button
-          onClick={() => {
-            toggleNotifications(!notifications);
-          }}
-          className="notification-btn"
-        >
-          <FontAwesomeIcon icon={faBell} /> {notificationBtnText}
-        </button>
-      )} */}
-
-        <br />
-        {/* Expand Create Project Form */}
 
         {/* Expand Project */}
         <div style={BUTTON_WRAPPER_STYLES}>

@@ -13,7 +13,8 @@ const ProjectModalPageOneReview = ({
     <>
       <div className="project-modal-page__group">
         <h4 className="project-modal-page__label">Description</h4>
-        {description ? (
+        <p>{description}</p>
+        {/* {description ? (
           <>
             <p className="form__text">{description}</p>
           </>
@@ -23,7 +24,7 @@ const ProjectModalPageOneReview = ({
             classes and members across 150 countries, who come together to find
             inspiration and take the next step in their creative journey.
           </p>
-        )}
+        )} */}
       </div>
 
       <div className="project-modal-page__group">
