@@ -37,11 +37,31 @@ const Login = () => {
     userRef.current.focus();
   }, []);
 
-  // useEffect(() => {
-  //   // console.log("Username:", user);
-  //   // console.log("Password:", pwd);
-  //   setErrMsg("");
-  // }, [user, pwd]);
+  // test new node JS architecture
+  const testSubmit = async (e) => {
+    try {
+      const payload = JSON.stringify({ user: "adidas", pwd: "Password1!" });
+      const response = await axios.post(
+        "http://localhost:5000/user/login",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      const accessToken = response?.data?.token;
+      const roles = response?.data?.roles;
+      console.log(accessToken, roles);
+      setUser("");
+      setPwd("");
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -236,6 +256,7 @@ const Login = () => {
             {/* <button onClick={handleSubmitInfluencer} >
             Login as an Influencer
           </button> */}
+            <button onClick={testSubmit}>Testing</button>
           </div>
           <img
             src={loginImg}

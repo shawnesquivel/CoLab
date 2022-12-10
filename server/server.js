@@ -29,19 +29,24 @@ const aws = require("aws-sdk");
 const crypto = require("crypto");
 const { promisify } = require("util");
 const randomBytes = promisify(crypto.randomBytes);
-
-// const upload = multer ( { dest: 'uploads/'});
-
-// To allow requests from client side server
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
   })
 );
+app.use(bodyParser.json());
+
+// test route for MVC architecture
+const userRoutes = require("./routes/user");
+
+app.use("/user", userRoutes);
+
+// const upload = multer ( { dest: 'uploads/'});
+
+// To allow requests from client side server
 
 // To allow the request body to be parsed
-app.use(bodyParser.json());
 
 const ROLES = {
   Admin: 1000,
