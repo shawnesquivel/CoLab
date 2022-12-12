@@ -256,7 +256,7 @@ const Login = () => {
             {/* <button onClick={handleSubmitInfluencer} >
             Login as an Influencer
           </button> */}
-            <button onClick={testSubmit}>Testing</button>
+            {/* <button onClick={testSubmit}>Testing</button> */}
           </div>
           <img
             src={loginImg}
