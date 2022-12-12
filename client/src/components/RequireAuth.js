@@ -5,7 +5,7 @@ import useAuth from "../hooks/useAuth";
 // allowedRoles is an array
 const RequireAuth = ({ allowedRoles }) => {
   const { auth } = useAuth(); // re-renders when authorization changes
-  const location = useLocation(); // how does this work?
+  const location = useLocation();
 
   // Outlet represnets any child component of RequireAuth
   // Protects all child compoents of it
