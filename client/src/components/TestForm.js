@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function TestForm() {
+function TestForm({ headingText }) {
   const [state, setState] = useState({
     name: "Blank",
     age: 5,
@@ -22,7 +22,7 @@ function TestForm() {
 
   return (
     <div className="App">
-      <h1>Welcome {state.name} </h1>
+      <p data-testid="welcome-banner">Welcome {state.name} </p>
       <form onSubmit={handleSubmit}>
         <label>
           Name:
@@ -33,6 +33,9 @@ function TestForm() {
           <input type="text" value={state.age} onChange={updateAge} />
         </label>
       </form>
+
+      <h1>{headingText ? headingText : "a turquoise frog"}</h1>
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }

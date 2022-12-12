@@ -9,7 +9,8 @@ import Unauthorized from "./components/Unauthorized";
 import Links from "./components/Links";
 import Dashboard from "./components/Dashboard";
 import RequireAuth from "./components/RequireAuth";
-import Test from "./components/Test";
+import TestForm from "./components/TestForm";
+import TestLogin from "./components/TestLogin";
 
 const ROLES = {
   Admin: 1000,
@@ -23,7 +24,8 @@ const App = () => {
       <Route path="/" element={<Layout />}>
         {/* Public Routes */}
         <Route path="register" element={<Register />} />
-        <Route path="test" element={<Test />} />
+        <Route path="testform" element={<TestForm />} />
+        <Route path="testlogin" element={<TestLogin />} />
         <Route path="login" element={<Login />} />
         <Route path="links" element={<Links />} />
         <Route path="changepassword" element={<ChangePassword />} />
