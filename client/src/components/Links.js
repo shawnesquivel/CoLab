@@ -16,7 +16,7 @@ const Links = () => {
   return (
     <>
       <header className="header">
-        <Link to="/register" className="header-left links__link">
+        <Link to="/" className="header-left links__link">
           <img
             src={colab}
             alt="colab text logo"

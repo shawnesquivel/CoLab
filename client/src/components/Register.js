@@ -8,6 +8,7 @@ import signUpImg from "../assets/signup.png";
 import RegisterForm from "./RegisterForm";
 import RegisterSelect from "./RegisterSelect";
 import Links from "./Links";
+import { Outlet } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate(); // to use the navigate hook
@@ -89,6 +90,7 @@ const Register = () => {
             ""
           )}
         </div>
+        <Outlet />
       </main>
     </>
   );
