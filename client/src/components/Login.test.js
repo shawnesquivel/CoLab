@@ -153,6 +153,7 @@ test("Button should not be  disabled when username/pwd is filled", () => {
   expect(buttonEl).not.toBeDisabled();
 });
 
+// Move this to dashboard.test.js
 // test("User should be rendered after fetching", async () => {
 //    render(
 //     <BrowserRouter>
