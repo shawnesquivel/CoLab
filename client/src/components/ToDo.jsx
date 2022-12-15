@@ -12,7 +12,7 @@ const ToDo = ({ title, deadline }) => {
   const defaultTitle = "Task Not Found";
 
   return (
-    <div className="to-do">
+    <button className="to-do__card">
       <h4 className="to-do__title">{title || defaultTitle}</h4>
       <p className="to-do__deadline">
         By{" "}
@@ -20,7 +20,7 @@ const ToDo = ({ title, deadline }) => {
           ? moment(deadline).format("MMMM Do, YYYY")
           : moment(defaultDeadline).format("MMMM Do, YYYY")}
       </p>
-    </div>
+    </button>
   );
 };
 

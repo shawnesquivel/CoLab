@@ -129,11 +129,16 @@ const ProjectModalPageOneInProgress = ({
 
   return (
     <>
-      <ToDoList />
-
-      {!showUploadSuccess && status !== "brand reviewing" ? (
-        <div className="project-modal-container">
-          <h1 className="form__text form__text--subheader-large">Tasks</h1>
+      <div className="to-do">
+        <div className="to-do-left">
+          <ToDoList
+            status={status}
+            tiktokTask={tiktokTask}
+            youtubeTask={youtubeTask}
+            instagramTask={instagramTask}
+          />
+        </div>
+        <div className="to-do-right">
           {instagramTask ? (
             <>
               <p>
@@ -160,221 +165,144 @@ const ProjectModalPageOneInProgress = ({
           ) : (
             " "
           )}
-
-          <div className="guidelines-card">
-            <div className="guidelines-card__header">
-              <FontAwesomeIcon
-                icon={faCircleExclamation}
-                className="icon-highlight guidelines-card__flex-one"
-              />
-              <div className="guidelines-card__flex-two">
-                <h4>Next Step: Submit Draft</h4>
-                <p className="deadline-text">
-                  By {moment(reviewDeadline).format("MMMM Do YYYY, h:mm:ss a")}
-                </p>
-              </div>
-              <button
-                type="button"
-                className="guidelines-card__flex-three guidelines-card__btn-expand"
-                onClick={() => {
-                  setShowSubmitDraft(!showSubmitDraft);
-                }}
-              >
-                {showSubmitDraft ? (
-                  <>
-                    <FontAwesomeIcon icon={faAngleUp} />
-                  </>
-                ) : (
-                  <>
-                    <FontAwesomeIcon icon={faAngleDown} />
-                  </>
-                )}
-              </button>
-            </div>
-
-            <div className="project-modal-tasks-expand-container">
-              {/* replaced by form */}
-              {/* {instagramTask ? (
-                  <div className="project-task">
-                    <p className="">
-                      <FontAwesomeIcon
-                        icon={faInstagram}
-                        className="icon-left"
-                      />
-                      {instagramTask}
-                    </p>
-                    <button
-                      type="button"
-                      className={
-                        instagramBtnTxt === "Submitted"
-                          ? "form__btn-dotted form__btn-dotted--success"
-                          : "form__btn-dotted"
-                      }
-                      onClick={() => {
-                        setInstagramBtnTxt("Submitted");
-                      }}
-                    >
-                      {instagramBtnTxt}
-                    </button>
+          {!showUploadSuccess && status !== "brand reviewing" ? (
+            <div className="project-modal-container">
+              <div className="guidelines-card">
+                <div className="guidelines-card__header">
+                  <FontAwesomeIcon
+                    icon={faCircleExclamation}
+                    className="icon-highlight guidelines-card__flex-one"
+                  />
+                  <div className="guidelines-card__flex-two">
+                    <p>Upload</p>
                   </div>
-                ) : (
-                  ""
-                )}
-
-                {tiktokTask ? (
-                  <div className="project-task">
-                    <p className="">
-                      <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-                      {tiktokTask}
-                    </p>
-                    <button
-                      type="button"
-                      className={
-                        tiktokBtnTxt === "Submitted"
-                          ? "form__btn-dotted form__btn-dotted--success"
-                          : "form__btn-dotted"
-                      }
-                      onClick={() => {
-                        setTiktokBtnTxt("Submitted");
-                      }}
-                    >
-                      {tiktokBtnTxt}
-                    </button>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {youtubeTask ? (
-                  <div className="project-task">
-                    <p className="">
-                      <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-                      {youtubeTask}
-                    </p>
-                    <button
-                      type="button"
-                      className={
-                        youtubeBtnTxt === "Submitted"
-                          ? "form__btn-dotted form__btn-dotted--success"
-                          : "form__btn-dotted"
-                      }
-                      onClick={() => {
-                        setYoutubeBtnTxt("Submitted");
-                      }}
-                    >
-                      {youtubeBtnTxt}
-                    </button>
-                  </div>
-                ) : (
-                  ""
-                )} */}
-
-              <form className="form form--small" encType="multipart/form-data">
-                <label htmlFor="avatar" className="form__label">
-                  File Upload
-                </label>
-                <input
-                  type="file"
-                  id="avatar"
-                  name="avatar"
-                  onChange={uploadImgFileHandler}
-                  required
-                  className="create-project-form__input create-project-form__input--file"
-                />
-                <p id="uidnote" className="form__instructions">
-                  Max 2MB, .png only
-                </p>
-                <label htmlFor="social">
-                  Which deliverable is this an example for?
-                </label>
-                <select
-                  name="social"
-                  id="social"
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    setSocialExample(e.target.value);
-                  }}
-                  value={socialExample}
-                  className="form__input form__input--select "
-                >
-                  <option value="none" className="form__social">
-                    Select Platform
-                  </option>
-                  <option
-                    value="instagram"
-                    className="create-project-form__social"
-                  >
-                    Instagram
-                  </option>
-                  <option
-                    value="tiktok"
-                    className="create-project-form__social"
-                  >
-                    Tik Tok
-                  </option>
-                  <option
-                    value="youtube"
-                    className="create-project-form__social"
-                  >
-                    Youtube
-                  </option>
-                </select>
-
-                <div className="flex-col-center">
-                  {awsImage ? (
-                    <img
-                      className="form__profile-pic"
-                      src={awsImage}
-                      alt="aws avatar"
-                    />
-                  ) : (
-                    <img
-                      className="form__profile-pic"
-                      src={greyCircle}
-                      alt="blank avatar"
-                    />
-                  )}
-                  {uploadSuccessMsg ? (
-                    <p className="form__text form__text--success">
-                      {uploadSuccessMsg}
-                    </p>
-                  ) : (
-                    " "
-                  )}
                   <button
-                    type="submit"
-                    onClick={(e) => handleAwsUpload(e, "image")}
-                    className="update-profile__btn-cta"
+                    type="button"
+                    className="guidelines-card__flex-three guidelines-card__btn-expand"
+                    onClick={() => {
+                      setShowSubmitDraft(!showSubmitDraft);
+                    }}
                   >
-                    Upload Photo
+                    {showSubmitDraft ? (
+                      <>
+                        <FontAwesomeIcon icon={faAngleUp} />
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faAngleDown} />
+                      </>
+                    )}
                   </button>
+                </div>
+                {showSubmitDraft ? (
+                  <div className="project-modal-tasks-expand-container">
+                    <form
+                      className="form form--small"
+                      encType="multipart/form-data"
+                    >
+                      <label htmlFor="avatar" className="form__label">
+                        File Upload
+                      </label>
+                      <input
+                        type="file"
+                        id="avatar"
+                        name="avatar"
+                        onChange={uploadImgFileHandler}
+                        required
+                        className="create-project-form__input create-project-form__input--file"
+                      />
+                      <p id="uidnote" className="form__instructions">
+                        Max 2MB, .png only
+                      </p>
+                      <label htmlFor="social">
+                        Which deliverable is this an example for?
+                      </label>
+                      <select
+                        name="social"
+                        id="social"
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setSocialExample(e.target.value);
+                        }}
+                        value={socialExample}
+                        className="form__input form__input--select "
+                      >
+                        <option value="none" className="form__social">
+                          Select Platform
+                        </option>
+                        <option
+                          value="instagram"
+                          className="create-project-form__social"
+                        >
+                          Instagram
+                        </option>
+                        <option
+                          value="tiktok"
+                          className="create-project-form__social"
+                        >
+                          Tik Tok
+                        </option>
+                        <option
+                          value="youtube"
+                          className="create-project-form__social"
+                        >
+                          Youtube
+                        </option>
+                      </select>
 
-                  {/* {errMsg ? (
-                  <p aria-live="assertive" className="update-profile__error">
-                    {errMsg}
-                  </p>
+                      <div className="flex-col-center">
+                        {awsImage ? (
+                          <img
+                            className="form__profile-pic"
+                            src={awsImage}
+                            alt="aws avatar"
+                          />
+                        ) : (
+                          <img
+                            className="form__profile-pic"
+                            src={greyCircle}
+                            alt="blank avatar"
+                          />
+                        )}
+                        {uploadSuccessMsg ? (
+                          <p className="form__text form__text--success">
+                            {uploadSuccessMsg}
+                          </p>
+                        ) : (
+                          " "
+                        )}
+                        <button
+                          type="submit"
+                          onClick={(e) => handleAwsUpload(e, "image")}
+                          className="update-profile__btn-cta"
+                        >
+                          Upload Photo
+                        </button>
+                      </div>
+                    </form>
+
+                    <button
+                      className="form__btn-dotted form__btn-dotted--large"
+                      style={{ margin: "0 auto", marginTop: "1rem" }}
+                      onClick={(e) => {
+                        handleSubmit("influencer submit draft", e);
+                        setShowSubmitDraft(false);
+                        setShowUploadSuccess(true);
+                      }}
+                    >
+                      Finished Uploading? Request review.
+                    </button>
+                  </div>
                 ) : (
                   ""
-                )} */}
-                </div>
-              </form>
-
-              <button
-                className="form__btn-dotted form__btn-dotted--large"
-                style={{ margin: "0 auto", marginTop: "1rem" }}
-                onClick={(e) => {
-                  handleSubmit("influencer submit draft", e);
-                  setShowSubmitDraft(false);
-                  setShowUploadSuccess(true);
-                }}
-              >
-                Finished Uploading? Request review.
-              </button>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
-      ) : (
-        ""
-      )}
+      </div>
 
       {showUploadSuccess ? (
         <>
