@@ -30,11 +30,7 @@ const ProjectModalPageOneInProgress = ({
 }) => {
   // Page One - 2 - In Progress - Task Dropdowns
   const [showSubmitDraft, setShowSubmitDraft] = useState(false);
-  const [showReviseDraft, setShowReviseDraft] = useState(false);
 
-  const [instagramBtnTxt, setInstagramBtnTxt] = useState("Upload");
-  const [tiktokBtnTxt, setTiktokBtnTxt] = useState("Upload");
-  const [youtubeBtnTxt, setYoutubeBtnTxt] = useState("Upload");
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
 
   // Copy and Pasta from Create Project Modal BEGIN - upload image
