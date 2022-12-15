@@ -7,13 +7,10 @@ import {
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import {
-  faAngleDown,
-  faAngleUp,
-  faSquareMinus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import greyCircle from "../assets/greycircle.jpg";
 import axios from "../api/axios";
+import ToDoList from "./ToDoList";
 
 const moment = require("moment");
 const ADD_PROJECT_IMAGES_URL = "/api/addprojectimage";
@@ -132,16 +129,8 @@ const ProjectModalPageOneInProgress = ({
 
   return (
     <>
-      <h1 className="form__text form__text--subheader-large">Deadlines</h1>
-      <p className="form__text form__text--subheader">
-        Upload first draft by:{" "}
-        {moment(reviewDeadline).format("MMMM Do YYYY, h:mm:ss a")}
-      </p>
+      <ToDoList />
 
-      <p className="form__text form__text--subheader">
-        Post to social media by:{" "}
-        {moment(deadline).format("MMMM Do YYYY, h:mm:ss a")}
-      </p>
       {!showUploadSuccess && status !== "brand reviewing" ? (
         <div className="project-modal-container">
           <h1 className="form__text form__text--subheader-large">Tasks</h1>
@@ -202,10 +191,10 @@ const ProjectModalPageOneInProgress = ({
                 )}
               </button>
             </div>
-            {showSubmitDraft ? (
-              <div className="project-modal-tasks-expand-container">
-                {/* replaced by form */}
-                {/* {instagramTask ? (
+
+            <div className="project-modal-tasks-expand-container">
+              {/* replaced by form */}
+              {/* {instagramTask ? (
                   <div className="project-task">
                     <p className="">
                       <FontAwesomeIcon
@@ -279,114 +268,108 @@ const ProjectModalPageOneInProgress = ({
                   ""
                 )} */}
 
-                <form
-                  className="form form--small"
-                  encType="multipart/form-data"
+              <form className="form form--small" encType="multipart/form-data">
+                <label htmlFor="avatar" className="form__label">
+                  File Upload
+                </label>
+                <input
+                  type="file"
+                  id="avatar"
+                  name="avatar"
+                  onChange={uploadImgFileHandler}
+                  required
+                  className="create-project-form__input create-project-form__input--file"
+                />
+                <p id="uidnote" className="form__instructions">
+                  Max 2MB, .png only
+                </p>
+                <label htmlFor="social">
+                  Which deliverable is this an example for?
+                </label>
+                <select
+                  name="social"
+                  id="social"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setSocialExample(e.target.value);
+                  }}
+                  value={socialExample}
+                  className="form__input form__input--select "
                 >
-                  <label htmlFor="avatar" className="form__label">
-                    File Upload
-                  </label>
-                  <input
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    onChange={uploadImgFileHandler}
-                    required
-                    className="create-project-form__input create-project-form__input--file"
-                  />
-                  <p id="uidnote" className="form__instructions">
-                    Max 2MB, .png only
-                  </p>
-                  <label htmlFor="social">
-                    Which deliverable is this an example for?
-                  </label>
-                  <select
-                    name="social"
-                    id="social"
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      setSocialExample(e.target.value);
-                    }}
-                    value={socialExample}
-                    className="form__input form__input--select "
+                  <option value="none" className="form__social">
+                    Select Platform
+                  </option>
+                  <option
+                    value="instagram"
+                    className="create-project-form__social"
                   >
-                    <option value="none" className="form__social">
-                      Select Platform
-                    </option>
-                    <option
-                      value="instagram"
-                      className="create-project-form__social"
-                    >
-                      Instagram
-                    </option>
-                    <option
-                      value="tiktok"
-                      className="create-project-form__social"
-                    >
-                      Tik Tok
-                    </option>
-                    <option
-                      value="youtube"
-                      className="create-project-form__social"
-                    >
-                      Youtube
-                    </option>
-                  </select>
+                    Instagram
+                  </option>
+                  <option
+                    value="tiktok"
+                    className="create-project-form__social"
+                  >
+                    Tik Tok
+                  </option>
+                  <option
+                    value="youtube"
+                    className="create-project-form__social"
+                  >
+                    Youtube
+                  </option>
+                </select>
 
-                  <div className="flex-col-center">
-                    {awsImage ? (
-                      <img
-                        className="form__profile-pic"
-                        src={awsImage}
-                        alt="aws avatar"
-                      />
-                    ) : (
-                      <img
-                        className="form__profile-pic"
-                        src={greyCircle}
-                        alt="blank avatar"
-                      />
-                    )}
-                    {uploadSuccessMsg ? (
-                      <p className="form__text form__text--success">
-                        {uploadSuccessMsg}
-                      </p>
-                    ) : (
-                      " "
-                    )}
-                    <button
-                      type="submit"
-                      onClick={(e) => handleAwsUpload(e, "image")}
-                      className="update-profile__btn-cta"
-                    >
-                      Upload Photo
-                    </button>
+                <div className="flex-col-center">
+                  {awsImage ? (
+                    <img
+                      className="form__profile-pic"
+                      src={awsImage}
+                      alt="aws avatar"
+                    />
+                  ) : (
+                    <img
+                      className="form__profile-pic"
+                      src={greyCircle}
+                      alt="blank avatar"
+                    />
+                  )}
+                  {uploadSuccessMsg ? (
+                    <p className="form__text form__text--success">
+                      {uploadSuccessMsg}
+                    </p>
+                  ) : (
+                    " "
+                  )}
+                  <button
+                    type="submit"
+                    onClick={(e) => handleAwsUpload(e, "image")}
+                    className="update-profile__btn-cta"
+                  >
+                    Upload Photo
+                  </button>
 
-                    {/* {errMsg ? (
+                  {/* {errMsg ? (
                   <p aria-live="assertive" className="update-profile__error">
                     {errMsg}
                   </p>
                 ) : (
                   ""
                 )} */}
-                  </div>
-                </form>
+                </div>
+              </form>
 
-                <button
-                  className="form__btn-dotted form__btn-dotted--large"
-                  style={{ margin: "0 auto", marginTop: "1rem" }}
-                  onClick={(e) => {
-                    handleSubmit("influencer submit draft", e);
-                    setShowSubmitDraft(false);
-                    setShowUploadSuccess(true);
-                  }}
-                >
-                  Finished Uploading? Request review.
-                </button>
-              </div>
-            ) : (
-              " "
-            )}
+              <button
+                className="form__btn-dotted form__btn-dotted--large"
+                style={{ margin: "0 auto", marginTop: "1rem" }}
+                onClick={(e) => {
+                  handleSubmit("influencer submit draft", e);
+                  setShowSubmitDraft(false);
+                  setShowUploadSuccess(true);
+                }}
+              >
+                Finished Uploading? Request review.
+              </button>
+            </div>
           </div>
         </div>
       ) : (

@@ -1,0 +1,29 @@
+@use "partials/index" as *;
+
+.to-do {
+  width: 386px;
+  height: 61px;
+
+  background: #fcfcfc;
+  border: 1px solid #d6d6d6;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  padding: 8px 16px;
+  gap: 8px;
+  margin-bottom: 1rem;
+
+  &__title {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 21px;
+  }
+  &__deadline {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 21px;
+  }
+}
