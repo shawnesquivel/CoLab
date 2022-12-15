@@ -9,7 +9,7 @@ const ErrorPage = () => {
         404 Error: Page Not Found
       </h1>
       <p className="mb-1p5">
-        Sorry, we can't find the page you're looking for.
+        Sorry, we can't find the page you're looking for!
       </p>
 
       <Link
