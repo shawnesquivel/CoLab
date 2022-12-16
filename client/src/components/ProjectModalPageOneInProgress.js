@@ -29,6 +29,7 @@ const ProjectModalPageOneInProgress = ({
   const [showSubmitDraft, setShowSubmitDraft] = useState(false);
 
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showRequestReview, setShowRequestReview] = useState(false);
 
   // Copy and Pasta from Create Project Modal BEGIN - upload image
   const [socialExample, setSocialExample] = useState("");
@@ -107,7 +108,7 @@ const ProjectModalPageOneInProgress = ({
       setUploadSuccessMsg(
         `Submission for  ${
           socialExample[0].toUpperCase() + socialExample.slice(1)
-        } was succesfully uploaded! You may add more files for other submissions.`
+        } was succesfully uploaded! You may add more files for other submissions. `
       );
       console.log(
         "The example image was added to the project",
@@ -139,180 +140,162 @@ const ProjectModalPageOneInProgress = ({
           />
         </div>
         <div className="to-do-right">
-          {instagramTask ? (
-            <>
-              <p>
-                <FontAwesomeIcon icon={faInstagram} className="icon-left" />
-                {instagramTask} on Instagram.
-              </p>
-            </>
-          ) : (
-            ""
-          )}
-          {tiktokTask ? (
-            <p>
-              <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-              {tiktokTask} on Tik Tok.
-            </p>
-          ) : (
-            ""
-          )}
-          {youtubeTask ? (
-            <p>
-              <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-              {youtubeTask} on YouTube.
-            </p>
-          ) : (
-            " "
-          )}
           {!showUploadSuccess && status !== "brand reviewing" ? (
-            <div className="project-modal-container">
-              <div className="guidelines-card">
-                <div className="guidelines-card__header">
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    className="icon-highlight guidelines-card__flex-one"
-                  />
-                  <div className="guidelines-card__flex-two">
-                    <p>Upload</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="guidelines-card__flex-three guidelines-card__btn-expand"
-                    onClick={() => {
-                      setShowSubmitDraft(!showSubmitDraft);
+            <div className="to-do__card to-do__card--wide">
+              <div className="guidelines-card__header">
+                {/* Left Icon */}
+                <FontAwesomeIcon
+                  icon={faCircleExclamation}
+                  className="icon-highlight guidelines-card__flex-one"
+                />
+                {/* Middle Text */}
+                <div className="guidelines-card__flex-two">
+                  <p className="to-do__title">Submit Draft</p>
+                </div>
+                {/* Toggle Button */}
+                <button
+                  type="button"
+                  className="guidelines-card__flex-three guidelines-card__btn-expand"
+                  onClick={() => {
+                    setShowSubmitDraft(!showSubmitDraft);
+                  }}
+                >
+                  {showSubmitDraft ? (
+                    <>
+                      <FontAwesomeIcon icon={faAngleUp} />
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faAngleDown} />
+                    </>
+                  )}
+                </button>
+              </div>
+              {showSubmitDraft ? (
+                <form
+                  className="form form--small"
+                  encType="multipart/form-data"
+                >
+                  <label htmlFor="avatar" className="form__label">
+                    <input
+                      type="file"
+                      id="avatar"
+                      name="avatar"
+                      onChange={uploadImgFileHandler}
+                      required
+                      className="create-project-form__input create-project-form__input--file"
+                    />
+                  </label>
+
+                  <p id="uidnote" className="form__instructions">
+                    Max 2MB, .png only
+                  </p>
+                  <label htmlFor="social">
+                    Which deliverable is this an example for?
+                  </label>
+                  <select
+                    name="social"
+                    id="social"
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      setSocialExample(e.target.value);
                     }}
+                    value={socialExample}
+                    className="form__input form__input--select "
                   >
-                    {showSubmitDraft ? (
+                    <option value="none" className="form__social">
+                      Select Platform
+                    </option>
+                    <option
+                      value="instagram"
+                      className="create-project-form__social"
+                    >
+                      Instagram
+                    </option>
+                    <option
+                      value="tiktok"
+                      className="create-project-form__social"
+                    >
+                      Tik Tok
+                    </option>
+                    <option
+                      value="youtube"
+                      className="create-project-form__social"
+                    >
+                      Youtube
+                    </option>
+                  </select>
+
+                  <div className="flex-col-center">
+                    {awsImage ? (
+                      <img
+                        className="form__profile-pic"
+                        src={awsImage}
+                        alt="aws avatar"
+                      />
+                    ) : (
+                      <img
+                        className="form__profile-pic"
+                        src={greyCircle}
+                        alt="blank avatar"
+                      />
+                    )}
+                    {uploadSuccessMsg ? (
+                      <p className="form__text form__text--success">
+                        {uploadSuccessMsg}
+                      </p>
+                    ) : (
+                      " "
+                    )}
+                    <button
+                      type="submit"
+                      onClick={(e) => {
+                        handleAwsUpload(e, "image");
+                        setShowRequestReview(true);
+                      }}
+                      className="form__btn-dotted form__btn-dotted--large mb-1p5"
+                    >
+                      Upload Photo
+                    </button>
+                    {showRequestReview ? (
                       <>
-                        <FontAwesomeIcon icon={faAngleUp} />
+                        <p>Done uploading?</p>
+                        <button
+                          className="btn-cta mb-1"
+                          style={{ margin: "0 auto", marginTop: "1rem" }}
+                          onClick={(e) => {
+                            handleSubmit("influencer submit draft", e);
+                            setShowUploadSuccess(true);
+                            setShowRequestReview(false);
+                          }}
+                        >
+                          Request review
+                        </button>
                       </>
                     ) : (
-                      <>
-                        <FontAwesomeIcon icon={faAngleDown} />
-                      </>
+                      ""
                     )}
-                  </button>
-                </div>
-                {showSubmitDraft ? (
-                  <div className="project-modal-tasks-expand-container">
-                    <form
-                      className="form form--small"
-                      encType="multipart/form-data"
-                    >
-                      <label htmlFor="avatar" className="form__label">
-                        File Upload
-                      </label>
-                      <input
-                        type="file"
-                        id="avatar"
-                        name="avatar"
-                        onChange={uploadImgFileHandler}
-                        required
-                        className="create-project-form__input create-project-form__input--file"
-                      />
-                      <p id="uidnote" className="form__instructions">
-                        Max 2MB, .png only
-                      </p>
-                      <label htmlFor="social">
-                        Which deliverable is this an example for?
-                      </label>
-                      <select
-                        name="social"
-                        id="social"
-                        onChange={(e) => {
-                          console.log(e.target.value);
-                          setSocialExample(e.target.value);
-                        }}
-                        value={socialExample}
-                        className="form__input form__input--select "
-                      >
-                        <option value="none" className="form__social">
-                          Select Platform
-                        </option>
-                        <option
-                          value="instagram"
-                          className="create-project-form__social"
-                        >
-                          Instagram
-                        </option>
-                        <option
-                          value="tiktok"
-                          className="create-project-form__social"
-                        >
-                          Tik Tok
-                        </option>
-                        <option
-                          value="youtube"
-                          className="create-project-form__social"
-                        >
-                          Youtube
-                        </option>
-                      </select>
-
-                      <div className="flex-col-center">
-                        {awsImage ? (
-                          <img
-                            className="form__profile-pic"
-                            src={awsImage}
-                            alt="aws avatar"
-                          />
-                        ) : (
-                          <img
-                            className="form__profile-pic"
-                            src={greyCircle}
-                            alt="blank avatar"
-                          />
-                        )}
-                        {uploadSuccessMsg ? (
-                          <p className="form__text form__text--success">
-                            {uploadSuccessMsg}
-                          </p>
-                        ) : (
-                          " "
-                        )}
-                        <button
-                          type="submit"
-                          onClick={(e) => handleAwsUpload(e, "image")}
-                          className="update-profile__btn-cta"
-                        >
-                          Upload Photo
-                        </button>
-                      </div>
-                    </form>
-
-                    <button
-                      className="form__btn-dotted form__btn-dotted--large"
-                      style={{ margin: "0 auto", marginTop: "1rem" }}
-                      onClick={(e) => {
-                        handleSubmit("influencer submit draft", e);
-                        setShowSubmitDraft(false);
-                        setShowUploadSuccess(true);
-                      }}
-                    >
-                      Finished Uploading? Request review.
-                    </button>
+                    {showUploadSuccess ? (
+                      <>
+                        <p>
+                          Successfully submitted draft. Please wait for the
+                          brand to review.
+                        </p>
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </div>
-                ) : (
-                  ""
-                )}
-              </div>
+                </form>
+              ) : (
+                ""
+              )}
             </div>
           ) : (
             ""
           )}
         </div>
       </div>
-
-      {showUploadSuccess ? (
-        <>
-          <p>
-            Successfully submitted draft. Please wait for the brand to review.
-          </p>
-        </>
-      ) : (
-        ""
-      )}
     </>
   );
 };
