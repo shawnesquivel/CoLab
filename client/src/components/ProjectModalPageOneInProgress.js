@@ -140,7 +140,7 @@ const ProjectModalPageOneInProgress = ({
           />
         </div>
         <div className="to-do-right">
-          {!showUploadSuccess && status !== "brand reviewing" ? (
+          {status !== "brand reviewing" ? (
             <div className="to-do__card to-do__card--wide">
               <div className="guidelines-card__header">
                 {/* Left Icon */}
@@ -278,8 +278,8 @@ const ProjectModalPageOneInProgress = ({
                     {showUploadSuccess ? (
                       <>
                         <p>
-                          Successfully submitted draft. Please wait for the
-                          brand to review.
+                          ✅ Successfully submitted draft! Please wait for the
+                          brand to review. You may now close the page.
                         </p>
                       </>
                     ) : (
