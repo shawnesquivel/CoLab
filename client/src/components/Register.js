@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/register.scss";
-import "../styles/register.scss";
 import influencerHeadshot from "../assets/register/black-model-afro.png";
 import signUpImg from "../assets/signup.png";
 import RegisterForm from "./RegisterForm";

@@ -7,13 +7,10 @@ import {
   faTiktok,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import {
-  faAngleDown,
-  faAngleUp,
-  faSquareMinus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import greyCircle from "../assets/greycircle.jpg";
 import axios from "../api/axios";
+import ToDoList from "./ToDoList";
 
 const moment = require("moment");
 const ADD_PROJECT_IMAGES_URL = "/api/addprojectimage";
@@ -32,6 +29,7 @@ const ProjectModalPageOneInProgress = ({
   const [showSubmitDraft, setShowSubmitDraft] = useState(false);
 
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showRequestReview, setShowRequestReview] = useState(false);
 
   // Copy and Pasta from Create Project Modal BEGIN - upload image
   const [socialExample, setSocialExample] = useState("");
@@ -110,7 +108,7 @@ const ProjectModalPageOneInProgress = ({
       setUploadSuccessMsg(
         `Submission for  ${
           socialExample[0].toUpperCase() + socialExample.slice(1)
-        } was succesfully uploaded! You may add more files for other submissions.`
+        } was succesfully uploaded! You may add more files for other submissions. `
       );
       console.log(
         "The example image was added to the project",
@@ -132,168 +130,63 @@ const ProjectModalPageOneInProgress = ({
 
   return (
     <>
-      <h1 className="form__text form__text--subheader-large">Deadlines</h1>
-      <p className="form__text form__text--subheader">
-        Upload first draft by:{" "}
-        {moment(reviewDeadline).format("MMMM Do YYYY, h:mm:ss a")}
-      </p>
-
-      <p className="form__text form__text--subheader">
-        Post to social media by:{" "}
-        {moment(deadline).format("MMMM Do YYYY, h:mm:ss a")}
-      </p>
-      {!showUploadSuccess && status !== "brand reviewing" ? (
-        <div className="project-modal-container">
-          <h1 className="form__text form__text--subheader-large">Tasks</h1>
-          {instagramTask ? (
-            <>
-              <p>
-                <FontAwesomeIcon icon={faInstagram} className="icon-left" />
-                {instagramTask} on Instagram.
-              </p>
-            </>
-          ) : (
-            ""
-          )}
-          {tiktokTask ? (
-            <p>
-              <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-              {tiktokTask} on Tik Tok.
-            </p>
-          ) : (
-            ""
-          )}
-          {youtubeTask ? (
-            <p>
-              <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-              {youtubeTask} on YouTube.
-            </p>
-          ) : (
-            " "
-          )}
-
-          <div className="guidelines-card">
-            <div className="guidelines-card__header">
-              <FontAwesomeIcon
-                icon={faCircleExclamation}
-                className="icon-highlight guidelines-card__flex-one"
-              />
-              <div className="guidelines-card__flex-two">
-                <h4>Next Step: Submit Draft</h4>
-                <p className="deadline-text">
-                  By {moment(reviewDeadline).format("MMMM Do YYYY, h:mm:ss a")}
-                </p>
+      <div className="to-do">
+        <div className="to-do-left">
+          <ToDoList
+            status={status}
+            tiktokTask={tiktokTask}
+            youtubeTask={youtubeTask}
+            instagramTask={instagramTask}
+          />
+        </div>
+        <div className="to-do-right">
+          {status !== "brand reviewing" ? (
+            <div className="to-do__card to-do__card--wide">
+              <div className="guidelines-card__header">
+                {/* Left Icon */}
+                <FontAwesomeIcon
+                  icon={faCircleExclamation}
+                  className="icon-highlight guidelines-card__flex-one"
+                />
+                {/* Middle Text */}
+                <div className="guidelines-card__flex-two">
+                  <p className="to-do__title">Submit Draft</p>
+                </div>
+                {/* Toggle Button */}
+                <button
+                  type="button"
+                  className="guidelines-card__flex-three guidelines-card__btn-expand"
+                  onClick={() => {
+                    setShowSubmitDraft(!showSubmitDraft);
+                  }}
+                >
+                  {showSubmitDraft ? (
+                    <>
+                      <FontAwesomeIcon icon={faAngleUp} />
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faAngleDown} />
+                    </>
+                  )}
+                </button>
               </div>
-              <button
-                type="button"
-                className="guidelines-card__flex-three guidelines-card__btn-expand"
-                onClick={() => {
-                  setShowSubmitDraft(!showSubmitDraft);
-                }}
-              >
-                {showSubmitDraft ? (
-                  <>
-                    <FontAwesomeIcon icon={faAngleUp} />
-                  </>
-                ) : (
-                  <>
-                    <FontAwesomeIcon icon={faAngleDown} />
-                  </>
-                )}
-              </button>
-            </div>
-            {showSubmitDraft ? (
-              <div className="project-modal-tasks-expand-container">
-                {/* replaced by form */}
-                {/* {instagramTask ? (
-                  <div className="project-task">
-                    <p className="">
-                      <FontAwesomeIcon
-                        icon={faInstagram}
-                        className="icon-left"
-                      />
-                      {instagramTask}
-                    </p>
-                    <button
-                      type="button"
-                      className={
-                        instagramBtnTxt === "Submitted"
-                          ? "form__btn-dotted form__btn-dotted--success"
-                          : "form__btn-dotted"
-                      }
-                      onClick={() => {
-                        setInstagramBtnTxt("Submitted");
-                      }}
-                    >
-                      {instagramBtnTxt}
-                    </button>
-                  </div>
-                ) : (
-                  ""
-                )}
-
-                {tiktokTask ? (
-                  <div className="project-task">
-                    <p className="">
-                      <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-                      {tiktokTask}
-                    </p>
-                    <button
-                      type="button"
-                      className={
-                        tiktokBtnTxt === "Submitted"
-                          ? "form__btn-dotted form__btn-dotted--success"
-                          : "form__btn-dotted"
-                      }
-                      onClick={() => {
-                        setTiktokBtnTxt("Submitted");
-                      }}
-                    >
-                      {tiktokBtnTxt}
-                    </button>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {youtubeTask ? (
-                  <div className="project-task">
-                    <p className="">
-                      <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-                      {youtubeTask}
-                    </p>
-                    <button
-                      type="button"
-                      className={
-                        youtubeBtnTxt === "Submitted"
-                          ? "form__btn-dotted form__btn-dotted--success"
-                          : "form__btn-dotted"
-                      }
-                      onClick={() => {
-                        setYoutubeBtnTxt("Submitted");
-                      }}
-                    >
-                      {youtubeBtnTxt}
-                    </button>
-                  </div>
-                ) : (
-                  ""
-                )} */}
-
+              {showSubmitDraft ? (
                 <form
                   className="form form--small"
                   encType="multipart/form-data"
                 >
                   <label htmlFor="avatar" className="form__label">
-                    File Upload
+                    <input
+                      type="file"
+                      id="avatar"
+                      name="avatar"
+                      onChange={uploadImgFileHandler}
+                      required
+                      className="create-project-form__input create-project-form__input--file"
+                    />
                   </label>
-                  <input
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    onChange={uploadImgFileHandler}
-                    required
-                    className="create-project-form__input create-project-form__input--file"
-                  />
+
                   <p id="uidnote" className="form__instructions">
                     Max 2MB, .png only
                   </p>
@@ -356,52 +249,53 @@ const ProjectModalPageOneInProgress = ({
                     )}
                     <button
                       type="submit"
-                      onClick={(e) => handleAwsUpload(e, "image")}
-                      className="update-profile__btn-cta"
+                      onClick={(e) => {
+                        handleAwsUpload(e, "image");
+                        setShowRequestReview(true);
+                      }}
+                      className="form__btn-dotted form__btn-dotted--large mb-1p5"
                     >
                       Upload Photo
                     </button>
-
-                    {/* {errMsg ? (
-                  <p aria-live="assertive" className="update-profile__error">
-                    {errMsg}
-                  </p>
-                ) : (
-                  ""
-                )} */}
+                    {showRequestReview ? (
+                      <>
+                        <p>Done uploading?</p>
+                        <button
+                          className="btn-cta mb-1"
+                          style={{ margin: "0 auto", marginTop: "1rem" }}
+                          onClick={(e) => {
+                            handleSubmit("influencer submit draft", e);
+                            setShowUploadSuccess(true);
+                            setShowRequestReview(false);
+                          }}
+                        >
+                          Request review
+                        </button>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    {showUploadSuccess ? (
+                      <>
+                        <p>
+                          ✅ Successfully submitted draft! Please wait for the
+                          brand to review. You may now close the page.
+                        </p>
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </form>
-
-                <button
-                  className="form__btn-dotted form__btn-dotted--large"
-                  style={{ margin: "0 auto", marginTop: "1rem" }}
-                  onClick={(e) => {
-                    handleSubmit("influencer submit draft", e);
-                    setShowSubmitDraft(false);
-                    setShowUploadSuccess(true);
-                  }}
-                >
-                  Finished Uploading? Request review.
-                </button>
-              </div>
-            ) : (
-              " "
-            )}
-          </div>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
-      ) : (
-        ""
-      )}
-
-      {showUploadSuccess ? (
-        <>
-          <p>
-            Successfully submitted draft. Please wait for the brand to review.
-          </p>
-        </>
-      ) : (
-        ""
-      )}
+      </div>
     </>
   );
 };
