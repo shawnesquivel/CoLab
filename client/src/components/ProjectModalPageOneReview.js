@@ -4,6 +4,8 @@ import "../styles/createprojectmodal.scss";
 import "../styles/dashboard.scss";
 const moment = require("moment");
 
+// Once a project has been accepted, an influencer can click the "Overview" tab in the Project Modal to get a summary of the project deadlines.
+
 const ProjectModalPageOneReview = ({
   description,
   reviewDeadline,
@@ -11,33 +13,23 @@ const ProjectModalPageOneReview = ({
 }) => {
   return (
     <>
-      <div className="project-modal-page__group">
-        <h4 className="project-modal-page__label">Description</h4>
-        <p>{description}</p>
-        {/* {description ? (
-          <>
-            <p className="form__text">{description}</p>
-          </>
-        ) : (
-          <p className="form__text form__text--description">
-            Skillshare is an online learning community with thousands of online
-            classes and members across 150 countries, who come together to find
-            inspiration and take the next step in their creative journey.
+      <div className="page">
+        <div className="project-modal-page__group">
+          <h4 className="project-modal-page__label">Description</h4>
+          <p>{description}</p>
+        </div>
+        <div className="project-modal-page__group">
+          <h4 className="project-modal-page__label">Review Deadline</h4>
+          <p className="project-modal-page__value">
+            {moment(reviewDeadline).format("MMMM Do YYYY, h:mm A")}
           </p>
-        )} */}
-      </div>
-
-      <div className="project-modal-page__group">
-        <h4 className="project-modal-page__label">Review Deadline</h4>
-        <p className="project-modal-page__value">
-          {moment(reviewDeadline).format("MMMM Do YYYY, h:mm A")}
-        </p>
-      </div>
-      <div className="project-modal-page__group">
-        <h4 className="project-modal-page__label">Publish Deadline</h4>
-        <p className="project-modal-page__value">
-          {moment(deadline).format("MMMM Do YYYY, h:mm A")}
-        </p>
+        </div>
+        <div className="project-modal-page__group">
+          <h4 className="project-modal-page__label">Publish Deadline</h4>
+          <p className="project-modal-page__value">
+            {moment(deadline).format("MMMM Do YYYY, h:mm A")}
+          </p>
+        </div>
       </div>
     </>
   );

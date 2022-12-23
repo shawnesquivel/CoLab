@@ -45,7 +45,6 @@ const ProjectModalPageOneBrandReview = ({
         </div>
         <div className="to-do-right">
           <p className="form__label">Review</p>
-
           <Tasks
             instagramSubmission={instagramSubmission}
             instagramTask={instagramTask}
@@ -54,8 +53,7 @@ const ProjectModalPageOneBrandReview = ({
             youtubeSubmission={youtubeSubmission}
             youtubeTask={youtubeTask}
           />
-
-          {!showRejectProjectComment ? (
+          {!showRejectProjectComment && !reviewSuccess ? (
             <div className="flex-col-center mt-2">
               <button
                 type="button"
@@ -63,7 +61,7 @@ const ProjectModalPageOneBrandReview = ({
                 onClick={(e) => {
                   setShowRejectProjectComment(true);
                 }}
-                // disabled for now
+                // #todo: enable this once restyled
                 disabled
               >
                 Request Revision
@@ -74,7 +72,9 @@ const ProjectModalPageOneBrandReview = ({
                 onClick={(e) => {
                   handleSubmit("brand approves submission", e);
                   setReviewSuccess(true);
-                  setReviewSuccessMsg("Project was approved");
+                  setReviewSuccessMsg(
+                    "✅ The submission was approved! The influencer has been notified."
+                  );
                 }}
               >
                 Approve Submission
@@ -83,9 +83,24 @@ const ProjectModalPageOneBrandReview = ({
           ) : (
             ""
           )}
+          {reviewSuccess ? (
+            <div className="flex-col-center">
+              <p className="mt-2">{reviewSuccessMsg}</p>
+              <button
+                className="btn-cta mt-1p5"
+                onClick={onClose}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
+                Close
+              </button>
+            </div>
+          ) : (
+            " "
+          )}{" "}
         </div>
       </div>
-      {/* #todo: Add Request Revisions */}
+      {/* #todo: restyling */}
       {showRejectProjectComment ? (
         <form action="">
           <label htmlFor="comments">
@@ -116,21 +131,6 @@ const ProjectModalPageOneBrandReview = ({
       ) : (
         ""
       )}
-      {reviewSuccess ? (
-        <>
-          <p>{reviewSuccessMsg}</p>
-          <button
-            className="create-project__close-btn"
-            onClick={onClose}
-            type="button"
-          >
-            <FontAwesomeIcon icon={faSquareMinus} className="icon-left" />
-            Close
-          </button>
-        </>
-      ) : (
-        " "
-      )}{" "}
     </>
   );
 };
