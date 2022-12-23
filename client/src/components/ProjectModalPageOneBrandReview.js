@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 import {
-  faInstagram,
-  faTiktok,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
-import {
-  faCheck,
   faTimes,
   faPencil,
   faSquareMinus,
@@ -13,8 +7,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles/projectmodal.scss";
 import "../styles/createprojectmodal.scss";
-
+import ToDoList from "./ToDoList";
+import Tasks from "./Tasks";
 const ProjectModalPageOneBrandReview = ({
+  status,
   tiktokTask,
   instagramTask,
   youtubeTask,
@@ -23,6 +19,7 @@ const ProjectModalPageOneBrandReview = ({
   youtubeSubmission,
   handleSubmit,
   onClose,
+  numberOfRevisions,
 }) => {
   // 3 - Brand Accept/Reject Submission
 
@@ -37,86 +34,58 @@ const ProjectModalPageOneBrandReview = ({
 
   return (
     <>
-      <p className="form__text form__text--subheader">
-        Please review the submission(s)
-      </p>
-      {instagramTask ? (
-        <>
-          <p>
-            <FontAwesomeIcon icon={faInstagram} className="icon-left" />
-            Instagram: {instagramTask}
-          </p>
-          <img
-            src={instagramSubmission}
-            alt="instagram submission"
-            className="project-modal__submission"
+      <div className="to-do">
+        <div className="to-do-left">
+          <ToDoList
+            status={status}
+            tiktokTask={tiktokTask}
+            youtubeTask={youtubeTask}
+            instagramTask={instagramTask}
           />
-        </>
-      ) : (
-        ""
-      )}
-      {tiktokTask ? (
-        <>
-          <p>
-            <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-            TikTok: {tiktokTask}
-          </p>
-
-          <img
-            src={tiktokSubmission}
-            alt="tiktok submission"
-            className="project-modal__submission"
-          />
-        </>
-      ) : (
-        ""
-      )}
-      {youtubeTask ? (
-        <>
-          <p>
-            <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-            TikTok: {youtubeTask}
-          </p>
-
-          <img
-            src={youtubeSubmission}
-            alt="youtube submission"
-            className="project-modal__submission"
-          />
-        </>
-      ) : (
-        ""
-      )}
-
-      {!showRejectProjectComment ? (
-        <div className="btn-holder">
-          <button
-            type="button"
-            className="form__btn-dotted form__btn-dotted--large"
-            onClick={(e) => {
-              handleSubmit("brand approves submission", e);
-              setReviewSuccess(true);
-              setReviewSuccessMsg("Project was approved");
-            }}
-          >
-            <FontAwesomeIcon icon={faCheck} className="icon-left" />
-            Approve Submission
-          </button>
-          <button
-            type="button"
-            className="form__btn-dotted form__btn-dotted--large"
-            onClick={(e) => {
-              setShowRejectProjectComment(true);
-            }}
-          >
-            <FontAwesomeIcon icon={faTimes} className="icon-left" />
-            Project Needs to be Updated
-          </button>
         </div>
-      ) : (
-        ""
-      )}
+        <div className="to-do-right">
+          <p className="form__label">Review</p>
 
+          <Tasks
+            instagramSubmission={instagramSubmission}
+            instagramTask={instagramTask}
+            tiktokSubmission={tiktokSubmission}
+            tiktokTask={tiktokTask}
+            youtubeSubmission={youtubeSubmission}
+            youtubeTask={youtubeTask}
+          />
+
+          {!showRejectProjectComment ? (
+            <div className="flex-col-center mt-2">
+              <button
+                type="button"
+                className="btn-cta btn-cta--transparent"
+                onClick={(e) => {
+                  setShowRejectProjectComment(true);
+                }}
+                // disabled for now
+                disabled
+              >
+                Request Revision
+              </button>
+              <button
+                type="button"
+                className="btn-cta"
+                onClick={(e) => {
+                  handleSubmit("brand approves submission", e);
+                  setReviewSuccess(true);
+                  setReviewSuccessMsg("Project was approved");
+                }}
+              >
+                Approve Submission
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+      {/* #todo: Add Request Revisions */}
       {showRejectProjectComment ? (
         <form action="">
           <label htmlFor="comments">
@@ -147,7 +116,6 @@ const ProjectModalPageOneBrandReview = ({
       ) : (
         ""
       )}
-
       {reviewSuccess ? (
         <>
           <p>{reviewSuccessMsg}</p>
@@ -162,7 +130,7 @@ const ProjectModalPageOneBrandReview = ({
         </>
       ) : (
         " "
-      )}
+      )}{" "}
     </>
   );
 };

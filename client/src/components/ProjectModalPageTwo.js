@@ -14,44 +14,45 @@ const ProjectModalPageTwo = ({
 
   return (
     <>
-      <div className="project-modal-page__group">
-        <h4 className="project-modal-page__label">Compensation Type</h4>
-        <p className="project-modal-page__value">
-          {generatePaymentMethodText(paymentMethod)}
-        </p>
-      </div>
-
-      {paymentMethod.toLowerCase() === "payment only" ||
-      paymentMethod.toLowerCase() === "payment and product" ? (
-        <>
-          <div className="project-modal-page__group">
-            <h4 className="project-modal-page__label">Payment Method</h4>
-            <p className="project-modal-page__value">Stripe</p>
-          </div>
-          <div className="project-modal-page__group">
-            <h4 className="project-modal-page__label">Payment Amount</h4>
-            <p className="project-modal-page__value">${paymentPrice}</p>
-          </div>
-        </>
-      ) : (
-        ""
-      )}
-      {paymentMethod.toLowerCase() === "product only" ||
-      paymentMethod.toLowerCase() === "payment and product" ? (
+      <div className="page">
         <div className="project-modal-page__group">
-          <h4 className="project-modal-page__label">Product Description</h4>
-          <p className="project-modal-page__value">{paymentProduct}</p>
+          <h4 className="project-modal-page__label">Compensation Type</h4>
+          <p className="project-modal-page__value">
+            {generatePaymentMethodText(paymentMethod)}
+          </p>
         </div>
-      ) : (
-        ""
-      )}
 
-      {/* <div className="project-modal-page__group">
+        {paymentMethod.toLowerCase() === "payment only" ||
+        paymentMethod.toLowerCase() === "payment and product" ? (
+          <>
+            <div className="project-modal-page__group">
+              <h4 className="project-modal-page__label">Payment Method</h4>
+              <p className="project-modal-page__value">Stripe</p>
+            </div>
+            <div className="project-modal-page__group">
+              <h4 className="project-modal-page__label">Payment Amount</h4>
+              <p className="project-modal-page__value">${paymentPrice}</p>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+        {paymentMethod.toLowerCase() === "product only" ||
+        paymentMethod.toLowerCase() === "payment and product" ? (
+          <div className="project-modal-page__group">
+            <h4 className="project-modal-page__label">Product Description</h4>
+            <p className="project-modal-page__value">{paymentProduct}</p>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {/* <div className="project-modal-page__group">
         <h4 className="project-modal-page__label">Label</h4>
         <p className="project-modal-page__value">Content</p>
       </div> */}
 
-      {/* <section className="project-modal-page">
+        {/* <section className="project-modal-page">
         <h4 className="form__text form__text--subheader">Payment Details</h4>
         <p className="form__text">
           <span className="form__text form__text--bold">
@@ -91,6 +92,7 @@ const ProjectModalPageTwo = ({
           </div>
         </div>
       </section> */}
+      </div>
     </>
   );
 };

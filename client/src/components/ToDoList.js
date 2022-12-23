@@ -3,16 +3,33 @@ import ToDo from "./ToDo";
 
 // This renders the immediate and upcoming tasks for the project
 
-const ToDoList = ({ status, role, titkokTask, youtubeTask, instagramTask }) => {
+const ToDoList = ({
+  status,
+  role,
+  tiktokTask,
+  youtubeTask,
+  instagramTask,
+  reviewDeadline,
+}) => {
   return (
     <div>
-      <p className="mb-1">To Do</p>
-      {instagramTask ? (
-        <ToDo title="Submit Instagram Draft" deadline={"2022-12-25"} />
+      <p className="mb-1 form__label">To Do</p>
+      {status === "in progress/waiting for submission" && instagramTask ? (
+        <ToDo
+          title={"Waiting for influencer to submit instagram draft"}
+          deadline={reviewDeadline}
+        />
       ) : (
         ""
       )}
-      <p className="mt-1 mb-1">Up Next</p>
+
+      {status === "brand reviewing" ? (
+        <ToDo title="Review influencer draft" deadline={null} />
+      ) : (
+        ""
+      )}
+
+      <p className="mt-1 mb-1 form__label">Up Next</p>
       {/* draft */}
       <ToDo />
       {/* Schedule Content */}

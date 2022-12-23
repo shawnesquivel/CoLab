@@ -14,12 +14,16 @@ const ToDo = ({ title, deadline }) => {
   return (
     <button className="to-do__card">
       <h4 className="to-do__title">{title || defaultTitle}</h4>
-      <p className="to-do__deadline">
-        By{" "}
-        {deadline
-          ? moment(deadline).format("MMMM Do, YYYY")
-          : moment(defaultDeadline).format("MMMM Do, YYYY")}
-      </p>
+      {deadline !== null ? (
+        <p className="to-do__deadline">
+          By{" "}
+          {deadline
+            ? moment(deadline).format("MMMM Do, YYYY")
+            : moment(defaultDeadline).format("MMMM Do, YYYY")}
+        </p>
+      ) : (
+        <p className="to-do__deadline">As soon as possible</p>
+      )}
     </button>
   );
 };

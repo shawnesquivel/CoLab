@@ -210,10 +210,16 @@ select {
 
 .btn-holder {
   display: flex;
+  flex-direction: row;
   flex-wrap: row;
   gap: 100px;
   justify-content: center;
   align-items: center;
+}
+
+.btn-holder-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .reset-margin-top {
@@ -581,6 +587,7 @@ select {
   }
 }
 
+// Button Classes
 .btn {
   &-skip {
     background-color: transparent;
@@ -673,9 +680,12 @@ select {
       color: var(--text-light-color);
     }
   }
+
   &-cta {
     width: 100%;
     border-radius: 91px;
+    border: none;
+
     margin-bottom: 1rem;
     padding: 0.5rem 3rem;
     font-size: $desktop-btn-regular;
@@ -683,6 +693,7 @@ select {
     color: $text-light-color;
     min-width: 17rem;
     max-width: 18rem;
+
     &--medium {
       width: 35%;
     }
@@ -704,6 +715,16 @@ select {
       margin: 0;
       padding: 0;
       color: $text-dark-grey;
+    }
+
+    &--transparent {
+      padding: 0.5rem 3rem;
+      width: 100%;
+      height: 40px;
+      border: 1px solid $btn-grey-color;
+      border-radius: 91px;
+      background: transparent;
+      color: $btn-grey-color;
     }
   }
 
