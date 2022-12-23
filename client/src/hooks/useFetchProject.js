@@ -1,5 +1,5 @@
 import axios from "../api/axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 const GETUSER_URL = "/api/getuser";
 
