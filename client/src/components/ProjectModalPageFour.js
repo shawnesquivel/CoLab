@@ -23,7 +23,7 @@ const ProjectModalPageFour = ({
   }, []);
 
   return (
-    <>
+    <div className="page">
       <div className="project-modal-page__group">
         <h4 className="project-modal-page__label">Examples</h4>
         <div className="examples-container">
@@ -126,7 +126,7 @@ const ProjectModalPageFour = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -2,17 +2,12 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import {
-  faInstagram,
-  faTiktok,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
+
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import greyCircle from "../assets/greycircle.jpg";
 import axios from "../api/axios";
 import ToDoList from "./ToDoList";
 
-const moment = require("moment");
 const ADD_PROJECT_IMAGES_URL = "/api/addprojectimage";
 
 const ProjectModalPageOneInProgress = ({
@@ -141,7 +136,7 @@ const ProjectModalPageOneInProgress = ({
         </div>
         <div className="to-do-right">
           {status !== "brand reviewing" ? (
-            <div className="to-do__card to-do__card--wide">
+            <div className="to-do__card">
               <div className="guidelines-card__header">
                 {/* Left Icon */}
                 <FontAwesomeIcon

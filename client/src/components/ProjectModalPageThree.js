@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ProjectModalPageTwo = ({ instagramTask, tiktokTask, youtubeTask }) => {
   return (
-    <>
+    <div className="page">
       {instagramTask ? (
         <>
           <div className="project-modal-page__group">
@@ -49,7 +49,7 @@ const ProjectModalPageTwo = ({ instagramTask, tiktokTask, youtubeTask }) => {
       ) : (
         ""
       )}
-    </>
+    </div>
   );
 };
 

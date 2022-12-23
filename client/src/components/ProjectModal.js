@@ -277,11 +277,8 @@ const ProjectModal = ({
     setSuccessMsg("You accepted the project!");
   };
 
-  // To Do: Include the functionality for the user to upload deliverables
-
   if (!isOpen) return null;
   return ReactDOM.createPortal(
-    // #to-do: switch from in-line style to className style
     <div style={OVERLAY_STYLES} className="">
       <div style={MODAL_STYLES} className="project-modal">
         <div className="stack">
