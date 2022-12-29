@@ -16,7 +16,7 @@ const Tasks = ({
 }) => {
   return (
     <>
-      <div className="flex-col-center">
+      <div className="flex-col flex-col--gap">
         {instagramTask ? (
           <>
             <p className="mb-1">

@@ -352,11 +352,16 @@ select {
   color: $text-dark-grey;
 }
 
-.flex-col-center {
+.flex-col {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  &-center {
+    align-items: center;
+    justify-content: center;
+  }
+  &--gap {
+    gap: 1rem;
+  }
 }
 
 // Update Profile, Create Project Modal
@@ -691,7 +696,7 @@ select {
     font-size: $desktop-btn-regular;
     background-color: $text-dark-color;
     color: $text-light-color;
-    min-width: 17rem;
+    // min-width: 17rem;
     max-width: 18rem;
 
     &--medium {
@@ -725,6 +730,12 @@ select {
       border-radius: 91px;
       background: transparent;
       color: $btn-grey-color;
+    }
+
+    &--small {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      width: 200px;
     }
   }
 
@@ -768,6 +779,9 @@ select {
 
   &--full {
     width: 100%;
+  }
+  &--gap {
+    gap: 2rem;
   }
 }
 
