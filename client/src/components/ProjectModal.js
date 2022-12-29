@@ -64,6 +64,7 @@ const ProjectModal = ({
   const [showProjectComments, setShowProjectComments] = useState(false);
 
   const data = {
+    company: project.company,
     id: project._id,
     status: project.status,
     title: project.title,
@@ -413,6 +414,7 @@ const ProjectModal = ({
                       <ProjectModalPageOneSubmitted
                         {...data}
                         handleSubmit={handleSubmit}
+                        onClose={onClose}
                       />
                     </>
                   ) : (

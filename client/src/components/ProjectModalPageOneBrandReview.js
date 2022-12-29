@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  faTimes,
-  faPencil,
-  faSquareMinus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faSquareMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../styles/projectmodal.scss";
 import "../styles/createprojectmodal.scss";
@@ -19,7 +15,6 @@ const ProjectModalPageOneBrandReview = ({
   youtubeSubmission,
   handleSubmit,
   onClose,
-  numberOfRevisions,
 }) => {
   // 3 - Brand Accept/Reject Submission
 
