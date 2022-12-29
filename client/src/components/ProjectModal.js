@@ -7,10 +7,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactDOM from "react-dom";
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
 import axios from "../api/axios";
-import StripeContainer from "./StripeContainer";
 import "../styles/projectmodal.scss";
 import "../styles/createprojectmodal.scss";
 
@@ -23,6 +21,7 @@ import ProjectModalPageFour from "./ProjectModalPageFour";
 import ProjectModalPageOneBrandReview from "./ProjectModalPageOneBrandReview";
 import holidayBackground from "../assets/holiday-background.png";
 import ProjectModalAccept from "./ProjectModalAccept";
+import ProjectModalPayment from "./ProjectModalPayment";
 
 const UPDATEPROJECT_URL = "/api/updateproject";
 
@@ -57,11 +56,8 @@ const ProjectModal = ({
   const [showProgress, setShowProgress] = useState(false);
   // Page Five - Accept Project
   const [showSuccess, setShowSuccess] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
 
-  // Show Stripe Button
-  const [showStripe, setShowStripe] = useState(false);
-  const [showProjectComments, setShowProjectComments] = useState(false);
+  // const [showProjectComments, setShowProjectComments] = useState(false);
 
   const data = {
     company: project.company,
@@ -94,8 +90,8 @@ const ProjectModal = ({
   };
 
   useEffect(() => {
-    console.log("project:", project);
-    console.log("user:", user);
+    console.log("Project Modal:", project);
+    console.log("Logged In User:", user);
   }, []);
   //  Attached to each button - will change the project status
   const handleSubmit = async (action, e) => {
@@ -112,7 +108,7 @@ const ProjectModal = ({
           project,
         });
 
-        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+        await axios.post(UPDATEPROJECT_URL, payload, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -132,7 +128,7 @@ const ProjectModal = ({
           project,
         });
 
-        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+        await axios.post(UPDATEPROJECT_URL, payload, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -154,7 +150,7 @@ const ProjectModal = ({
           project,
         });
 
-        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+        await axios.post(UPDATEPROJECT_URL, payload, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -177,7 +173,7 @@ const ProjectModal = ({
           "Influencer has uploaded the content to social media",
           payload
         );
-        const response = await axios.post(UPDATEPROJECT_URL, payload, {
+        await axios.post(UPDATEPROJECT_URL, payload, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -225,7 +221,6 @@ const ProjectModal = ({
   };
 
   const getPaymentMethodText = (paymentMethod) => {
-    console.log(paymentMethod);
     if (paymentMethod === "payment and product") {
       return "💰🎁 Payment + Gift";
     }
@@ -275,7 +270,6 @@ const ProjectModal = ({
   const acceptProject = (e) => {
     handleSubmitReviewContract("accept", e);
     setShowSuccess(true);
-    setSuccessMsg("You accepted the project!");
   };
 
   if (!isOpen) return null;
@@ -438,65 +432,7 @@ const ProjectModal = ({
                   {role.includes(3000) &&
                   project.status === "awaiting project payment" ? (
                     <>
-                      <h3>The influencer has submitted their deliverables.</h3>
-                      <p>
-                        Please pay the influencer as per the contract guidelines
-                        by the agreed payment method.
-                      </p>
-                      <h4>Project Submission Details</h4>
-                      <p>
-                        <FontAwesomeIcon
-                          icon={faInstagram}
-                          className="icon-left"
-                        />
-                        1. {project.instagramTask} on Instagram.
-                      </p>
-                      <img
-                        src={project.instagramSubmission}
-                        alt="instagram submission"
-                        className="project-modal__submission project-modal__submission--small"
-                      />
-                      {/* <p>
-                      <FontAwesomeIcon icon={faTiktok} className="icon-left" />
-                      2. {project.tiktokSubmission} on Tik Tok.
-                    </p>
-                    <p>
-                      <FontAwesomeIcon icon={faYoutube} className="icon-left" />
-                      3. {project.youtubeSubmission} on YouTube.
-                    </p> */}
-                      <h3>Select your Payment Method</h3>
-                      <h4>Project Price: ${project.paymentPrice} CAD</h4>
-                      <div className="btn-holder">
-                        <button
-                          className="form__btn-dotted form__btn-dotted--large"
-                          onClick={() => {
-                            setShowStripe(!showStripe);
-                          }}
-                        >
-                          {/* <FontAwesomeIcon
-                          icon={faStripe}
-                          className="icon-right"
-                          style={{ fontSize: "1.2rem", padding: "" }}
-                        /> */}
-                          Stripe
-                        </button>
-                        {/* <a
-                        href="https://paypal.com"
-                        target="_blank"
-                        rel="noreferrer"
-                      > */}
-
-                        <button className="form__btn-dotted form__btn-dotted--large">
-                          {/* <FontAwesomeIcon
-                            style={{ fontSize: "0.8rem" }}
-                            icon={faPaypal}
-                            className="icon-left"  */}
-                          Paypal
-                        </button>
-
-                        {/* </a>  */}
-                      </div>
-                      {showStripe ? <StripeContainer project={project} /> : ""}
+                      <ProjectModalPayment {...data} project={project} />
                     </>
                   ) : (
                     ""
@@ -667,9 +603,6 @@ const ProjectModal = ({
                         onClick={(e) => {
                           handleSubmitReviewContract("reject", e);
                           setShowSuccess(true);
-                          setSuccessMsg(
-                            'You rejected the project. Go to the "Upcoming Collabs" to look for other projects!'
-                          );
                         }}
                       >
                         <FontAwesomeIcon icon={faTimes} className="icon-left" />

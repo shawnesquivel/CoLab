@@ -11,7 +11,7 @@ const CARD_OPTIONS = {
       color: "#fff",
       fontWeight: 500,
       fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
-      fontSize: "1rem",
+      fontSize: "16px",
       fontSmoothing: "antialiased",
       ":-webkit-autofill": { color: "#fce883" },
       "::placeholder": { color: "#87bbfd" },
@@ -24,18 +24,20 @@ const CARD_OPTIONS = {
 };
 const UPDATEPROJECT_URL = "/api/updateproject";
 
-const PaymentForm = ({ project }) => {
+const PaymentForm = ({ project, handleSuccess }) => {
   const [success, setSuccess] = useState(false);
-  const [paymentError, setPaymentError] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
   const stripe = useStripe();
   const elements = useElements();
 
   const handleSubmit = async (e, amount) => {
     e.preventDefault();
+    console.log("Clicked 'Pay'");
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
     });
+    console.log(error, paymentMethod);
     // Stripe Payment
     if (!error) {
       try {
@@ -45,6 +47,7 @@ const PaymentForm = ({ project }) => {
           amount,
           id,
         };
+        console.log("we get to here");
         const response = await axios.post("/api/payment", payload, {
           headers: {
             "Content-Type": "application/json",
@@ -60,8 +63,7 @@ const PaymentForm = ({ project }) => {
         console.log("Could not process payment", error);
       }
     } else {
-      console.log(error.message);
-      setPaymentError(true);
+      setPaymentError(error.message);
     }
 
     // If the Stripe payment succeeds, update the project status to complete
@@ -77,13 +79,18 @@ const PaymentForm = ({ project }) => {
         },
         withCredentials: true,
       });
-    } catch (error) {}
+      console.log(response);
+      handleSuccess();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <>
       {!success ? (
-        <form onSubmit={(e) => handleSubmit(e, project.paymentPrice)}>
+        // Note: Payment = Price in Dollars * 100 cents per dollar
+        <form onSubmit={(e) => handleSubmit(e, project.paymentPrice * 100)}>
           <fieldset className="FormGroup">
             <div className="FormRow">
               <CardElement options={CARD_OPTIONS} />
@@ -93,10 +100,10 @@ const PaymentForm = ({ project }) => {
         </form>
       ) : (
         <div>
-          <h2>Your payment has been processed!</h2>
+          <p>✅ Your payment has been processed!</p>
         </div>
       )}
-      {paymentError ? <p>There was an error processing your paymenst</p> : ""}
+      {paymentError ? <p>{paymentError}</p> : ""}
     </>
   );
 };

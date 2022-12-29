@@ -7,10 +7,10 @@ const PUBLIC_KEY =
 
 const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
-const StripeContainer = ({ project }) => {
+const StripeContainer = ({ project, handleSuccess }) => {
   return (
     <Elements stripe={stripeTestPromise}>
-      <PaymentForm project={project} />
+      <PaymentForm project={project} handleSuccess={handleSuccess} />
     </Elements>
   );
 };
