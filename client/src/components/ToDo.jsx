@@ -12,19 +12,25 @@ const ToDo = ({ title, deadline }) => {
   const defaultTitle = "Task Not Found";
 
   return (
-    <button className="to-do__card">
-      <h4 className="to-do__title">{title || defaultTitle}</h4>
-      {deadline !== null ? (
-        <p className="to-do__deadline">
-          By{" "}
-          {deadline
-            ? moment(deadline).format("MMMM Do, YYYY")
-            : moment(defaultDeadline).format("MMMM Do, YYYY")}
-        </p>
+    <>
+      {title !== "placeholder" ? (
+        <button className="to-do__card">
+          <h4 className="to-do__title">{title || defaultTitle}</h4>
+          {deadline !== null ? (
+            <p className="to-do__deadline">
+              By{" "}
+              {deadline
+                ? moment(deadline).format("MMMM Do, YYYY")
+                : moment(defaultDeadline).format("MMMM Do, YYYY")}
+            </p>
+          ) : (
+            <p className="to-do__deadline">As soon as possible</p>
+          )}
+        </button>
       ) : (
-        <p className="to-do__deadline">As soon as possible</p>
+        <button className="to-do__card to-do__card--placeholder"> </button>
       )}
-    </button>
+    </>
   );
 };
 

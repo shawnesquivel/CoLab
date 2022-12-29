@@ -37,6 +37,10 @@
     &--wide {
       width: 42rem;
     }
+    &--placeholder {
+      border: none;
+      box-shadow: none;
+    }
   }
 
   &__title {
