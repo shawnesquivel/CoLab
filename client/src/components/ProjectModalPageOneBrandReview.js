@@ -54,10 +54,10 @@ const ProjectModalPageOneBrandReview = ({
             youtubeTask={youtubeTask}
           />
           {!showRejectProjectComment && !reviewSuccess ? (
-            <div className="flex-col-center mt-2">
+            <div className="btn-container btn-container--gap mt-2">
               <button
                 type="button"
-                className="btn-cta btn-cta--transparent"
+                className="btn-cta btn-cta--transparent btn-cta--small"
                 onClick={(e) => {
                   setShowRejectProjectComment(true);
                 }}
@@ -68,7 +68,7 @@ const ProjectModalPageOneBrandReview = ({
               </button>
               <button
                 type="button"
-                className="btn-cta"
+                className="btn-cta btn-cta--small"
                 onClick={(e) => {
                   handleSubmit("brand approves submission", e);
                   setReviewSuccess(true);
@@ -77,7 +77,7 @@ const ProjectModalPageOneBrandReview = ({
                   );
                 }}
               >
-                Approve Submission
+                Approve Post
               </button>
             </div>
           ) : (
