@@ -1032,7 +1032,7 @@ app.post("/api/payment", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({
-      message: "Payment failed!",
+      message: error.raw.message,
       success: false,
     });
   }
