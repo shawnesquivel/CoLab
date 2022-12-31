@@ -27,7 +27,7 @@ let FormData = require("form-data");
 // AWS Stuff
 const aws = require("aws-sdk");
 const crypto = require("crypto");
-const { promisify } = require("util");
+const {promisify} = require("util");
 const randomBytes = promisify(crypto.randomBytes);
 app.use(
   cors({
@@ -54,22 +54,33 @@ const ROLES = {
   Brand: 3000,
 };
 
-// Establish connection
+// Local Mongoose
+// mongoose
+//   .connect(MONGOOSE_URL, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then((res) => {
+//     console.log(`Database connected at ${MONGOOSE_URL}`);
+//   })
+//   .catch((err) => console.log(err));
+
+// Mongo Atlas
+console.log(process.env.MONGO_URI);
 mongoose
-  .connect(MONGOOSE_URL, {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then((res) => {
-    console.log(`Database connected at ${MONGOOSE_URL}`);
+    app.listen(port, () => {
+      console.log(`Server is online at Port ${port}`);
+    });
+    console.log(`MongoAtlas Connected`);
   })
   .catch((err) => console.log(err));
 
 app.use("/", express.static(path.join(__dirname, "static")));
-
-app.listen(port, () => {
-  console.log(`Server is online at Port ${port}`);
-});
 
 // Multer Storage for Files
 const storage = multer.diskStorage({
@@ -85,7 +96,7 @@ const storage = multer.diskStorage({
 const maxSize = 2 * 1024 * 1024; // 2.09MB
 const upload = multer({
   storage: storage,
-  limits: { fileSize: maxSize },
+  limits: {fileSize: maxSize},
 });
 
 // Single Image Upload
@@ -146,7 +157,7 @@ async function generateUploadURL() {
 app.get("/api/s3", async (req, res) => {
   console.log("inside api/s3");
   const url = await generateUploadURL();
-  res.send({ url });
+  res.send({url});
 });
 
 // DEPRECATED - TO UPLOAD IMAGES MANUALLY ON POSTMAN
@@ -181,17 +192,17 @@ app.post("/api/uploadimage", upload.single("avatar"), async (req, res) => {
     console.log(err);
   }
 
-  res.json({ data: imageID, status: "OK" });
+  res.json({data: imageID, status: "OK"});
 });
 
 // DEPRECATED - TO UPLOAD IMAGES MANUALLY ON POSTMAN
 app.post("/api/getimage", async (req, res) => {
-  const { imageID } = req.body;
+  const {imageID} = req.body;
   // const allData = await Image.find({});
-  const imageData = await Image.findOne({ _id: imageID }).exec();
+  const imageData = await Image.findOne({_id: imageID}).exec();
   console.log("imageData found", imageData);
   // res.json(imageData);
-  res.json({ data: imageData, status: "OK" });
+  res.json({data: imageData, status: "OK"});
 });
 
 // Test Endpoint
@@ -202,23 +213,16 @@ app.get("/", (req, res) => {
 // ENDPOINT #1 - USER SIGNUP
 app.post("/api/register", async (req, res) => {
   console.log("Registration Received: req.body:", req.body);
-  let {
-    user,
-    pwd: plainTextPwd,
-    role,
-    firstName,
-    lastName,
-    company,
-  } = req.body;
+  let {user, pwd: plainTextPwd, role, firstName, lastName, company} = req.body;
 
   // Username / Password Validation
   if (!user || typeof user !== "string") {
-    return res.json({ status: "error", error: "invalid username" });
+    return res.json({status: "error", error: "invalid username"});
   }
 
   if (!plainTextPwd || typeof plainTextPwd !== "string") {
     console.log(plainTextPwd);
-    return res.json({ status: "error", error: "invalid password" });
+    return res.json({status: "error", error: "invalid password"});
   }
 
   // Initialize Role
@@ -265,17 +269,17 @@ app.post("/api/register", async (req, res) => {
     }
     throw err;
   }
-  res.json({ status: "OK" });
+  res.json({status: "OK"});
 });
 
 // ENDPOINT #2 - USER LOGIN
 app.post("/api/login", async (req, res) => {
-  const { user, pwd } = req.body;
+  const {user, pwd} = req.body;
   console.log("Server received login request:", user, pwd);
 
   // Find the User record
   // .lean() returns a Plain Old Java Object (POJO) instead of the entire
-  const userRecord = await User.findOne({ username: user }).exec();
+  const userRecord = await User.findOne({username: user}).exec();
 
   console.log("User in Database:", userRecord);
 
@@ -303,19 +307,19 @@ app.post("/api/login", async (req, res) => {
     if (token) {
       console.log("Succesfully signed token");
 
-      res.json({ status: "OK", token: token, roles: roles });
+      res.json({status: "OK", token: token, roles: roles});
     } else {
       console.log("Did not sign token");
     }
   } else {
     console.log("inside the err2");
-    return res.json({ status: "error" });
+    return res.json({status: "error"});
   }
 });
 
 // ENDPOINT #3 - CHANGE PASSWORD
 app.post("/api/changepassword", async (req, res) => {
-  const { oldPwd, newPwd, token } = req.body;
+  const {oldPwd, newPwd, token} = req.body;
   console.log(oldPwd, newPwd, token);
   try {
     // verify the token - will throw error if not verified
@@ -330,17 +334,17 @@ app.post("/api/changepassword", async (req, res) => {
     console.log("Password was hashed:", newHashedPwd);
     const _id = user.id;
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { password: newHashedPwd },
+        $set: {password: newHashedPwd},
       }
     );
-    const userRecord = await User.findOne({ _id });
+    const userRecord = await User.findOne({_id});
     console.log("Password was updated", userRecord);
-    res.json({ status: "OK" });
+    res.json({status: "OK"});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not verify identity" });
+    res.json({status: "Error", error: "Could not verify identity"});
   }
 });
 
@@ -349,7 +353,7 @@ app.post("/api/getuser", async (req, res) => {
   console.log("Inside the Get Profile Endpoint");
   // Payload contains JWT and user
   console.log(req.body);
-  const { token } = req.body;
+  const {token} = req.body;
   console.log(token);
 
   try {
@@ -358,10 +362,10 @@ app.post("/api/getuser", async (req, res) => {
 
     console.log("User Record", user, _id, userRecord);
 
-    res.json({ status: "OK", userProfile: userRecord });
+    res.json({status: "OK", userProfile: userRecord});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not verify identity" });
+    res.json({status: "Error", error: "Could not verify identity"});
   }
 });
 
@@ -386,7 +390,7 @@ app.get("/api/searchprojects", async (req, res) => {
 app.post("/api/getproject", async (req, res) => {
   console.log("Inside the Get Project Endpoint");
   console.log(req.body);
-  const { token, projectID } = req.body;
+  const {token, projectID} = req.body;
 
   console.log("Token:", token, "ProjectID:", projectID);
 
@@ -397,10 +401,10 @@ app.post("/api/getproject", async (req, res) => {
       _id: mongoose.Types.ObjectId(projectID),
     });
     console.log("Retrieved the project", projectRecord);
-    res.json({ status: "getProject succeeded!", project: projectRecord });
+    res.json({status: "getProject succeeded!", project: projectRecord});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not find project" });
+    res.json({status: "Error", error: "Could not find project"});
   }
 });
 
@@ -408,7 +412,7 @@ app.post("/api/getproject", async (req, res) => {
 app.post("/api/updateprofile", async (req, res) => {
   console.log("\n\n\n\n\n", "Inside the Update Profile Endpoint");
 
-  const { token, instagram, tiktok, youtube, keywords } = req.body;
+  const {token, instagram, tiktok, youtube, keywords} = req.body;
 
   console.log(token, instagram, tiktok, youtube, keywords);
 
@@ -424,36 +428,36 @@ app.post("/api/updateprofile", async (req, res) => {
     const [user, _id] = verifyJWT(token);
     // todo: combine all tehse updateOnes into one update
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { instagram: instagram },
+        $set: {instagram: instagram},
       }
     );
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { tiktok: tiktok },
+        $set: {tiktok: tiktok},
       }
     );
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { youtube: youtube },
+        $set: {youtube: youtube},
       }
     );
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { keywords: keywords },
+        $set: {keywords: keywords},
       }
     );
     const userRecord = await findUser(_id);
     console.log("Updated user links:", user, _id, userRecord);
 
-    res.json({ status: "OK", userProfile: userRecord });
+    res.json({status: "OK", userProfile: userRecord});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not verify identity" });
+    res.json({status: "Error", error: "Could not verify identity"});
   }
 });
 
@@ -461,60 +465,60 @@ app.post("/api/updateprofile", async (req, res) => {
 app.post("/api/updateavatar", async (req, res) => {
   console.log("updating the user avatar");
 
-  const { avatar, token } = req.body;
+  const {avatar, token} = req.body;
   console.log(avatar, token);
 
   try {
     // Verify the JWT
     const [user, _id] = verifyJWT(token);
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { avatar: avatar },
+        $set: {avatar: avatar},
       }
     );
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { hasUpdatedProfile: true },
+        $set: {hasUpdatedProfile: true},
       }
     );
     const userRecord = await findUser(_id);
     console.log("User Updated Record:", user, _id, userRecord);
-    res.json({ status: "OK", userProfile: userRecord });
+    res.json({status: "OK", userProfile: userRecord});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not verify identity" });
+    res.json({status: "Error", error: "Could not verify identity"});
   }
 });
 // Add the Media Kit to User Profile
 app.post("/api/updatemediakit", async (req, res) => {
   console.log("updating the media kit");
 
-  const { token, mediaKit } = req.body;
+  const {token, mediaKit} = req.body;
   console.log(token, mediaKit);
 
   try {
     // Verify the JWT
     const [user, _id] = verifyJWT(token);
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { mediaKit: mediaKit },
+        $set: {mediaKit: mediaKit},
       }
     );
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $set: { hasUpdatedProfile: true },
+        $set: {hasUpdatedProfile: true},
       }
     );
     const userRecord = await findUser(_id);
     console.log("User Updated Record:", user, _id, userRecord);
-    res.json({ status: "OK", userProfile: userRecord });
+    res.json({status: "OK", userProfile: userRecord});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not verify identity" });
+    res.json({status: "Error", error: "Could not verify identity"});
   }
 });
 
@@ -638,17 +642,17 @@ app.post("/api/createproject", async (req, res) => {
 
     // Add project to brandRep and influencer's currentProjects property
     await User.updateOne(
-      { _id },
+      {_id},
       {
-        $push: { currentProjects: res._id },
+        $push: {currentProjects: res._id},
       }
     );
     console.log("Brand Rep Was Updated");
 
     await User.updateOne(
-      { username: influencerRecord.username },
+      {username: influencerRecord.username},
       {
-        $push: { currentProjects: res._id },
+        $push: {currentProjects: res._id},
       }
     );
 
@@ -663,41 +667,41 @@ app.post("/api/createproject", async (req, res) => {
     }
     throw err;
   }
-  res.json({ status: "OK", project: projectData });
+  res.json({status: "OK", project: projectData});
 });
 
 // TO DO: Add the Example Image Deliverables to Project
 app.post("/api/addprojectimage", async (req, res) => {
   console.log("adding example deliverable images to project");
 
-  const { projectID: _id, imageURL, social, type } = req.body;
+  const {projectID: _id, imageURL, social, type} = req.body;
 
   console.log(_id, imageURL, social, type);
 
   try {
     if (social === "instagram" && type === "example") {
       const projectRes = await Project.updateOne(
-        { _id },
+        {_id},
         {
-          $set: { instagramExample: imageURL },
+          $set: {instagramExample: imageURL},
         }
       );
       console.log("Project Updated Image Files:", projectRes);
     }
     if (social === "youtube" && type === "example") {
       const projectRes = await Project.updateOne(
-        { _id },
+        {_id},
         {
-          $set: { youtubeExample: imageURL },
+          $set: {youtubeExample: imageURL},
         }
       );
       console.log("Project Updated Image Files:", projectRes);
     }
     if (social === "tiktok" && type === "example") {
       const projectRes = await Project.updateOne(
-        { _id },
+        {_id},
         {
-          $set: { tiktokExample: imageURL },
+          $set: {tiktokExample: imageURL},
         }
       );
       console.log("Project Updated Image Files:", projectRes);
@@ -705,46 +709,46 @@ app.post("/api/addprojectimage", async (req, res) => {
 
     if (social === "instagram" && type === "Submission") {
       const projectRes = await Project.updateOne(
-        { _id },
+        {_id},
         {
-          $set: { instagramSubmission: imageURL },
+          $set: {instagramSubmission: imageURL},
         }
       );
       console.log("Project Updated Image Files:", projectRes);
     }
     if (social === "youtube" && type === "Submission") {
       const projectRes = await Project.updateOne(
-        { _id },
+        {_id},
         {
-          $set: { youtubeSubmission: imageURL },
+          $set: {youtubeSubmission: imageURL},
         }
       );
       console.log("Project Updated Image Files:", projectRes);
     }
     if (social === "tiktok" && type === "Submission") {
       const projectRes = await Project.updateOne(
-        { _id },
+        {_id},
         {
-          $set: { tiktokSubmission: imageURL },
+          $set: {tiktokSubmission: imageURL},
         }
       );
       console.log("Project Updated Image Files:", projectRes);
     }
 
-    const projectRecord = await Project.findOne({ _id }).exec();
+    const projectRecord = await Project.findOne({_id}).exec();
 
     console.log("Updated Project:", projectRecord);
 
-    res.json({ status: "OK", project: projectRecord });
+    res.json({status: "OK", project: projectRecord});
   } catch (err) {
     console.log(err);
-    res.json({ status: "Error", error: "Could not verify identity" });
+    res.json({status: "Error", error: "Could not verify identity"});
   }
 });
 
 // Update Project Everytime Status Updates
 app.post("/api/updateproject", async (req, res) => {
-  const { token, action, comment, project, user } = req.body;
+  const {token, action, comment, project, user} = req.body;
   try {
     console.log(token, action, comment);
     console.log("user", user);
@@ -769,13 +773,13 @@ app.post("/api/updateproject", async (req, res) => {
     if (action === "accept") {
       // Update Status
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
           $set: {
             status: "in progress/waiting for submission",
             influencerAssigned: user._id,
           },
-          $push: { commentList: newCommentWithDate },
+          $push: {commentList: newCommentWithDate},
         }
       );
       // if influencer is not already assigned the project
@@ -784,9 +788,9 @@ app.post("/api/updateproject", async (req, res) => {
       if (!user.currentProjects.includes(project._id)) {
         console.log("adding the project to current projects!");
         await User.updateOne(
-          { _id: user._id },
+          {_id: user._id},
           {
-            $push: { currentProjects: `${project._id}` },
+            $push: {currentProjects: `${project._id}`},
           }
         );
       }
@@ -794,10 +798,10 @@ app.post("/api/updateproject", async (req, res) => {
     // Step 1B - Influencer Reject Contract/Project
     if (action === "reject") {
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { status: "project proposal rejected" },
-          $push: { commentList: newCommentWithDate },
+          $set: {status: "project proposal rejected"},
+          $push: {commentList: newCommentWithDate},
         }
       );
     }
@@ -820,15 +824,15 @@ app.post("/api/updateproject", async (req, res) => {
     // Step 2: Update Project and Notify Brand
     if (action === "influencer submit draft") {
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { status: "brand reviewing" },
+          $set: {status: "brand reviewing"},
         }
       );
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $push: { commentList: newCommentWithDate },
+          $push: {commentList: newCommentWithDate},
         }
       );
       // await Project.updateOne(
@@ -850,15 +854,15 @@ app.post("/api/updateproject", async (req, res) => {
       //   }
       // );
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForBrand: true },
+          $set: {waitingForBrand: true},
         }
       );
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForInfluencer: false },
+          $set: {waitingForInfluencer: false},
         }
       );
     }
@@ -870,30 +874,30 @@ app.post("/api/updateproject", async (req, res) => {
 
       // Influencer can publish
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { status: "ready to publish" },
+          $set: {status: "ready to publish"},
         }
       );
       // Add comment
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $push: { commentList: newCommentWithDate },
+          $push: {commentList: newCommentWithDate},
         }
       );
 
       // Next step with influencer
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForInfluencer: true },
+          $set: {waitingForInfluencer: true},
         }
       );
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForBrand: false },
+          $set: {waitingForBrand: false},
         }
       );
     }
@@ -905,23 +909,23 @@ app.post("/api/updateproject", async (req, res) => {
         ": The brand requested changes to the submission. Please see the comments and re-upload.";
 
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { status: "in progress/waiting for submission" },
+          $set: {status: "in progress/waiting for submission"},
         }
       );
 
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $push: { commentList: newCommentWithDate },
+          $push: {commentList: newCommentWithDate},
         }
       );
 
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $push: { commentList: rejectProjectComment },
+          $push: {commentList: rejectProjectComment},
         }
       );
     }
@@ -937,30 +941,30 @@ app.post("/api/updateproject", async (req, res) => {
 
       // Influencer can publish
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { status: "awaiting project payment" },
+          $set: {status: "awaiting project payment"},
         }
       );
       // Add comment
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $push: { commentList: newCommentWithDate },
+          $push: {commentList: newCommentWithDate},
         }
       );
 
       // Next step with brand (must pay influencer)
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForInfluencer: false },
+          $set: {waitingForInfluencer: false},
         }
       );
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForBrand: true },
+          $set: {waitingForBrand: true},
         }
       );
     }
@@ -972,30 +976,30 @@ app.post("/api/updateproject", async (req, res) => {
 
       // Influencer can publish
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { status: "project complete" },
+          $set: {status: "project complete"},
         }
       );
       // Add comment
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $push: { commentList: newCommentWithDate },
+          $push: {commentList: newCommentWithDate},
         }
       );
 
       // Next step with brand (must pay influencer)
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForInfluencer: false },
+          $set: {waitingForInfluencer: false},
         }
       );
       await Project.updateOne(
-        { _id: project._id },
+        {_id: project._id},
         {
-          $set: { waitingForBrand: false },
+          $set: {waitingForBrand: false},
         }
       );
     }
@@ -1013,7 +1017,7 @@ app.post("/api/updateproject", async (req, res) => {
 
 // Brand to pay influencer
 app.post("/api/payment", async (req, res) => {
-  let { amount, id } = req.body;
+  let {amount, id} = req.body;
   console.log("inside the payment api");
   try {
     const payment = await stripe.paymentIntents.create({
@@ -1049,16 +1053,16 @@ const verifyJWT = (token) => {
 
 // Find the project in the database
 const findUser = async (_id) => {
-  return User.findOne({ _id });
+  return User.findOne({_id});
 };
 const findProjectByID = async (_id) => {
-  return Project.findOne({ _id });
+  return Project.findOne({_id});
 };
 const findUserByUsername = async (username) => {
-  return User.findOne({ username });
+  return User.findOne({username});
 };
 const findProject = async (_id) => {
-  return Project.findOne({ username });
+  return Project.findOne({username});
 };
 
 const newRoleArray = (role) => {
